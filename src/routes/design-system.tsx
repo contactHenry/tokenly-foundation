@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AlertBanner, ChartCard, DataTable, DetailDrawer, EmptyState, FilterBar, LoadingSkeleton, StatCard, StatusBadge, ThresholdProgress, type Column } from "@/components/tokenly/primitives";
+import { AlertBanner, ChartCard, DataTable, DetailDrawer, EmptyState, ErrorState, FilterBar, LoadingSkeleton, StatCard, StatusBadge, ThresholdProgress, type Column } from "@/components/tokenly/primitives";
 import { dailyUsage, projects, type Project } from "@/lib/mock";
 export const Route = createFileRoute("/design-system")({ head: () => ({ meta: [{ title: "Design system · Tokenly" }, { name: "description", content: "Tokenly’s reusable dashboard components, charts, tables and states." }, { property: "og:title", content: "Design system · Tokenly" }, { property: "og:description", content: "A showcase of Tokenly’s reusable dashboard components." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: DesignSystem });
 const columns: Column<Project>[] = [{ key: "name", label: "Project", sortValue: row => row.name, render: row => <span className="font-medium">{row.name}</span> }, { key: "status", label: "Status", sortValue: row => row.status, render: row => <StatusBadge status="healthy">{row.status}</StatusBadge> }, { key: "budget", label: "Monthly budget", sortValue: row => row.budget, render: row => `$${row.budget.toLocaleString()}` }, { key: "open", label: "", render: () => <ArrowRight className="ml-auto size-4 text-muted-foreground" />, className: "text-right" }];
