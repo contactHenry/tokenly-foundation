@@ -7,3 +7,8 @@
 - [x] Verify shareable URL filters and Usage drill-down end-to-end.
 - [x] Build Projects & Keys: project grid, detail tabs, keys table, create/revoke/rotate flows.
 - [x] Build Limits & Alerts: budgets, 5-step budget drawer with live projection, alert rules, alert history.
+- [ ] Build Billing: balance, top-up modal, auto-recharge, plan & pricing, payment methods, invoices, ledger.
+- [ ] Build Activity audit timeline with filters and detail drawer.
+- [ ] Build notification center popover (All/Unread/Alerts, mark all read, source links).
+- [ ] Build Settings tabs: General, Team (invite, roles matrix), Notifications, Integrations.
+- [ ] Role-aware UI: Finance viewer sees Billing/Usage, key management disabled with tooltips.
