@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useDateRange } from "@/components/tokenly/app-shell";
-import { activityEvents } from "@/lib/mock";
-import { EmptyState } from "@/components/tokenly/primitives";
-export const Route = createFileRoute("/activity")({ head: () => ({ meta: [{ title: "Activity · Tokenly" }, { name: "description", content: "Explore workspace activity." }, { property: "og:title", content: "Activity · Tokenly" }, { property: "og:description", content: "Explore workspace activity." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
-function Page() { const range = useDateRange(); const events = activityEvents.filter(event => event.date >= range.from && event.date <= range.to); return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Activity</p><h2 className="mt-2 text-2xl font-semibold">Activity</h2></div>{events.length ? <div className="divide-y rounded-xl border bg-card">{events.map(event => <div key={event.id} className="flex flex-wrap items-start justify-between gap-2 px-5 py-4"><div><p className="text-sm font-medium">{event.title}</p><p className="mt-1 text-xs text-muted-foreground">{event.detail}</p></div><time dateTime={event.date} className="text-xs text-muted-foreground">{event.date}</time></div>)}</div> : <EmptyState title="No activity in this range" description="Choose a wider date range to see earlier activity." />}</div>; }
+import { ActivityView } from "@/components/tokenly/activity-view";
+
+export const Route = createFileRoute("/activity")({
+  head: () => ({ meta: [{ title: "Activity · Tokenly" }, { name: "description", content: "Audit log of top-ups, budgets, API keys, alerts and team changes." }, { property: "og:title", content: "Activity · Tokenly" }, { property: "og:description", content: "Audit log of top-ups, budgets, API keys, alerts and team changes." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  component: Page,
+});
+
+function Page() {
+  const range = useDateRange();
+  return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Activity</p><h2 className="mt-2 text-2xl font-semibold">Activity</h2><p className="mt-1 text-sm text-muted-foreground">Who did what, and when. Follows the date range at the top.</p></div><ActivityView from={range.from} to={range.to} /></div>;
+}
