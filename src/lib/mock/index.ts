@@ -5,9 +5,9 @@ export interface Project { id: string; name: string; description: string; status
 export interface ApiKey { id: string; name: string; prefix: string; projectId: string; createdAt: string; lastUsedAt: string; status: "active" | "revoked"; }
 export interface Model { id: string; name: string; provider: string; inputPerMillion: number; outputPerMillion: number; }
 export interface TeamMember { id: string; name: string; email: string; role: MemberRole; initials: string; }
-export interface UsageEvent { id: string; date: string; inputTokens: number; outputTokens: number; cost: number; modelId: string; projectId: string; keyId: string; userId: string; }
+export interface UsageEvent { id: string; date: string; inputTokens: number; outputTokens: number; cost: number; modelId: string; projectId: string; keyId: string; userId: string; endpoint: string; }
 export interface CreditTransaction { id: string; date: string; amount: number; method: string; }
-export interface CreditAccount { balance: number; topUps: CreditTransaction[]; }
+export interface CreditAccount { balance: number; usdPerCredit: number; topUps: CreditTransaction[]; }
 export interface Budget { projectId: string; monthlyLimit: number; spent: number; warningThreshold: number; criticalThreshold: number; }
 export interface UsageAlert { id: string; title: string; description: string; severity: Severity; date: string; read: boolean; }
 export interface Invoice { id: string; number: string; date: string; amount: number; status: "paid" | "pending"; }
@@ -38,7 +38,7 @@ export const apiKeys: ApiKey[] = projects.flatMap((project, index) => [
   { id: `key_${index * 2 + 1}`, name: `${project.name} · Live`, prefix: `tk_live_••••${["8f2a", "4b91", "7c03", "2d66"][index]}`, projectId: project.id, createdAt: "2026-06-18", lastUsedAt: "2026-09-26", status: "active" as const },
   { id: `key_${index * 2 + 2}`, name: `${project.name} · Test`, prefix: `tk_test_••••${["1e47", "9a18", "3f72", "5c09"][index]}`, projectId: project.id, createdAt: "2026-07-04", lastUsedAt: "2026-09-24", status: "active" as const },
 ]);
-export const creditAccount: CreditAccount = { balance: 42000, topUps: [
+export const creditAccount: CreditAccount = { balance: 42000, usdPerCredit: .016, topUps: [
   { id: "top_01", date: "2026-09-01", amount: 25000, method: "Visa •••• 4242" },
   { id: "top_02", date: "2026-08-01", amount: 20000, method: "Visa •••• 4242" },
   { id: "top_03", date: "2026-07-01", amount: 20000, method: "Visa •••• 4242" },
@@ -56,6 +56,18 @@ export const alerts: UsageAlert[] = [
   { id: "alt_04", title: "Monthly budget reset", description: "All project budgets renewed", severity: "healthy", date: "2026-09-01", read: true },
   { id: "alt_05", title: "Low balance resolved", description: "Credits were topped up successfully", severity: "critical", date: "2026-08-29", read: true },
 ];
+export type ActivityEvent = { id: string; date: string; type: "top-up" | "limit" | "key" | "alert"; title: string; detail: string; projectId?: string; keyId?: string };
+export const activityEvents: ActivityEvent[] = [
+  { id: "act_01", date: "2026-09-25", type: "alert", title: "Research Lab budget warning", detail: "87% of monthly budget used", projectId: "prj_03" },
+  { id: "act_02", date: "2026-09-22", type: "limit", title: "Support Copilot limit updated", detail: "Monthly limit raised to $650", projectId: "prj_02" },
+  { id: "act_03", date: "2026-09-18", type: "alert", title: "Unusual usage spike detected", detail: "Production API usage increased", projectId: "prj_01", keyId: "key_1" },
+  { id: "act_04", date: "2026-09-12", type: "key", title: "Research Lab test key created", detail: "New API key added", projectId: "prj_03", keyId: "key_6" },
+  { id: "act_05", date: "2026-09-05", type: "limit", title: "Production API limit updated", detail: "Monthly limit raised to $1,200", projectId: "prj_01" },
+  { id: "act_06", date: "2026-09-01", type: "top-up", title: "Credits added", detail: "25,000 credits added by Visa •••• 4242" },
+  { id: "act_07", date: "2026-08-29", type: "alert", title: "Low balance resolved", detail: "Balance returned to a healthy level" },
+  { id: "act_08", date: "2026-08-01", type: "top-up", title: "Credits added", detail: "20,000 credits added by Visa •••• 4242" },
+  { id: "act_09", date: "2026-07-01", type: "top-up", title: "Credits added", detail: "20,000 credits added by Visa •••• 4242" },
+];
 export const invoices: Invoice[] = Array.from({ length: 6 }, (_, i) => ({ id: `inv_${i + 1}`, number: `INV-2026-${String(9 - i).padStart(3, "0")}`, date: `2026-${String(9 - i).padStart(2, "0")}-01`, amount: [1487, 1324, 1198, 1056, 978, 842][i] ?? 0, status: i === 0 ? "pending" : "paid" }));
 
 // Stable 90-day fixture ending Sep 26, 2026. Weekends dip and Sep 18 has a deliberate spike.
@@ -69,7 +81,7 @@ export const usageEvents: UsageEvent[] = Array.from({ length: 90 }, (_, day) => 
     const rhythm = 1 + .16 * Math.sin(day * .47 + projectIndex) + .08 * Math.cos(day * .91 + slot);
     const inputTokens = Math.round((1200000 + projectIndex * -199200 + slot * 292800) * (weekend ? .42 : 1) * rhythm * spike);
     const outputTokens = Math.round(inputTokens * (model.id === "text-embedding-3" ? 0 : .39 + slot * .07));
-    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)]?.id ?? "", userId: teamMembers[(day + slot + projectIndex) % teamMembers.length]?.id ?? "" };
+    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)]?.id ?? "", userId: teamMembers[(day + slot + projectIndex) % teamMembers.length]?.id ?? "", endpoint: ["/v1/chat/completions", "/v1/responses", "/v1/embeddings"][model.id === "text-embedding-3" ? 2 : slot % 2] ?? "/v1/responses" };
   }));
 }).flat();
 export const dailyUsage = Array.from({ length: 90 }, (_, index) => {
