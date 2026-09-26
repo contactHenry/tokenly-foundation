@@ -1,3 +1,6 @@
+import { Gate } from "./role-gate";
+import { useRole } from "./workspace-store";
+import { toast } from "sonner";
 import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -72,6 +75,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
   const [creating, setCreating] = useState(false);
   const [revoking, setRevoking] = useState<ManagedKey | null>(null);
   const [rotating, setRotating] = useState<ManagedKey | null>(null);
+  const canKeys = useRole().can("manageKeys");
   const rows = keys.filter(k => !projectId || k.projectId === projectId).map(k => ({ ...k, ...keyStats(k.id) }));
   type Row = (typeof rows)[number];
   const projectName = (id: string) => projects.find(p => p.id === id)?.name ?? "—";
@@ -83,10 +87,10 @@ export function KeysTable({ projectId }: { projectId?: string }) {
     { key: "used", label: "Last used", sortValue: r => r.lastUsedAt, render: r => <span className="text-muted-foreground">{relativeTime(r.lastUsedAt)}</span> },
     { key: "spend", label: "30d spend", className: "text-right", sortValue: r => r.spend30, render: r => money(r.spend30) },
     { key: "status", label: "Status", sortValue: r => r.status, render: r => <StatusBadge status={r.status === "active" ? "healthy" : "neutral"}>{r.status === "active" ? "Active" : "Revoked"}</StatusBadge> },
-    { key: "actions", label: "", className: "w-10", render: r => r.status === "active" ? <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="size-8" aria-label={`Actions for ${r.name}`} onClick={e => e.stopPropagation()}><MoreHorizontal className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => setRotating(r)}><RefreshCw className="size-4" />Rotate key</DropdownMenuItem><DropdownMenuItem className="text-critical" onSelect={() => setRevoking(r)}>Revoke key</DropdownMenuItem></DropdownMenuContent></DropdownMenu> : null },
+    { key: "actions", label: "", className: "w-10", render: r => r.status === "active" ? !canKeys ? <Gate perm="manageKeys" disabled={<Button variant="ghost" size="icon" className="size-8" disabled aria-label={`Actions for ${r.name}`}><MoreHorizontal className="size-4" /></Button>}><span /></Gate> : <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="size-8" aria-label={`Actions for ${r.name}`} onClick={e => e.stopPropagation()}><MoreHorizontal className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => setRotating(r)}><RefreshCw className="size-4" />Rotate key</DropdownMenuItem><DropdownMenuItem className="text-critical" onSelect={() => setRevoking(r)}>Revoke key</DropdownMenuItem></DropdownMenuContent></DropdownMenu> : null },
   ];
   return <section className="space-y-4">
-    <div className="flex items-center justify-between"><div><h3 className="font-semibold">API keys</h3><p className="text-sm text-muted-foreground">{rows.filter(r => r.status === "active").length} active · {rows.filter(r => r.status === "revoked").length} revoked</p></div><Button onClick={() => setCreating(true)}><Plus className="size-4" />Create key</Button></div>
+    <div className="flex items-center justify-between"><div><h3 className="font-semibold">API keys</h3><p className="text-sm text-muted-foreground">{rows.filter(r => r.status === "active").length} active · {rows.filter(r => r.status === "revoked").length} revoked</p></div><Gate perm="manageKeys" disabled={<Button disabled><Plus className="size-4" />Create key</Button>}><Button onClick={() => setCreating(true)}><Plus className="size-4" />Create key</Button></Gate></div>
     {rows.length ? <DataTable rows={rows} columns={columns} /> : <EmptyState title="No keys yet" description="Create a key to start sending requests from this project." action={<Button onClick={() => setCreating(true)}>Create key</Button>} />}
     <CreateKeyDialog open={creating} onOpenChange={setCreating} {...(projectId ? { defaultProject: projectId } : {})} />
     <RevokeDialog keyItem={revoking} onClose={() => setRevoking(null)} />
@@ -132,7 +136,7 @@ function RevokeDialog({ keyItem, onClose }: { keyItem: ManagedKey | null; onClos
     <DialogHeader><DialogTitle>Revoke {keyItem.name}?</DialogTitle><DialogDescription>Requests using this key will fail immediately. This can't be undone.</DialogDescription></DialogHeader>
     <div className="rounded-lg border border-critical/40 bg-critical-muted p-3 text-sm">This key made <strong>{stats.requests7.toLocaleString()} requests</strong> in the last 7 days and spent {money(stats.spend30)} in the last 30.</div>
     <Field label={`Type "${keyItem.name}" to confirm`}><Input value={typed} onChange={e => setTyped(e.target.value)} autoFocus aria-label="Confirm key name" /></Field>
-    <DialogFooter><Button variant="outline" onClick={close}>Cancel</Button><Button variant="destructive" disabled={typed !== keyItem.name} onClick={() => { actions.revokeKey(keyItem.id); close(); }}>Revoke key</Button></DialogFooter></>}
+    <DialogFooter><Button variant="outline" onClick={close}>Cancel</Button><Button variant="destructive" disabled={typed !== keyItem.name} onClick={() => { actions.revokeKey(keyItem.id); toast.success(`${keyItem.name} revoked`); close(); }}>Revoke key</Button></DialogFooter></>}
   </DialogContent></Dialog>;
 }
 
@@ -141,7 +145,7 @@ function RotateDialog({ keyItem, onClose }: { keyItem: ManagedKey | null; onClos
   const close = () => { onClose(); setTimeout(() => setSecret(null), 200); };
   return <Dialog open={!!keyItem} onOpenChange={v => { if (!v) close(); }}><DialogContent>{keyItem && (secret ? <SecretReveal secret={secret} title={`${keyItem.name} rotated`} onDone={close} /> : <>
     <DialogHeader><DialogTitle>Rotate {keyItem.name}?</DialogTitle><DialogDescription>A new secret replaces {maskKey(keyItem)}. The old secret stops working right away, so update your apps after copying the new one.</DialogDescription></DialogHeader>
-    <DialogFooter><Button variant="outline" onClick={close}>Cancel</Button><Button onClick={() => setSecret(actions.rotateKey(keyItem.id))}><RefreshCw className="size-4" />Rotate key</Button></DialogFooter></>)}
+    <DialogFooter><Button variant="outline" onClick={close}>Cancel</Button><Button onClick={() => { setSecret(actions.rotateKey(keyItem.id)); toast.success(`${keyItem.name} rotated`); }}><RefreshCw className="size-4" />Rotate key</Button></DialogFooter></>)}
   </DialogContent></Dialog>;
 }
 

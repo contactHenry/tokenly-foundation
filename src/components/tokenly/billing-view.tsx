@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+import { Gate } from "./role-gate";
 import { useState } from "react";
 import { ArrowDownLeft, ArrowUpRight, Check, CreditCard, Download, Gift, Plus, RotateCcw, Trash2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +22,7 @@ export function BalanceCard({ onTopUp }: { onTopUp: () => void }) {
   const { balance } = useBillingStore();
   const days = runwayDays(balance), burn = burnPerDay();
   return <div className="rounded-xl border bg-card p-6 lg:col-span-7">
-    <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm text-muted-foreground">Credit balance</p><p className="mt-1 text-4xl font-semibold tracking-tight">{num(balance)}<span className="ml-2 text-base font-normal text-muted-foreground">credits</span></p><p className="mt-1 text-sm text-muted-foreground">≈ {money(balance * USD_PER_CREDIT)} at {money(USD_PER_CREDIT, 3)} per credit</p></div><Button size="lg" onClick={onTopUp}><Plus className="size-4" />Top up</Button></div>
+    <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm text-muted-foreground">Credit balance</p><p className="mt-1 text-4xl font-semibold tracking-tight">{num(balance)}<span className="ml-2 text-base font-normal text-muted-foreground">credits</span></p><p className="mt-1 text-sm text-muted-foreground">≈ {money(balance * USD_PER_CREDIT)} at {money(USD_PER_CREDIT, 3)} per credit</p></div><Gate perm="manageBilling" disabled={<Button size="lg" disabled><Plus className="size-4" />Top up</Button>}><Button size="lg" onClick={onTopUp}><Plus className="size-4" />Top up</Button></Gate></div>
     <div className="mt-6 grid grid-cols-2 gap-4 border-t pt-5"><div><p className="text-xs text-muted-foreground">Runway</p><div className="mt-1 flex items-center gap-2"><p className="text-lg font-semibold">{runwayText(days)}</p><StatusBadge status={runwayTone(days)}>{runwayTone(days) === "healthy" ? "Healthy" : runwayTone(days) === "warning" ? "Under 14 days" : "Under 7 days"}</StatusBadge></div>{Number.isFinite(days) && <p className="text-xs text-muted-foreground">Runs out around {fmtDate(shift(LAST_DAY, days))}</p>}</div><div><p className="text-xs text-muted-foreground">Burn rate</p><p className="mt-1 text-lg font-semibold">{num(burn)} <span className="text-sm font-normal text-muted-foreground">credits/day</span></p><p className="text-xs text-muted-foreground">7-day average</p></div></div>
   </div>;
 }
@@ -37,7 +39,7 @@ export function TopUpDialog({ open, onOpenChange }: { open: boolean; onOpenChang
   const confirm = () => {
     if (!Number.isFinite(usd) || usd < 10 || usd > 50000) return setError("Enter an amount between $10 and $50,000.");
     if (!method) return setError("Add a payment method first.");
-    billingActions.topUp(usd, `${method.brand} •••• ${method.last4}`); setDone({ before: balance, added: base + bonus });
+    billingActions.topUp(usd, `${method.brand} •••• ${method.last4}`); setDone({ before: balance, added: base + bonus }); toast.success(`${num(base + bonus)} credits added`);
   };
   return <Dialog open={open} onOpenChange={v => { if (!v) close(); }}><DialogContent className="sm:max-w-lg">{done ? <>
     <DialogHeader><div className="mb-2 grid size-10 place-items-center rounded-full bg-success-muted"><Check className="size-5 text-success" /></div><DialogTitle>Credits added</DialogTitle><DialogDescription>{num(done.added)} credits are available now.</DialogDescription></DialogHeader>
@@ -63,7 +65,7 @@ export function AutoRechargeCard() {
   const cost = a.amount * USD_PER_CREDIT;
   const field = (label: string, value: number, key: "threshold" | "amount" | "monthlyCap", suffix: string) => <div className="space-y-1.5"><Label className="text-xs text-muted-foreground">{label}</Label><div className="flex items-center gap-2"><Input type="number" min={1} className="h-9" value={value} disabled={!a.enabled} onChange={e => { const v = Number(e.target.value); if (Number.isFinite(v) && v >= 0) billingActions.setAutoRecharge({ [key]: v }); }} aria-label={label} /><span className="shrink-0 text-xs text-muted-foreground">{suffix}</span></div></div>;
   return <div className="rounded-xl border bg-card p-6 lg:col-span-5">
-    <div className="flex items-start justify-between gap-3"><div className="flex items-center gap-2"><Zap className="size-4 text-muted-foreground" /><h3 className="font-semibold">Auto-recharge</h3></div><Switch checked={a.enabled} onCheckedChange={enabled => billingActions.setAutoRecharge({ enabled })} aria-label="Enable auto-recharge" /></div>
+    <div className="flex items-start justify-between gap-3"><div className="flex items-center gap-2"><Zap className="size-4 text-muted-foreground" /><h3 className="font-semibold">Auto-recharge</h3></div><Switch checked={a.enabled} onCheckedChange={enabled => { billingActions.setAutoRecharge({ enabled }); toast.success(enabled ? "Auto-recharge on" : "Auto-recharge off"); }} aria-label="Enable auto-recharge" /></div>
     <div className="mt-5 grid grid-cols-2 gap-3">{field("When balance falls below", a.threshold, "threshold", "credits")}{field("Add", a.amount, "amount", "credits")}<div className="col-span-2">{field("Monthly cap", a.monthlyCap, "monthlyCap", "USD / month")}</div></div>
     <p className={cn("mt-5 rounded-lg p-3 text-sm", a.enabled ? "bg-accent/60" : "bg-muted/60 text-muted-foreground")}>{a.enabled ? `When your balance drops below ${num(a.threshold)} credits, we'll add ${num(a.amount)} credits (${money(cost)}) to your default card — up to ${money(a.monthlyCap)} per month.` : "Auto-recharge is off. Your API calls will stop if credits run out."}</p>
   </div>;
@@ -86,11 +88,11 @@ export function PaymentMethodsCard() {
     if (!/^\d{12,19}$/.test(digits)) return setErr("Enter a valid card number.");
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)) return setErr("Use MM/YY for expiry.");
     billingActions.addMethod({ brand: digits.startsWith("4") ? "Visa" : digits.startsWith("5") ? "Mastercard" : digits.startsWith("3") ? "Amex" : "Card", last4: digits.slice(-4), expiry: exp });
-    setCard(""); setExp(""); setErr(""); setAdding(false);
+    setCard(""); setExp(""); setErr(""); setAdding(false); toast.success("Card added");
   };
   return <div className="rounded-xl border bg-card p-6 lg:col-span-5">
-    <div className="flex items-center justify-between"><h3 className="font-semibold">Payment methods</h3><Button size="sm" variant="outline" onClick={() => setAdding(true)}><Plus className="size-3.5" />Add</Button></div>
-    <div className="mt-4 space-y-2">{methods.length ? methods.map(m => <div key={m.id} className="flex items-center gap-3 rounded-lg border p-3"><CreditCard className="size-4 text-muted-foreground" /><div className="min-w-0 flex-1"><p className="text-sm font-medium">{m.brand} •••• {m.last4}</p><p className="text-xs text-muted-foreground">Expires {m.expiry}</p></div>{m.isDefault ? <StatusBadge status="neutral">Default</StatusBadge> : <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => billingActions.makeDefault(m.id)}>Make default</Button>}<Button variant="ghost" size="icon" className="size-7" aria-label={`Remove ${m.brand} ending ${m.last4}`} onClick={() => billingActions.removeMethod(m.id)}><Trash2 className="size-3.5" /></Button></div>) : <p className="text-sm text-muted-foreground">No payment methods saved.</p>}</div>
+    <div className="flex items-center justify-between"><h3 className="font-semibold">Payment methods</h3><Gate perm="manageBilling" disabled={<Button size="sm" variant="outline" disabled><Plus className="size-3.5" />Add</Button>}><Button size="sm" variant="outline" onClick={() => setAdding(true)}><Plus className="size-3.5" />Add</Button></Gate></div>
+    <div className="mt-4 space-y-2">{methods.length ? methods.map(m => <div key={m.id} className="flex items-center gap-3 rounded-lg border p-3"><CreditCard className="size-4 text-muted-foreground" /><div className="min-w-0 flex-1"><p className="text-sm font-medium">{m.brand} •••• {m.last4}</p><p className="text-xs text-muted-foreground">Expires {m.expiry}</p></div>{m.isDefault ? <StatusBadge status="neutral">Default</StatusBadge> : <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { billingActions.makeDefault(m.id); toast.success(`${m.brand} •••• ${m.last4} is now default`); }}>Make default</Button>}<Button variant="ghost" size="icon" className="size-7" aria-label={`Remove ${m.brand} ending ${m.last4}`} onClick={() => { billingActions.removeMethod(m.id); toast.success("Card removed"); }}><Trash2 className="size-3.5" /></Button></div>) : <p className="text-sm text-muted-foreground">No payment methods saved.</p>}</div>
     <Dialog open={adding} onOpenChange={setAdding}><DialogContent className="sm:max-w-sm"><DialogHeader><DialogTitle>Add card</DialogTitle><DialogDescription>Preview only — card details aren't stored beyond the last 4 digits.</DialogDescription></DialogHeader><div className="space-y-3"><div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Card number</Label><Input inputMode="numeric" value={card} onChange={e => setCard(e.target.value.slice(0, 23))} placeholder="4242 4242 4242 4242" autoComplete="off" /></div><div className="space-y-1.5"><Label className="text-xs text-muted-foreground">Expiry</Label><Input value={exp} onChange={e => setExp(e.target.value.slice(0, 5))} placeholder="MM/YY" /></div>{err && <p className="text-sm text-critical">{err}</p>}</div><DialogFooter><Button variant="outline" onClick={() => setAdding(false)}>Cancel</Button><Button onClick={add}>Add card</Button></DialogFooter></DialogContent></Dialog>
   </div>;
 }
@@ -120,7 +122,7 @@ export function InvoicesSection() {
     { key: "st", label: "Status", sortValue: r => r.st, render: r => <StatusBadge status={tone[r.st]}>{r.st === "paid" ? "Paid" : r.st === "due" ? "Due" : "Failed"}</StatusBadge> },
     { key: "pdf", label: "", className: "w-12 text-right", render: r => <Button variant="ghost" size="icon" className="size-8" aria-label={`Download ${r.number} PDF`} onClick={() => downloadPdf(r.number, r.date, r.amount, r.st)}><Download className="size-4" /></Button> },
   ];
-  const retry = () => { if (!failed) return; setRetrying(true); setTimeout(() => { billingActions.payInvoice(failed.id); setRetrying(false); }, 700); };
+  const retry = () => { if (!failed) return; setRetrying(true); setTimeout(() => { billingActions.payInvoice(failed.id); setRetrying(false); toast.success(`${failed.number} paid`); }, 700); };
   return <section className="space-y-4"><h3 className="font-semibold">Invoices</h3>
     {failed && <div className="relative"><AlertBanner tone="critical" title={`Payment failed for ${failed.number}`} description={`We couldn't charge ${money(failed.amount, 2)} to your default card. Retry now to avoid service interruption.`} /><Button size="sm" variant="outline" className="absolute right-4 top-1/2 -translate-y-1/2 bg-card" onClick={retry} disabled={retrying}><RotateCcw className={cn("size-3.5", retrying && "animate-spin")} />{retrying ? "Retrying…" : "Retry"}</Button></div>}
     <DataTable rows={rows} columns={columns} />
