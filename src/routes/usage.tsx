@@ -1,12 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useDateRange } from "@/components/tokenly/app-shell";
-import { apiKeys, models, projects, usageEvents } from "@/lib/mock";
-import { EmptyState } from "@/components/tokenly/primitives";
-export const Route = createFileRoute("/usage")({ validateSearch: (search: Record<string, unknown>) => ({ model: typeof search["model"] === "string" ? search["model"] : undefined, project: typeof search["project"] === "string" ? search["project"] : undefined, key: typeof search["key"] === "string" ? search["key"] : undefined, action: typeof search["action"] === "string" ? search["action"] : undefined }), head: () => ({ meta: [{ title: "Usage · Tokenly" }, { name: "description", content: "View token usage and model activity." }, { property: "og:title", content: "Usage · Tokenly" }, { property: "og:description", content: "View token usage and model activity." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
-function Page() {
-  const search = Route.useSearch();
-  const range = useDateRange();
-  const filter = search.model ? models.find(item => item.id === search.model)?.name : search.project ? projects.find(item => item.id === search.project)?.name : search.key ? apiKeys.find(item => item.id === search.key)?.name : null;
-  const events = usageEvents.filter(event => event.date >= range.from && event.date <= range.to && (!search.model || event.modelId === search.model) && (!search.project || event.projectId === search.project) && (!search.key || event.keyId === search.key));
-  return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Usage</p><h2 className="mt-2 text-2xl font-semibold">Usage</h2></div>{filter && <div className="rounded-xl border bg-card p-5"><p className="text-xs text-muted-foreground">{search["action"] === "inspect-spike" ? "Inspecting spike · " : "Filtered by · "}{range.label === "Custom" ? `${range.from} – ${range.to}` : range.label}</p><p className="mt-2 font-semibold">{filter}</p><p className="mt-1 text-sm text-muted-foreground">{events.length.toLocaleString()} events · {events.reduce((total, event) => total + event.cost, 0).toLocaleString("en-US", { style: "currency", currency: "USD" })} spent</p></div>}<EmptyState title="Usage details are coming soon" description="Your selection is saved here; the full usage view is not available yet." /></div>;
-}
+import { UsageView } from "@/components/tokenly/usage-view";
+const field = (search: Record<string, unknown>, key: string) => typeof search[key] === "string" ? String(search[key]) : undefined;
+export const Route = createFileRoute("/usage")({
+  validateSearch: (search: Record<string, unknown>) => ({ model: field(search, "model"), project: field(search, "project"), key: field(search, "key"), user: field(search, "user"), token: field(search, "token"), from: field(search, "from"), to: field(search, "to"), action: field(search, "action") }),
+  head: () => ({ meta: [{ title: "Usage · Tokenly" }, { name: "description", content: "Analyze AI token usage by model, project, key and user." }, { property: "og:title", content: "Usage · Tokenly" }, { property: "og:description", content: "Analyze AI token usage by model, project, key and user." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  component: UsageView,
+});
