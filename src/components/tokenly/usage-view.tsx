@@ -11,7 +11,7 @@ import { useDateRange } from "@/components/tokenly/app-shell";
 import { apiKeys, models, projects, teamMembers, usageEvents } from "@/lib/mock";
 import { compact, dimensions, filteredEvents, groupEvents, labelFor, measure, money, shiftDate, type Dimension, type GroupRow, type UsageFilters } from "@/components/tokenly/usage-data";
 
-type Search = UsageFilters & { action?: string };
+type Search = UsageFilters & { action?: string | undefined };
 type SavedView = { name: string; filters: UsageFilters };
 const FILTERS = ["model", "project", "key", "user", "token"] as const;
 const names = { model: "Model", project: "Project", key: "API key", user: "User", token: "Token type" };
