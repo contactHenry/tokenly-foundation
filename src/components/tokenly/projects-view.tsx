@@ -30,11 +30,11 @@ export function ProjectsGrid() {
   const [open, setOpen] = useState(false);
   return <section className="space-y-4">
     <div className="flex items-center justify-between"><div><h3 className="font-semibold">Projects</h3><p className="text-sm text-muted-foreground">{projects.length} projects in this workspace</p></div><Button onClick={() => setOpen(true)}><Plus className="size-4" />New project</Button></div>
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{projects.map(p => {
+    <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">{projects.map(p => {
       const spent = projectMtd(p.id), pct = p.budget ? (spent / p.budget) * 100 : 0, h = projectHealth(pct);
       const count = keys.filter(k => k.projectId === p.id && k.status === "active").length;
       return <Link key={p.id} to="/projects" search={{ project: p.id }} className="group rounded-xl border bg-card p-5 transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-primary">
-        <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate font-semibold group-hover:text-primary">{p.name}</p><p className="mt-0.5 text-xs text-muted-foreground">Owner · {memberName(p.ownerId)}</p></div><StatusBadge status={p.status === "paused" ? "neutral" : h.s}>{p.status === "paused" ? "Paused" : h.t}</StatusBadge></div>
+        <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate font-semibold group-hover:text-primary">{p.name}</p><p className="mt-0.5 text-xs text-muted-foreground">Owner · {memberName(p.ownerId)}</p></div><span className="shrink-0 whitespace-nowrap"><StatusBadge status={p.status === "paused" ? "neutral" : h.s}>{p.status === "paused" ? "Paused" : h.t}</StatusBadge></span></div>
         <div className="mt-5 flex items-baseline gap-1.5"><span className="text-2xl font-semibold">{money(spent)}</span><span className="text-xs text-muted-foreground">of {money(p.budget)} this month</span></div>
         <div className="mt-3"><ThresholdProgress value={pct} /></div>
         <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><KeyRound className="size-3.5" />{count} active {count === 1 ? "key" : "keys"}</p>
