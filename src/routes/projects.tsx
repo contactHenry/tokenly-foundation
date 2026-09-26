@@ -1,4 +1,27 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/tokenly/primitives";
-export const Route = createFileRoute("/projects")({ head: () => ({ meta: [{ title: "Projects & Keys · Tokenly" }, { name: "description", content: "Manage workspace projects and API keys." }, { property: "og:title", content: "Projects & Keys · Tokenly" }, { property: "og:description", content: "Manage workspace projects and API keys." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
-function Page() { return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Projects & Keys</p><h2 className="mt-2 text-2xl font-semibold">Projects & Keys</h2></div><EmptyState title="Projects & Keys is coming soon" description="This space is ready for the next chapter of your workspace." /></div>; }
+import { KeysTable, ProjectDetail, ProjectsGrid } from "@/components/tokenly/projects-view";
+import { useProjectsStore } from "@/components/tokenly/projects-store";
+
+type Search = { project?: string };
+
+export const Route = createFileRoute("/projects")({
+  validateSearch: (s: Record<string, unknown>): Search => (typeof s["project"] === "string" ? { project: s["project"] } : {}),
+  head: () => ({ meta: [{ title: "Projects & Keys · Tokenly" }, { name: "description", content: "Manage workspace projects, budgets, and API keys." }, { property: "og:title", content: "Projects & Keys · Tokenly" }, { property: "og:description", content: "Manage workspace projects, budgets, and API keys." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  component: Page,
+});
+
+function Page() {
+  const search = Route.useSearch();
+  const { projects } = useProjectsStore();
+  if (search.project) {
+    const project = projects.find(p => p.id === search.project);
+    return project ? <ProjectDetail key={project.id} project={project} /> : <EmptyState title="Project not found" description="It may have been removed." action={<Button asChild variant="outline"><Link to="/projects" search={{}}>Back to projects</Link></Button>} />;
+  }
+  return <div className="space-y-10">
+    <div><p className="text-sm text-muted-foreground">Workspace / Projects & Keys</p><h2 className="mt-2 text-2xl font-semibold">Projects & Keys</h2></div>
+    <ProjectsGrid />
+    <KeysTable />
+  </div>;
+}
