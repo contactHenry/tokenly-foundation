@@ -1,6 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as ChartTooltip, XAxis, YAxis } from "recharts";
-import { ArrowDownRight, ArrowUpRight, ArrowUpDown, BellOff, ChevronDown, MoreHorizontal, X } from "lucide-react";
+import { Circle, CircleCheck, OctagonAlert, RotateCcw, TriangleAlert, ArrowDownRight, ArrowUpRight, ArrowUpDown, BellOff, ChevronDown, MoreHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -9,13 +9,31 @@ import { cn } from "@/lib/utils";
 import type { Severity } from "@/lib/mock";
 
 export function StatusBadge({ status, children }: { status: Severity | "neutral"; children: ReactNode }) {
-  return <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", status === "healthy" && "bg-success-muted text-success", status === "warning" && "bg-warning-muted text-warning", status === "critical" && "bg-critical-muted text-critical", status === "neutral" && "bg-muted text-muted-foreground")}><span className="size-1.5 rounded-full bg-current" />{children}</span>;
+  const Icon = status === "healthy" ? CircleCheck : status === "warning" ? TriangleAlert : status === "critical" ? OctagonAlert : Circle;
+  return <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", status === "healthy" && "bg-success-muted text-success", status === "warning" && "bg-warning-muted text-warning", status === "critical" && "bg-critical-muted text-critical", status === "neutral" && "bg-muted text-muted-foreground")}><Icon className={cn("size-3 shrink-0", status === "neutral" && "size-2 fill-current")} aria-hidden />{children}</span>;
+}
+/** Animates the numeric part of a formatted string (e.g. "$1,240.50", "42,000") from 0 on mount / change. */
+export function CountUp({ value, duration = 600 }: { value: string; duration?: number }) {
+  const match = value.match(/-?[\d,]*\.?\d+/);
+  const target = match ? Number(match[0].replace(/,/g, "")) : NaN;
+  const decimals = match?.[0].split(".")[1]?.length ?? 0;
+  const [shown, setShown] = useState(value);
+  useEffect(() => {
+    if (!match || !Number.isFinite(target) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setShown(value); return; }
+    let raf = 0; const start = performance.now();
+    const tick = (now: number) => { const t = Math.min(1, (now - start) / duration), eased = 1 - Math.pow(1 - t, 3); const n = (target * eased).toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); setShown(value.replace(match[0], n)); if (t < 1) raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick); return () => cancelAnimationFrame(raf);
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+  return <span aria-label={value}><span aria-hidden>{shown}</span></span>;
+}
+export function ErrorState({ title = "Couldn't load this data", description = "Something went wrong. Your data is safe — try again.", onRetry }: { title?: string; description?: string; onRetry: () => void }) {
+  return <div role="alert" className="flex min-h-52 flex-col items-center justify-center rounded-xl border border-critical/30 bg-card px-6 py-8 text-center"><div className="mb-4 grid size-10 place-items-center rounded-lg bg-critical-muted text-critical"><OctagonAlert className="size-5" aria-hidden /></div><h3 className="text-sm font-semibold">{title}</h3><p className="mt-1 max-w-xs text-sm text-muted-foreground">{description}</p><Button variant="outline" className="mt-4" onClick={onRetry}><RotateCcw className="size-4" />Try again</Button></div>;
 }
 export function Sparkline({ data }: { data: number[] }) {
   return <div className="h-11 w-24 shrink-0" aria-hidden="true"><ResponsiveContainer width="100%" height="100%"><AreaChart data={data.map((value, index) => ({ index, value }))}><Area type="monotone" dataKey="value" stroke="var(--chart-1)" fill="var(--accent)" strokeWidth={2} isAnimationActive={false} /></AreaChart></ResponsiveContainer></div>;
 }
 export function StatCard({ label, value, delta, sparkline, status, detail }: { label: string; value: string; delta?: number; sparkline?: number[]; status?: Severity; detail?: string }) {
-  return <div className="rounded-xl border bg-card p-5 min-h-40 flex flex-col justify-between"><div className="flex items-center justify-between gap-3"><span className="text-sm font-medium text-muted-foreground">{label}</span>{status && <StatusBadge status={status}>{status === "healthy" ? "Healthy" : status === "warning" ? "Attention" : "Critical"}</StatusBadge>}</div><div className="flex items-end justify-between gap-3"><div className="min-w-0"><div className="text-2xl font-semibold leading-tight sm:text-[28px]">{value}</div><div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">{delta !== undefined && <span className={cn("inline-flex items-center font-medium", delta >= 0 ? "text-success" : "text-critical")}>{delta >= 0 ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}{Math.abs(delta)}%</span>}{detail && <span>{detail}</span>}</div></div>{sparkline && <Sparkline data={sparkline} />}</div></div>;
+  return <div className="rounded-xl border bg-card p-5 min-h-40 flex flex-col justify-between"><div className="flex items-center justify-between gap-3"><span className="text-sm font-medium text-muted-foreground">{label}</span>{status && <StatusBadge status={status}>{status === "healthy" ? "Healthy" : status === "warning" ? "Attention" : "Critical"}</StatusBadge>}</div><div className="flex items-end justify-between gap-3"><div className="min-w-0"><div className="text-2xl font-semibold leading-tight sm:text-[28px]"><CountUp value={value} /></div><div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">{delta !== undefined && <span className={cn("inline-flex items-center font-medium", delta >= 0 ? "text-success" : "text-critical")}>{delta >= 0 ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}{Math.abs(delta)}%</span>}{detail && <span>{detail}</span>}</div></div>{sparkline && <Sparkline data={sparkline} />}</div></div>;
 }
 export function ThresholdProgress({ value, warning = 75, critical = 90, label }: { value: number; warning?: number; critical?: number; label?: string }) {
   const state: Severity = value >= critical ? "critical" : value >= warning ? "warning" : "healthy";
@@ -25,7 +43,12 @@ export type Column<T> = { key: string; label: string; render: (row: T) => ReactN
 export function DataTable<T>({ rows, columns, onRowClick }: { rows: T[]; columns: Column<T>[]; onRowClick?: (row: T) => void }) {
   const [sort, setSort] = useState<{ key: string; direction: 1 | -1 } | null>(null);
   const sorted = [...rows].sort((a, b) => { const column = columns.find(c => c.key === sort?.key); if (!column?.sortValue || !sort) return 0; const first = column.sortValue(a), second = column.sortValue(b); return (typeof first === "number" && typeof second === "number" ? first - second : String(first).localeCompare(String(second))) * sort.direction; });
-  return <div className="overflow-x-auto rounded-xl border bg-card"><table className="w-full min-w-[620px] text-left text-sm"><thead className="sticky top-0 z-10 bg-muted/70 text-xs text-muted-foreground"><tr>{columns.map(column => <th scope="col" key={column.key} className={cn("px-5 py-3.5 font-medium", column.className)}>{column.sortValue ? <Button variant="ghost" size="sm" className="-ml-2 h-7 px-2 text-xs text-muted-foreground" onClick={() => setSort(current => ({ key: column.key, direction: current?.key === column.key && current.direction === 1 ? -1 : 1 }))}>{column.label}<ArrowUpDown className="size-3" /></Button> : column.label}</th>)}</tr></thead><tbody>{sorted.map((row, index) => <tr key={index} tabIndex={onRowClick ? 0 : undefined} onKeyDown={event => { if (onRowClick && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); onRowClick(row); } }} onClick={() => onRowClick?.(row)} className={cn("border-t", onRowClick && "cursor-pointer hover:bg-muted/60 focus-visible:outline-2 focus-visible:outline-primary")}>{columns.map(column => <td key={column.key} className={cn("px-5 py-4", column.className)}>{column.render(row)}</td>)}</tr>)}</tbody></table></div>;
+  const activate = (row: T) => (event: React.KeyboardEvent) => { if (onRowClick && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); onRowClick(row); } };
+  const rowCls = cn("transition-colors duration-150 hover:bg-muted/50", onRowClick && "cursor-pointer focus-visible:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring");
+  return <>
+    <div className="hidden overflow-x-auto rounded-xl border bg-card md:block"><table className="w-full text-left text-sm"><thead className="sticky top-0 z-10 bg-muted/70 text-xs text-muted-foreground backdrop-blur-sm"><tr>{columns.map(column => <th scope="col" key={column.key} aria-sort={sort?.key === column.key ? (sort.direction === 1 ? "ascending" : "descending") : undefined} className={cn("px-5 py-3 font-medium", column.className)}>{column.sortValue ? <Button variant="ghost" size="sm" className="-ml-2 h-7 px-2 text-xs text-muted-foreground" onClick={() => setSort(current => ({ key: column.key, direction: current?.key === column.key && current.direction === 1 ? -1 : 1 }))}>{column.label}<ArrowUpDown className="size-3" aria-hidden /></Button> : column.label}</th>)}</tr></thead><tbody>{sorted.map((row, index) => <tr key={index} tabIndex={onRowClick ? 0 : undefined} onKeyDown={activate(row)} onClick={() => onRowClick?.(row)} className={cn("border-t", rowCls)}>{columns.map(column => <td key={column.key} className={cn("px-5 py-3.5", column.className)}>{column.render(row)}</td>)}</tr>)}</tbody></table></div>
+    <ul className="space-y-2 md:hidden">{sorted.map((row, index) => { const [first, ...rest] = columns; return <li key={index} tabIndex={onRowClick ? 0 : undefined} onKeyDown={activate(row)} onClick={() => onRowClick?.(row)} className={cn("rounded-xl border bg-card p-4 text-sm", rowCls)}>{first && <div className="mb-2 font-medium">{first.render(row)}</div>}<dl className="grid grid-cols-2 gap-x-4 gap-y-2">{rest.map(column => <div key={column.key} className={cn("min-w-0", !column.label && "col-span-2 flex justify-end")}>{column.label && <dt className="text-xs text-muted-foreground">{column.label}</dt>}<dd className="min-w-0 truncate">{column.render(row)}</dd></div>)}</dl></li>; })}</ul>
+  </>;
 }
 export function FilterBar({ options, selected, onChange }: { options: string[]; selected: string; onChange: (value: string) => void }) {
   return <div className="flex flex-wrap items-center gap-2" aria-label="Filters">{options.map(option => <Button key={option} variant={selected === option ? "secondary" : "outline"} size="sm" className={cn("rounded-full shadow-none", selected === option && "border border-primary/20 text-primary")} onClick={() => onChange(option)}>{option}</Button>)}</div>;

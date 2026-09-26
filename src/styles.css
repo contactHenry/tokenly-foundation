@@ -42,4 +42,7 @@
   html { font-family: var(--font-sans); }
   body { background: var(--color-background); color: var(--color-foreground); font-variant-numeric: tabular-nums; }
   button { cursor: pointer; }
+  a, button, [role="tab"], [role="menuitem"], input, select, textarea { transition-property: color, background-color, border-color, box-shadow, opacity; transition-duration: 150ms; transition-timing-function: ease-out; }
+  :focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; } }
 }
