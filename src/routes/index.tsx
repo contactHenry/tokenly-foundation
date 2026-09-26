@@ -1,24 +1,24 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, ArrowUpRight, Coins, KeyRound, Layers3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ChartCard, StatCard, StatusBadge, ThresholdProgress } from "@/components/tokenly/primitives";
+import { useDateRange } from "@/components/tokenly/app-shell";
+import { alerts, budgets, creditAccount, dailyUsage, models, projects, usageEvents } from "@/lib/mock";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({ meta: [{ title: "Overview · Tokenly" }, { name: "description", content: "A clear view of AI token usage, spending, credits and budgets across your workspace." }, { property: "og:title", content: "Overview · Tokenly" }, { property: "og:description", content: "Track AI token usage, spending, credits and budgets in one calm workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  component: Overview,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+function Overview() {
+  const range = useDateRange();
+  const days = dailyUsage.filter(day => day.date >= range.from && day.date <= range.to);
+  const events = usageEvents.filter(event => event.date >= range.from && event.date <= range.to);
+  const tokens = events.reduce((sum, event) => sum + event.inputTokens + event.outputTokens, 0);
+  const cost = events.reduce((sum, event) => sum + event.cost, 0);
+  const spark = days.map(day => day.inputTokens + day.outputTokens);
+  const modelCosts = models.map(model => ({ ...model, cost: events.filter(event => event.modelId === model.id).reduce((sum, event) => sum + event.cost, 0) })).sort((a, b) => b.cost - a.cost);
+  return <div className="space-y-7"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm text-muted-foreground">Workspace overview <span className="mx-1">/</span> {range.label === "Custom" ? "Custom range" : range.label === "Today" ? "Today" : `Last ${range.label}`}</p><h2 className="mt-2 text-2xl font-semibold sm:text-[28px]">Good morning, Henry <span aria-hidden="true">✳</span></h2><p className="mt-2 text-sm text-muted-foreground">Here’s what’s happening across your AI workspace.</p></div><div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-xs text-muted-foreground"><span className="size-2 rounded-full bg-success" />All systems operational</div></div>
+  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><StatCard label="Total tokens" value={new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(tokens)} delta={12.8} detail="vs. previous period" sparkline={spark} /><StatCard label="Total spend" value={cost.toLocaleString("en-US", { style: "currency", currency: "USD" })} delta={8.2} detail="vs. previous period" sparkline={days.map(day => day.cost)} /><StatCard label="Credit balance" value={creditAccount.balance.toLocaleString()} status="healthy" detail="credits available" /><StatCard label="Active projects" value={`${projects.length}`} detail="across your workspace" status="healthy" /></div>
+  <div className="grid gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(300px,1fr)]"><ChartCard title="Token usage" subtitle="Input and output tokens over time" data={days} timeframe={range.label === "Custom" ? "Custom" : range.label} /><div className="rounded-xl border bg-card p-5 sm:p-6"><div className="flex items-center justify-between"><div><h3 className="font-semibold">Spend by model</h3><p className="mt-1 text-sm text-muted-foreground">Where your credits are going</p></div><Layers3 className="size-4 text-muted-foreground" /></div><div className="mt-6 space-y-5">{modelCosts.slice(0, 5).map((model, index) => <div key={model.id}><div className="mb-2 flex justify-between gap-2 text-sm"><span className="flex min-w-0 items-center gap-2 truncate"><span className={`size-2 shrink-0 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][index]}`} />{model.name}</span><span className="font-medium">${model.cost.toFixed(2)}</span></div><div className="h-1.5 rounded-full bg-muted"><div className={`h-full rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][index]}`} style={{ width: `${Math.max(2, modelCosts[0].cost ? model.cost / modelCosts[0].cost * 100 : 0)}%` }} /></div></div>)}</div></div></div>
+  <div className="grid gap-5 xl:grid-cols-[minmax(0,1.8fr)_minmax(300px,1fr)]"><div className="rounded-xl border bg-card p-5 sm:p-6"><div className="flex items-center justify-between"><div><h3 className="font-semibold">Project budgets</h3><p className="mt-1 text-sm text-muted-foreground">Monthly spending at a glance</p></div><KeyRound className="size-4 text-muted-foreground" /></div><div className="mt-6 grid gap-x-8 gap-y-6 md:grid-cols-2">{budgets.map(budget => { const project = projects.find(item => item.id === budget.projectId); const percent = budget.spent / budget.monthlyLimit * 100; return <div key={budget.projectId}><div className="mb-2 flex items-center justify-between gap-2"><span className="text-sm font-medium">{project?.name}</span><span className="text-xs text-muted-foreground">${budget.spent} / ${budget.monthlyLimit}</span></div><ThresholdProgress value={percent} warning={budget.warningThreshold} critical={budget.criticalThreshold} /></div>; })}</div></div><div className="rounded-xl border bg-card p-5 sm:p-6"><div className="flex items-center justify-between"><div><h3 className="font-semibold">Recent alerts</h3><p className="mt-1 text-sm text-muted-foreground">Updates that matter</p></div><StatusBadge status="warning">{alerts.filter(a => !a.read).length} new</StatusBadge></div><div className="mt-5 divide-y">{alerts.slice(0, 3).map(alert => <div className="flex gap-3 py-3 first:pt-0" key={alert.id}><span className={`mt-1.5 size-2 shrink-0 rounded-full ${alert.severity === "warning" ? "bg-warning" : alert.severity === "critical" ? "bg-critical" : "bg-success"}`} /><div className="min-w-0"><p className="text-sm font-medium">{alert.title}</p><p className="mt-1 text-xs text-muted-foreground">{alert.description}</p></div></div>)}</div><Button asChild variant="ghost" size="sm" className="mt-2 -ml-2 text-primary"><Link to="/limits">View all alerts <ArrowRight /></Link></Button></div></div><div className="flex flex-wrap items-center gap-4 border-t pt-5 text-xs text-muted-foreground"><span className="flex items-center gap-2"><Coins className="size-4" />Your workspace is on the Growth plan</span><Link to="/design-system" className="ml-auto inline-flex items-center gap-1 hover:text-primary">Explore design system <ArrowUpRight className="size-3" /></Link></div></div>;
 }

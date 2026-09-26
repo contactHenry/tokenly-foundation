@@ -1,0 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { EmptyState } from "@/components/tokenly/primitives";
+export const Route = createFileRoute("/limits")({ head: () => ({ meta: [{ title: "Limits & Alerts · Tokenly" }, { name: "description", content: "Monitor budgets, limits and alerts." }, { property: "og:title", content: "Limits & Alerts · Tokenly" }, { property: "og:description", content: "Monitor budgets, limits and alerts." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
+function Page() { return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Limits & Alerts</p><h2 className="mt-2 text-2xl font-semibold">Limits & Alerts</h2></div><EmptyState title="Limits & Alerts is coming soon" description="This space is ready for the next chapter of your workspace." /></div>; }
