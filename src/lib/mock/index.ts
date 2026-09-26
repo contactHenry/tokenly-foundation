@@ -5,7 +5,7 @@ export interface Project { id: string; name: string; description: string; status
 export interface ApiKey { id: string; name: string; prefix: string; projectId: string; createdAt: string; lastUsedAt: string; status: "active" | "revoked"; }
 export interface Model { id: string; name: string; provider: string; inputPerMillion: number; outputPerMillion: number; }
 export interface TeamMember { id: string; name: string; email: string; role: MemberRole; initials: string; }
-export interface UsageEvent { id: string; date: string; inputTokens: number; outputTokens: number; cost: number; modelId: string; projectId: string; keyId: string; userId: string; }
+export interface UsageEvent { id: string; date: string; inputTokens: number; outputTokens: number; cost: number; modelId: string; projectId: string; keyId: string; userId: string; endpoint: string; }
 export interface CreditTransaction { id: string; date: string; amount: number; method: string; }
 export interface CreditAccount { balance: number; usdPerCredit: number; topUps: CreditTransaction[]; }
 export interface Budget { projectId: string; monthlyLimit: number; spent: number; warningThreshold: number; criticalThreshold: number; }
@@ -81,7 +81,7 @@ export const usageEvents: UsageEvent[] = Array.from({ length: 90 }, (_, day) => 
     const rhythm = 1 + .16 * Math.sin(day * .47 + projectIndex) + .08 * Math.cos(day * .91 + slot);
     const inputTokens = Math.round((1200000 + projectIndex * -199200 + slot * 292800) * (weekend ? .42 : 1) * rhythm * spike);
     const outputTokens = Math.round(inputTokens * (model.id === "text-embedding-3" ? 0 : .39 + slot * .07));
-    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)]?.id ?? "", userId: teamMembers[(day + slot + projectIndex) % teamMembers.length]?.id ?? "" };
+    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)]?.id ?? "", userId: teamMembers[(day + slot + projectIndex) % teamMembers.length]?.id ?? "", endpoint: ["/v1/chat/completions", "/v1/responses", "/v1/embeddings"][model.id === "text-embedding-3" ? 2 : slot % 2] ?? "/v1/responses" };
   }));
 }).flat();
 export const dailyUsage = Array.from({ length: 90 }, (_, index) => {
