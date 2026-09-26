@@ -61,7 +61,7 @@ export function projectHit(b: Pick<BudgetRule, "scope" | "targetId" | "period" |
   const days = Math.ceil((b.amount - spent) / burn);
   // Weekly/daily windows roll, so project on a full-period basis.
   const date = shift(LAST_DAY, days);
-  return { reached: false as const, date, withinPeriod: b.period === "monthly" ? date <= periodEnd("monthly") : days <= 0 };
+  return { reached: false as const, date, withinPeriod: date <= (b.period === "monthly" ? periodEnd("monthly") : shift(LAST_DAY, b.period === "weekly" ? 6 : 0)) };
 }
 export function scopeName(scope: Scope, id: string, extraProjects: { id: string; name: string }[] = []) {
   if (scope === "org") return "Acme Studio (organization)";

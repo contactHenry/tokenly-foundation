@@ -13,3 +13,4 @@
 - Tokenly's UI palette is centralized in src/styles.css semantic tokens; this keeps light and dark modes coherent.
 - Usage analysis derives grouped figures from the deterministic mock events, keeps shareable filters in the URL, and stores named views on the current device; this provides a consistent no-login preview without creating account data.
 - Projects & Keys changes (new projects, keys, revocations) are saved on the current device only; why: the preview has no accounts yet.
+- Limits & Alerts budgets, rule settings and alert statuses are saved on the current device only; why: the preview has no accounts yet.
