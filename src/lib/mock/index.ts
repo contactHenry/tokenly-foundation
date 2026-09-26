@@ -56,7 +56,7 @@ export const alerts: UsageAlert[] = [
   { id: "alt_04", title: "Monthly budget reset", description: "All project budgets renewed", severity: "healthy", date: "2026-09-01", read: true },
   { id: "alt_05", title: "Low balance resolved", description: "Credits were topped up successfully", severity: "critical", date: "2026-08-29", read: true },
 ];
-export const invoices: Invoice[] = Array.from({ length: 6 }, (_, i) => ({ id: `inv_${i + 1}`, number: `INV-2026-${String(9 - i).padStart(3, "0")}`, date: `2026-${String(9 - i).padStart(2, "0")}-01`, amount: [1487, 1324, 1198, 1056, 978, 842][i], status: i === 0 ? "pending" : "paid" }));
+export const invoices: Invoice[] = Array.from({ length: 6 }, (_, i) => ({ id: `inv_${i + 1}`, number: `INV-2026-${String(9 - i).padStart(3, "0")}`, date: `2026-${String(9 - i).padStart(2, "0")}-01`, amount: [1487, 1324, 1198, 1056, 978, 842][i] ?? 0, status: i === 0 ? "pending" : "paid" }));
 
 // Stable 90-day fixture ending Sep 26, 2026. Weekends dip and Sep 18 has a deliberate spike.
 export const usageEvents: UsageEvent[] = Array.from({ length: 90 }, (_, day) => {
@@ -65,14 +65,15 @@ export const usageEvents: UsageEvent[] = Array.from({ length: 90 }, (_, day) => 
   const weekend = date.getUTCDay() === 0 || date.getUTCDay() === 6;
   const spike = dateString === "2026-09-18" ? 2.8 : 1;
   return projects.flatMap((project, projectIndex) => Array.from({ length: 3 }, (_, slot) => {
-    const model = models[(day + projectIndex * 2 + slot) % models.length];
+    const model = models[(day + projectIndex * 2 + slot) % models.length] ?? models[0];
+    if (!model) return [];
     const rhythm = 1 + .16 * Math.sin(day * .47 + projectIndex) + .08 * Math.cos(day * .91 + slot);
-    const inputTokens = Math.round((50000 + projectIndex * -8300 + slot * 12200) * (weekend ? .42 : 1) * rhythm * spike);
+    const inputTokens = Math.round((1200000 + projectIndex * -199200 + slot * 292800) * (weekend ? .42 : 1) * rhythm * spike);
     const outputTokens = Math.round(inputTokens * (model.id === "text-embedding-3" ? 0 : .39 + slot * .07));
-    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)].id, userId: teamMembers[(day + slot + projectIndex) % teamMembers.length].id };
+    return { id: `evt_${day}_${projectIndex}_${slot}`, date: dateString, inputTokens, outputTokens, cost: Number(((inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1000000).toFixed(4)), modelId: model.id, projectId: project.id, keyId: apiKeys[projectIndex * 2 + (slot % 2)]?.id ?? "", userId: teamMembers[(day + slot + projectIndex) % teamMembers.length]?.id ?? "" };
   }));
 }).flat();
 export const dailyUsage = Array.from({ length: 90 }, (_, index) => {
   const events = usageEvents.slice(index * 12, index * 12 + 12);
-  return { date: events[0].date, inputTokens: events.reduce((sum, event) => sum + event.inputTokens, 0), outputTokens: events.reduce((sum, event) => sum + event.outputTokens, 0), cost: Number(events.reduce((sum, event) => sum + event.cost, 0).toFixed(2)) };
+  return { date: events[0]?.date ?? "", inputTokens: events.reduce((sum, event) => sum + event.inputTokens, 0), outputTokens: events.reduce((sum, event) => sum + event.outputTokens, 0), cost: Number(events.reduce((sum, event) => sum + event.cost, 0).toFixed(2)) };
 });
