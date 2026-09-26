@@ -1,0 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { EmptyState } from "@/components/tokenly/primitives";
+export const Route = createFileRoute("/projects")({ head: () => ({ meta: [{ title: "Projects & Keys · Tokenly" }, { name: "description", content: "Manage workspace projects and API keys." }, { property: "og:title", content: "Projects & Keys · Tokenly" }, { property: "og:description", content: "Manage workspace projects and API keys." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
+function Page() { return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Projects & Keys</p><h2 className="mt-2 text-2xl font-semibold">Projects & Keys</h2></div><EmptyState title="Projects & Keys is coming soon" description="This space is ready for the next chapter of your workspace." /></div>; }
