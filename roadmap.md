@@ -5,3 +5,4 @@
 - [x] Verify range changes, actions, loading state, chart, and mobile presentation.
 - [x] Build Usage filters, saved views, summary, chart, grouped table, drawer, and CSV export.
 - [x] Verify shareable URL filters and Usage drill-down end-to-end.
+- [x] Build Projects & Keys: project grid, detail tabs, keys table, create/revoke/rotate flows.
