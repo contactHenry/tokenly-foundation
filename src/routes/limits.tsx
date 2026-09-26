@@ -1,5 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { budgets, projects } from "@/lib/mock";
-import { EmptyState, ThresholdProgress } from "@/components/tokenly/primitives";
-export const Route = createFileRoute("/limits")({ validateSearch: (search: Record<string, unknown>) => ({ project: typeof search["project"] === "string" ? search["project"] : undefined, action: typeof search["action"] === "string" ? search["action"] : undefined }), head: () => ({ meta: [{ title: "Limits & Alerts · Tokenly" }, { name: "description", content: "Monitor budgets, limits and alerts." }, { property: "og:title", content: "Limits & Alerts · Tokenly" }, { property: "og:description", content: "Monitor budgets, limits and alerts." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
-function Page() { const search = Route.useSearch(); const project = projects.find(item => item.id === search.project); const budget = budgets.find(item => item.projectId === search.project); return <div className="space-y-8"><div><p className="text-sm text-muted-foreground">Workspace / Limits & Alerts</p><h2 className="mt-2 text-2xl font-semibold">Limits & Alerts</h2></div>{project && budget && <div className="rounded-xl border bg-card p-5"><p className="text-xs text-muted-foreground">{search["action"] === "adjust-limit" ? "Limit review" : "Project budget"}</p><p className="mt-2 font-semibold">{project.name}</p><p className="mt-1 text-sm text-muted-foreground">${budget.spent} spent of ${budget.monthlyLimit} monthly limit</p><div className="mt-4 max-w-md"><ThresholdProgress value={budget.spent / budget.monthlyLimit * 100} warning={budget.warningThreshold} critical={budget.criticalThreshold} /></div><p className="mt-5 text-xs text-muted-foreground">Limit editing is not available in this preview.</p></div>}<EmptyState title="Limits & Alerts is coming soon" description="The full limits and alerts view is not available yet." /></div>; }
+import { AlertHistorySection, AlertRulesSection, BudgetsSection } from "@/components/tokenly/limits-view";
+
+export const Route = createFileRoute("/limits")({
+  validateSearch: (search: Record<string, unknown>) => ({ project: typeof search["project"] === "string" ? search["project"] : undefined, action: typeof search["action"] === "string" ? search["action"] : undefined }),
+  head: () => ({ meta: [{ title: "Limits & Alerts · Tokenly" }, { name: "description", content: "Set budgets, spending limits and alert rules to prevent AI overspend." }, { property: "og:title", content: "Limits & Alerts · Tokenly" }, { property: "og:description", content: "Set budgets, spending limits and alert rules to prevent AI overspend." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  component: Page,
+});
+
+function Page() {
+  const search = Route.useSearch();
+  return <div className="space-y-10">
+    <div><p className="text-sm text-muted-foreground">Workspace / Limits & Alerts</p><h2 className="mt-2 text-2xl font-semibold">Limits & Alerts</h2><p className="mt-1 text-sm text-muted-foreground">Catch overspend before it happens.</p></div>
+    <BudgetsSection {...(search.action === "adjust-limit" && search.project ? { focusProject: search.project } : {})} />
+    <AlertRulesSection />
+    <AlertHistorySection />
+  </div>;
+}
