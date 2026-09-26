@@ -6,3 +6,4 @@
 - [x] Build Usage filters, saved views, summary, chart, grouped table, drawer, and CSV export.
 - [x] Verify shareable URL filters and Usage drill-down end-to-end.
 - [x] Build Projects & Keys: project grid, detail tabs, keys table, create/revoke/rotate flows.
+- [x] Build Limits & Alerts: budgets, 5-step budget drawer with live projection, alert rules, alert history.
