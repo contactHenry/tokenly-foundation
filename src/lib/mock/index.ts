@@ -65,8 +65,7 @@ export const usageEvents: UsageEvent[] = Array.from({ length: 90 }, (_, day) => 
   const weekend = date.getUTCDay() === 0 || date.getUTCDay() === 6;
   const spike = dateString === "2026-09-18" ? 2.8 : 1;
   return projects.flatMap((project, projectIndex) => Array.from({ length: 3 }, (_, slot) => {
-    const model = models[(day + projectIndex * 2 + slot) % models.length] ?? models[0];
-    if (!model) return [];
+    const model = models[(day + projectIndex * 2 + slot) % models.length] ?? { id: "gpt-4o", inputPerMillion: 2.5, outputPerMillion: 10 };
     const rhythm = 1 + .16 * Math.sin(day * .47 + projectIndex) + .08 * Math.cos(day * .91 + slot);
     const inputTokens = Math.round((1200000 + projectIndex * -199200 + slot * 292800) * (weekend ? .42 : 1) * rhythm * spike);
     const outputTokens = Math.round(inputTokens * (model.id === "text-embedding-3" ? 0 : .39 + slot * .07));
