@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Tokenly uses a shared TanStack root shell with leaf routes and a typed deterministic mock layer; this keeps navigation consistent while feature pages remain placeholders.
+- Tokenly's UI palette is centralized in src/styles.css semantic tokens; this keeps light and dark modes coherent.
