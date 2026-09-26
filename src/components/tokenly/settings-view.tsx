@@ -21,7 +21,7 @@ function General() {
   const { general } = useWorkspace(); const { can } = useRole();
   const [form, setForm] = useState(general); useEffect(() => setForm(general), [general]);
   const dirty = JSON.stringify(form) !== JSON.stringify(general), locked = !can("manageWorkspace");
-  const save = () => { if (!form.name.trim()) return toast.error("Workspace name can't be empty"); workspaceActions.setGeneral({ ...form, name: form.name.trim() }); toast.success("Workspace settings saved"); };
+  const save = () => { if (!form.name.trim()) { toast.error("Workspace name can't be empty"); return; } workspaceActions.setGeneral({ ...form, name: form.name.trim() }); toast.success("Workspace settings saved"); };
   return <div className={`${card} max-w-2xl space-y-5`}>
     <div className="space-y-1.5"><Label htmlFor="ws-name">Workspace name</Label><Input id="ws-name" value={form.name} maxLength={60} disabled={locked} onChange={e => setForm({ ...form, name: e.target.value })} /></div>
     <div className="grid gap-4 sm:grid-cols-2">

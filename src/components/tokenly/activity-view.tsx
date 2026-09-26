@@ -14,13 +14,13 @@ const actorFor: Record<string, string | null> = { act_01: null, act_02: "usr_02"
 const hours = ["14:32", "10:05", "16:48", "09:21", "11:37", "08:02", "19:15", "08:10", "09:44"];
 const actionFor: Record<ActivityType, string> = { "top-up": "added credits", limit: "updated a budget", key: "created an API key", alert: "fired an alert" };
 type ActivityType = (typeof activityEvents)[number]["type"];
-export const auditLog: Audit[] = [
+export const auditLog: Audit[] = ([
   ...activityEvents.map((e, i) => ({ id: e.id, at: `${e.date}T${hours[i] ?? "12:00"}:00Z`, type: e.type, actorId: actorFor[e.id] ?? null, action: actionFor[e.type], target: e.title.replace(/ (created|updated|warning|detected|added|resolved)$/i, ""), detail: e.detail, projectId: e.projectId, ip: actorFor[e.id] ? "102.89.34.12" : "" })),
   { id: "aud_10", at: "2026-09-24T13:12:00Z", type: "key", actorId: "usr_03", action: "rotated an API key", target: "Production server key", detail: "Previous secret stopped working immediately", projectId: "prj_01", ip: "41.58.12.201" },
   { id: "aud_11", at: "2026-09-20T10:30:00Z", type: "member", actorId: "usr_01", action: "invited a member", target: "noah@acmestudio.example", detail: "Role: Finance viewer", ip: "102.89.34.12" },
   { id: "aud_12", at: "2026-09-15T17:02:00Z", type: "settings", actorId: "usr_02", action: "changed workspace settings", target: "Timezone", detail: "UTC → Africa/Lagos", ip: "197.210.64.3" },
   { id: "aud_13", at: "2026-09-08T12:45:00Z", type: "key", actorId: "usr_03", action: "revoked an API key", target: "Old staging key", detail: "Key made 0 requests in the prior 7 days", projectId: "prj_04", ip: "41.58.12.201" },
-].sort((a, b) => b.at.localeCompare(a.at));
+] as Audit[]).sort((a, b) => b.at.localeCompare(a.at));
 
 const typeMeta: Record<AuditType, { label: string; icon: typeof KeyRound }> = { "top-up": { label: "Credits", icon: Wallet }, limit: { label: "Budgets", icon: SlidersHorizontal }, key: { label: "API keys", icon: KeyRound }, alert: { label: "Alerts", icon: TriangleAlert }, member: { label: "Team", icon: UserPlus }, settings: { label: "Settings", icon: Settings2 } };
 const member = (id: string | null) => teamMembers.find(m => m.id === id);
