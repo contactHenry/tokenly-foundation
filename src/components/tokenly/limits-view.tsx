@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Bell, Check, CreditCard, KeyRound, Pencil, Plus, TrendingUp, Trash2, Wallet } from "lucide-react";
@@ -66,7 +67,7 @@ function BudgetDrawer({ budget, onClose }: { budget: BudgetRule | "new" | null; 
     if (!draft.recipients.length) return "Choose at least one person to notify.";
     return "";
   };
-  const save = () => { const e = valid(); if (e) return setError(e); limitActions.saveBudget({ ...draft, id: draft.id || `bud_${Date.now().toString(36)}` }); onClose(); };
+  const save = () => { const e = valid(); if (e) return setError(e); limitActions.saveBudget({ ...draft, id: draft.id || `bud_${Date.now().toString(36)}` }); toast.success(draft.id ? "Budget updated" : "Budget created"); onClose(); };
   const hit = projectHit(draft), spent = budgetSpend(draft);
   const targets = draft.scope === "project" ? projects.map(p => ({ id: p.id, name: p.name })) : draft.scope === "key" ? apiKeys.map(k => ({ id: k.id, name: k.name })) : [];
   const preview = !hit ? "There's no recent usage in this scope, so there's nothing to project yet." : hit.reached ? `You've already spent ${money(spent)} — this limit is reached now.` : `At your current burn rate, you'll hit this limit on ${fmtDate(hit.date)}.`;
@@ -126,7 +127,7 @@ export function AlertHistorySection() {
     { key: "sev", label: "Severity", sortValue: r => r.severity, render: r => <StatusBadge status={r.severity}>{r.severity === "healthy" ? "Info" : r.severity === "warning" ? "Warning" : "Critical"}</StatusBadge> },
     { key: "status", label: "Status", sortValue: r => statusOf(r.id), render: r => <StatusBadge status={tone[statusOf(r.id)] === "healthy" ? "neutral" : tone[statusOf(r.id)] as "critical" | "warning"}>{statusOf(r.id)[0]?.toUpperCase() + statusOf(r.id).slice(1)}</StatusBadge> },
     { key: "source", label: "Source", render: r => r.source.to === "/projects" ? <Link className="text-primary hover:underline" to="/projects" search={"project" in r.source && r.source.project ? { project: r.source.project } : {}}>{r.source.label}</Link> : r.source.to === "/usage" ? <Link className="text-primary hover:underline" to="/usage" search={{ model: undefined, project: undefined, key: "key_1", user: undefined, token: undefined, from: "2026-09-12", to: "2026-09-24", action: "inspect-spike" }}>{r.source.label}</Link> : <Link className="text-primary hover:underline" to="/billing">{r.source.label}</Link> },
-    { key: "act", label: "", render: r => statusOf(r.id) === "open" ? <Button size="sm" variant="outline" onClick={() => limitActions.setStatus(r.id, "acknowledged")}>Acknowledge</Button> : statusOf(r.id) === "acknowledged" ? <Button size="sm" variant="ghost" onClick={() => limitActions.setStatus(r.id, "resolved")}>Resolve</Button> : null },
+    { key: "act", label: "", render: r => statusOf(r.id) === "open" ? <Button size="sm" variant="outline" onClick={() => { limitActions.setStatus(r.id, "acknowledged"); toast.success("Alert acknowledged"); }}>Acknowledge</Button> : statusOf(r.id) === "acknowledged" ? <Button size="sm" variant="ghost" onClick={() => limitActions.setStatus(r.id, "resolved")}>Resolve</Button> : null },
   ];
   return <section className="space-y-4"><div><h3 className="font-semibold">Alert history</h3><p className="text-sm text-muted-foreground">{alertHistory.filter(a => statusOf(a.id) === "open").length} open</p></div><DataTable rows={alertHistory} columns={columns} /></section>;
 }

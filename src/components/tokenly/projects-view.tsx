@@ -53,7 +53,7 @@ function NewProjectDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
     const n = name.trim(), b = Number(budget);
     if (!n || n.length > 60) return setError("Enter a project name up to 60 characters.");
     if (!Number.isFinite(b) || b <= 0 || b > 1000000) return setError("Enter a monthly budget greater than 0.");
-    actions.createProject({ name: n, description: description.trim().slice(0, 140), budget: b, ownerId: owner });
+    actions.createProject({ name: n, description: description.trim().slice(0, 140), budget: b, ownerId: owner }); toast.success(`Project "${n}" created`);
     setName(""); setDescription(""); setBudget("500"); setError(""); onOpenChange(false);
   };
   return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><DialogHeader><DialogTitle>New project</DialogTitle><DialogDescription>Projects group API keys, budgets, and members.</DialogDescription></DialogHeader>
@@ -114,7 +114,7 @@ function CreateKeyDialog({ open, onOpenChange, defaultProject }: { open: boolean
     if (!n || n.length > 60) return setError("Enter a key name up to 60 characters.");
     if (!project) return setError("Choose a project.");
     if (c !== undefined && (!Number.isFinite(c) || c <= 0)) return setError("Spending cap must be greater than 0.");
-    setSecret(actions.createKey({ name: n, projectId: project, allowedModels: allowed, ...(c ? { spendCap: c } : {}) }));
+    setSecret(actions.createKey({ name: n, projectId: project, allowedModels: allowed, ...(c ? { spendCap: c } : {}) })); toast.success(`Key "${n}" created`);
   };
   return <Dialog open={open} onOpenChange={v => { if (!v) close(); }}><DialogContent>{secret ? <SecretReveal secret={secret} title="Your new API key" onDone={close} /> : <>
     <DialogHeader><DialogTitle>Create API key</DialogTitle><DialogDescription>Keys inherit the project's budget and alerts.</DialogDescription></DialogHeader>
