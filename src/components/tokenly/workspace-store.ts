@@ -33,6 +33,7 @@ type State = {
   slack: { connected: boolean; channel: string };
   webhook: { url: string; enabled: boolean; secret: string };
   readNotifications: string[];
+  onboarding: { projects: number; keys: number; budgets: number } | null;
 };
 export const NOTIFICATION_TYPES = [
   { id: "budget", label: "Budget thresholds" }, { id: "spike", label: "Usage spikes" }, { id: "balance", label: "Low balance" }, { id: "keys", label: "New API keys" }, { id: "billing", label: "Invoices & payments" },
@@ -47,6 +48,7 @@ const seed = (): State => ({
   slack: { connected: false, channel: "#ai-spend" },
   webhook: { url: "", enabled: false, secret: "whsec_demo_7f3a" },
   readNotifications: [],
+  onboarding: null,
 });
 const KEY = "tokenly-workspace-v1";
 let state = seed(); let loaded = false; const server = seed();
@@ -73,5 +75,6 @@ export const workspaceActions = {
   setPref(type: string, channel: Channel, on: boolean) { set({ ...state, prefs: { ...state.prefs, [type]: { ...(state.prefs[type] ?? { inApp: true, email: true, slack: false }), [channel]: on } } }); },
   setSlack(slack: State["slack"]) { set({ ...state, slack }); },
   setWebhook(webhook: State["webhook"]) { set({ ...state, webhook }); },
+  startOnboarding(base: { projects: number; keys: number; budgets: number } | null) { set({ ...state, onboarding: base }); },
   markRead(ids: string[]) { set({ ...state, readNotifications: [...new Set([...state.readNotifications, ...ids])] }); },
 };
