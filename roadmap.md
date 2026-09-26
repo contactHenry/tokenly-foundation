@@ -12,3 +12,9 @@
 - [ ] Build notification center popover (All/Unread/Alerts, mark all read, source links).
 - [ ] Build Settings tabs: General, Team (invite, roles matrix), Notifications, Integrations.
 - [ ] Role-aware UI: Finance viewer sees Billing/Usage, key management disabled with tooltips.
+- [ ] Polish: mobile (drawer nav, 2x2→1 stat cards, table→card lists <768px, readable chart axes).
+- [ ] Polish: loading / empty (with next action) / error (retry) states on every data view.
+- [ ] Polish: new-account onboarding checklist (Create project → API key → budget).
+- [ ] Polish: 150–200ms transitions, stat count-up, row hover, toasts for every action.
+- [ ] Polish: WCAG AA contrast, focus rings, keyboard tables/drawers, status icons + labels.
+- [ ] Polish: consistent spacing, $1,240.50 / 1.2M formatting, relative dates, button hierarchy.
