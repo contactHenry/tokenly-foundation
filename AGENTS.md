@@ -11,3 +11,4 @@
 
 - Tokenly uses a shared TanStack root shell with leaf routes and a typed deterministic mock layer; this keeps navigation consistent while feature pages remain placeholders.
 - Tokenly's UI palette is centralized in src/styles.css semantic tokens; this keeps light and dark modes coherent.
+- Usage analysis derives grouped figures from the deterministic mock events, keeps shareable filters in the URL, and stores named views on the current device; this provides a consistent no-login preview without creating account data.
