@@ -14,3 +14,5 @@
 - Usage analysis derives grouped figures from the deterministic mock events, keeps shareable filters in the URL, and stores named views on the current device; this provides a consistent no-login preview without creating account data.
 - Projects & Keys changes (new projects, keys, revocations) are saved on the current device only; why: the preview has no accounts yet.
 - Limits & Alerts budgets, rule settings and alert statuses are saved on the current device only; why: the preview has no accounts yet.
+- Billing (balance, top-ups, auto-recharge, cards, invoice status) and workspace settings/team/role preview live in device-only stores (tokenly-billing-v1, tokenly-workspace-v1); why: no accounts or payment provider yet.
+- Permissions come from ROLE_PERMS in workspace-store; gate actions with <Gate perm> so denied actions render disabled with a tooltip; why: one source of truth for role-aware UI.

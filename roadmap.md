@@ -7,3 +7,14 @@
 - [x] Verify shareable URL filters and Usage drill-down end-to-end.
 - [x] Build Projects & Keys: project grid, detail tabs, keys table, create/revoke/rotate flows.
 - [x] Build Limits & Alerts: budgets, 5-step budget drawer with live projection, alert rules, alert history.
+- [x] Build Billing: balance, top-up modal, auto-recharge, plan & pricing, payment methods, invoices, ledger.
+- [x] Build Activity audit timeline with filters and detail drawer.
+- [x] Build notification center popover (All/Unread/Alerts, mark all read, source links).
+- [x] Build Settings tabs: General, Team (invite, roles matrix), Notifications, Integrations.
+- [x] Role-aware UI: Finance viewer sees Billing/Usage, key management disabled with tooltips.
+- [ ] Polish: mobile (drawer nav, 2x2→1 stat cards, table→card lists <768px, readable chart axes).
+- [ ] Polish: loading / empty (with next action) / error (retry) states on every data view.
+- [x] Polish: new-account onboarding checklist (Create project → API key → budget).
+- [x] Polish: 150–200ms transitions, stat count-up, row hover, toasts for every action.
+- [ ] Polish: WCAG AA contrast, focus rings, keyboard tables/drawers, status icons + labels.
+- [ ] Polish: consistent spacing, $1,240.50 / 1.2M formatting, relative dates, button hierarchy.
