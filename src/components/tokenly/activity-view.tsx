@@ -47,7 +47,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
       <span className="text-sm text-muted-foreground sm:ml-auto">{rows.length} event{rows.length === 1 ? "" : "s"}</span>
       {filtered && <Button variant="ghost" size="sm" onClick={clear}><X className="size-3.5" />Clear</Button>}
     </div>
-    {groups.length ? <div className="space-y-10">{groups.map(([day, items]) => <section key={day} aria-labelledby={`d-${day}`}>
+    {groups.length ? <div className="space-y-8">{groups.map(([day, items]) => <section key={day} aria-labelledby={`d-${day}`} className="border-b border-border pb-8 last:border-b-0 last:pb-0">
       <h3 id={`d-${day}`} className="mb-4 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{dayLabel(day)}</h3>
       <ol className="space-y-1">{items.map(a => { const m = member(a.actorId), I = typeMeta[a.type].icon; return <li key={a.id}><button type="button" onClick={() => setOpen(a)} className="flex w-full items-start justify-between gap-4 px-1 py-3 text-left transition-colors duration-150 hover:bg-muted/50 focus-visible:bg-muted focus-visible:outline-none">
         <span className="flex min-w-0 items-start gap-4">
