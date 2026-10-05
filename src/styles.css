@@ -46,3 +46,13 @@
   :focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; } }
 }
+
+/* Buttons and form fields use a 2px corner radius everywhere */
+@layer components {
+  button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]),
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    border-radius: 2px;
+  }
+}
