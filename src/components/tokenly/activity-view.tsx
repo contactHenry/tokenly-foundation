@@ -40,18 +40,24 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
   const clear = () => { setActor("all"); setType("all"); setProject("all"); };
   const sel = (label: string, value: string, set: (v: string) => void, opts: [string, string][]) => <Select value={value} onValueChange={set}><SelectTrigger className="h-9 w-full sm:w-44" aria-label={label}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">All {label.toLowerCase()}</SelectItem>{opts.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent></Select>;
   return <div className="space-y-6">
-    <div className="flex flex-col gap-2 rounded-xl border bg-card p-3 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
       {sel("Actors", actor, setActor, [...teamMembers.map(m => [m.id, m.name] as [string, string]), ["system", "Tokenly (system)"]])}
       {sel("Event types", type, setType, Object.entries(typeMeta).map(([k, v]) => [k, v.label] as [string, string]))}
       {sel("Projects", project, setProject, projects.map(p => [p.id, p.name] as [string, string]))}
       <span className="text-sm text-muted-foreground sm:ml-auto">{rows.length} event{rows.length === 1 ? "" : "s"}</span>
       {filtered && <Button variant="ghost" size="sm" onClick={clear}><X className="size-3.5" />Clear</Button>}
     </div>
-    {groups.length ? groups.map(([day, items]) => <section key={day} aria-labelledby={`d-${day}`}>
-      <h3 id={`d-${day}`} className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{dayLabel(day)}</h3>
-      <ol className="divide-y rounded-xl border bg-card">{items.map(a => { const m = member(a.actorId), I = typeMeta[a.type].icon; return <li key={a.id}><button type="button" onClick={() => setOpen(a)} className="flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors duration-150 hover:bg-muted/50 focus-visible:bg-muted focus-visible:outline-none sm:px-5">
-        <Avatar id={a.actorId} /><span className="min-w-0 flex-1"><span className="block text-sm"><span className="font-semibold">{m?.name ?? "Tokenly"}</span> {a.action} <span className="font-medium">{a.target}</span></span><span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground"><I className="size-3" aria-hidden />{typeMeta[a.type].label} · {a.detail}</span></span>
-        <time dateTime={a.at} className="shrink-0 text-xs text-muted-foreground">{time(a.at)}</time></button></li>; })}</ol></section>)
+    {groups.length ? <div className="space-y-10">{groups.map(([day, items]) => <section key={day} aria-labelledby={`d-${day}`}>
+      <h3 id={`d-${day}`} className="mb-4 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{dayLabel(day)}</h3>
+      <ol className="space-y-1">{items.map(a => { const m = member(a.actorId), I = typeMeta[a.type].icon; return <li key={a.id}><button type="button" onClick={() => setOpen(a)} className="flex w-full items-start justify-between gap-4 px-1 py-3 text-left transition-colors duration-150 hover:bg-muted/50 focus-visible:bg-muted focus-visible:outline-none">
+        <span className="flex min-w-0 items-start gap-4">
+          <Avatar id={a.actorId} />
+          <span className="min-w-0">
+            <span className="block text-sm"><span className="font-medium">{m?.name ?? "Tokenly"}</span> <span className="text-muted-foreground">{a.action}</span> <span className="font-medium">{a.target}</span></span>
+            <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs"><span className="flex items-center gap-1 font-medium text-primary"><I className="size-3" aria-hidden />{typeMeta[a.type].label}</span><span className="text-muted-foreground">· {a.detail}</span></span>
+          </span>
+        </span>
+        <time dateTime={a.at} className="shrink-0 text-xs tabular-nums text-muted-foreground">{time(a.at)}</time></button></li>; })}</ol></section>)}</div>
       : <EmptyState title={filtered ? "No events match these filters" : "No activity in this range"} description={filtered ? "Try removing a filter." : "Choose a wider date range to see earlier activity."} {...(filtered ? { action: <Button variant="outline" onClick={clear}>Clear filters</Button> } : {})} />}
     <DetailDrawer open={!!open} onOpenChange={v => !v && setOpen(null)} title={open ? `${member(open.actorId)?.name ?? "Tokenly"} ${open.action}` : ""} description={open ? `${dayLabel(open.at.slice(0, 10))} at ${time(open.at)} UTC · ${relative(open.at)}` : ""}>
       {open && <div className="space-y-5 text-sm">
