@@ -8,7 +8,6 @@ import { TopUpDialog } from "@/components/tokenly/billing-view";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  BookOpen,
   CalendarDays,
   ChevronDown,
   CircleHelp,
@@ -177,21 +176,6 @@ function SideNavigation() {
         ))}
       </SidebarContent>
       <SidebarFooter className="p-3">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              tooltip="Design system"
-              isActive={path === "/design-system"}
-              className={navButton}
-            >
-              <Link to="/design-system" onClick={() => setOpenMobile(false)}>
-                <NavIcon icon={BookOpen} tone="slate" />
-                <span>Design system</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
