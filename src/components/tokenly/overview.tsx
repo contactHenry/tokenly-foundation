@@ -201,7 +201,7 @@ function Metric({
         </p>
         <span
           className={cn(
-            "size-2 shrink-0 rounded-md",
+            "size-2 shrink-0 rounded-full",
             status === "healthy"
               ? "bg-success"
               : status === "warning"
@@ -233,7 +233,7 @@ function Meter({
   return (
     <div className="mt-4">
       <div
-        className="relative h-2 rounded-md bg-muted"
+        className="relative h-2 rounded-full bg-muted"
         role="progressbar"
         aria-label={label}
         aria-valuenow={Math.round(value)}
@@ -242,7 +242,7 @@ function Meter({
       >
         <div
           className={cn(
-            "h-full rounded-md",
+            "h-full rounded-full",
             status === "healthy"
               ? "bg-success"
               : status === "warning"
@@ -282,7 +282,7 @@ export function StatusRow({ data }: { data: OverviewData }) {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Metric
         icon={Wallet}
-        tone="indigo"
+        tone="brand"
         label="Credits remaining"
         value={num(data.balance)}
         detail={`vs. ${num(topUp)} at last top-up`}
@@ -412,7 +412,7 @@ export function NeedsAttention({ data }: { data: OverviewData }) {
       </div>
       {items.length === 0 ? (
         <div className="flex items-center gap-3 px-5 py-6">
-          <IconTile icon={CircleCheck} tone="emerald" size="sm" />
+          <IconTile icon={CircleCheck} tone="teal" size="sm" />
           <p className="text-sm text-muted-foreground">All good. Nothing needs you right now.</p>
         </div>
       ) : (
@@ -496,7 +496,7 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 id="spend-title" className="flex items-center gap-2.5 font-semibold">
-            <IconTile icon={TrendingUp} tone="indigo" size="sm" />
+            <IconTile icon={TrendingUp} tone="brand" size="sm" />
             Spend trend
           </h3>
           <p className="pl-[38px] mt-1 text-sm text-muted-foreground">
@@ -519,7 +519,7 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
         </span>
         {data.forecastDays > 0 && (
           <span className="flex items-center gap-2">
-            <span className="w-4 border-t-2 border-dashed border-chart-2" />
+            <span className="w-4 border-t-2 border-dashed border-chart-3" />
             Forecast to month end
           </span>
         )}
@@ -566,7 +566,7 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
             <Line
               type="monotone"
               dataKey="forecast"
-              stroke="var(--chart-2)"
+              stroke="var(--chart-3)"
               strokeDasharray="5 5"
               strokeWidth={2}
               dot={false}
@@ -668,9 +668,9 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                     <span className="shrink-0 font-semibold">{money(row.cost)}</span>
                   </span>
                   <span className="mt-2 flex items-center gap-2">
-                    <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-md bg-muted">
+                    <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
                       <span
-                        className="block h-full rounded-md bg-chart-1"
+                        className="block h-full rounded-full bg-chart-1"
                         style={{ width: `${row.percent}%` }}
                       />
                     </span>
@@ -728,7 +728,7 @@ export function RecentActivity({ range }: { range: DateSelection }) {
             Changes across your workspace
           </p>
         </div>
-        <Button asChild variant="ghost" size="sm" className="shrink-0 text-primary">
+        <Button asChild variant="ghost" size="sm" className="shrink-0 text-primary-ink">
           <Link to="/activity">
             View all <ArrowRight className="size-4" />
           </Link>

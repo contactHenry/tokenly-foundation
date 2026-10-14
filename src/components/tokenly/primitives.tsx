@@ -43,20 +43,20 @@ import { cn } from "@/lib/utils";
 import type { IconComponent } from "@/components/icons";
 import type { Severity } from "@/lib/mock";
 
-export type Tone = "indigo" | "sky" | "violet" | "amber" | "emerald" | "rose" | "slate";
+export type Tone = "brand" | "sky" | "violet" | "amber" | "teal" | "rose" | "slate";
 const toneClass: Record<Tone, string> = {
-  indigo: "bg-tone-indigo-soft text-tone-indigo",
+  brand: "bg-tone-brand-soft text-tone-brand",
   sky: "bg-tone-sky-soft text-tone-sky",
   violet: "bg-tone-violet-soft text-tone-violet",
   amber: "bg-tone-amber-soft text-tone-amber",
-  emerald: "bg-tone-emerald-soft text-tone-emerald",
+  teal: "bg-tone-teal-soft text-tone-teal",
   rose: "bg-tone-rose-soft text-tone-rose",
   slate: "bg-tone-slate-soft text-tone-slate",
 };
 /** A soft, tinted square holding a two-tone icon. The friendly anchor for headers and cards. */
 export function IconTile({
   icon: Icon,
-  tone = "indigo",
+  tone = "brand",
   size = "md",
   className,
 }: {
@@ -73,7 +73,7 @@ export function IconTile({
         toneClass[tone],
         size === "sm" && "size-7 [&>svg]:size-4",
         size === "md" && "size-9 [&>svg]:size-5",
-        size === "lg" && "size-12 [&>svg]:size-6",
+        size === "lg" && "size-12 rounded-xl [&>svg]:size-6",
         className,
       )}
     >
@@ -327,10 +327,10 @@ export function ThresholdProgress({
         {label && <span className="text-muted-foreground">{label}</span>}
         <span className="ml-auto font-medium">{Math.round(value)}%</span>
       </div>
-      <div className="relative h-2 rounded-md bg-muted">
+      <div className="relative h-2 rounded-full bg-muted">
         <div
           className={cn(
-            "h-full rounded-md transition-[width]",
+            "h-full rounded-full transition-[width]",
             state === "healthy" ? "bg-success" : state === "warning" ? "bg-warning" : "bg-critical",
           )}
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
@@ -501,7 +501,7 @@ export function FilterBar({
           size="sm"
           className={cn(
             "rounded-md shadow-none",
-            selected === option && "border border-primary/20 text-primary",
+            selected === option && "border border-primary/20 text-primary-ink",
           )}
           onClick={() => onChange(option)}
         >
@@ -525,7 +525,7 @@ export function EmptyState({
   tone?: Tone | undefined;
 }) {
   return (
-    <div className="flex min-h-56 flex-col items-center justify-center rounded-md border border-dashed bg-card px-6 py-10 text-center">
+    <div className="flex min-h-56 flex-col items-center justify-center rounded-xl border border-dashed bg-card px-6 py-10 text-center">
       <IconTile icon={icon} tone={tone} size="lg" className="mb-4" />
       <h3 className="text-sm font-semibold">{title}</h3>
       <p className="mt-1 max-w-xs text-sm text-muted-foreground">{description}</p>
@@ -537,7 +537,7 @@ export function LoadingSkeleton() {
   return (
     <div className="surface p-5 space-y-4">
       <div className="flex items-center gap-3">
-        <Skeleton className="size-9 rounded-md" />
+        <Skeleton className="size-9 rounded-full" />
         <div className="space-y-2">
           <Skeleton className="h-3 w-32" />
           <Skeleton className="h-3 w-20" />
@@ -572,7 +572,7 @@ export function AlertBanner({
       )}
     >
       {tone === "info" ? (
-        <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+        <Info className="mt-0.5 size-4 shrink-0 text-primary-ink" aria-hidden />
       ) : tone === "warning" ? (
         <TriangleAlert className="mt-0.5 size-4 shrink-0 text-warning" aria-hidden />
       ) : (
@@ -653,7 +653,9 @@ export function ChartCard({
       <div className="mt-5 flex flex-wrap gap-5 text-xs text-muted-foreground">
         {legend.map((item, index) => (
           <span key={item} className="flex items-center gap-2">
-            <span className={cn("size-2 rounded-md", index === 0 ? "bg-chart-1" : "bg-chart-2")} />
+            <span
+              className={cn("size-2 rounded-full", index === 0 ? "bg-chart-1" : "bg-chart-3")}
+            />
             {item}
           </span>
         ))}
@@ -710,7 +712,7 @@ export function ChartCard({
               type="monotone"
               dataKey="outputTokens"
               name="Output tokens"
-              stroke="var(--chart-2)"
+              stroke="var(--chart-3)"
               fill="transparent"
               strokeWidth={2}
               isAnimationActive={false}

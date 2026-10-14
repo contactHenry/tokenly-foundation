@@ -171,7 +171,7 @@ function Team() {
         <div className="flex items-center justify-between gap-3 border-b p-5">
           <div>
             <h3 className="flex items-center gap-2.5 font-semibold">
-              <IconTile icon={Users} tone="emerald" size="sm" />
+              <IconTile icon={Users} tone="teal" size="sm" />
               Members
             </h3>
             <p className="pl-[38px] text-sm text-muted-foreground">{members.length} people</p>
@@ -201,7 +201,7 @@ function Team() {
                 className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-5 py-3 transition-colors duration-150 hover:bg-muted/40 md:grid-cols-[auto_minmax(0,1fr)_10rem_8rem_2.5rem]"
               >
                 <span
-                  className="grid size-9 place-items-center rounded-md bg-accent text-xs font-semibold text-primary"
+                  className="grid size-9 place-items-center rounded-full bg-accent text-xs font-semibold text-primary-ink"
                   aria-hidden
                 >
                   {m.initials}

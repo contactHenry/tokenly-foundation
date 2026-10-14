@@ -16,7 +16,6 @@ import {
   Plus,
   Settings,
   Sun,
-  Zap,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +49,7 @@ import { CommandMenu } from "@/components/tokenly/command-menu";
 import { navGroups, type Page } from "@/components/tokenly/nav";
 import { setDarkMode, useIsDark } from "@/components/tokenly/theme";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/tokenly/logo";
 import { organization, teamMembers } from "@/lib/mock";
 
 export type DateSelection = {
@@ -71,15 +71,14 @@ export function useDateRange() {
   return useContext(RangeContext).range;
 }
 const toneText: Record<Tone, string> = {
-  indigo:
-    "group-data-[active=true]/nav:bg-tone-indigo-soft group-data-[active=true]/nav:text-tone-indigo",
+  brand:
+    "group-data-[active=true]/nav:bg-tone-brand-soft group-data-[active=true]/nav:text-tone-brand",
   sky: "group-data-[active=true]/nav:bg-tone-sky-soft group-data-[active=true]/nav:text-tone-sky",
   violet:
     "group-data-[active=true]/nav:bg-tone-violet-soft group-data-[active=true]/nav:text-tone-violet",
   amber:
     "group-data-[active=true]/nav:bg-tone-amber-soft group-data-[active=true]/nav:text-tone-amber",
-  emerald:
-    "group-data-[active=true]/nav:bg-tone-emerald-soft group-data-[active=true]/nav:text-tone-emerald",
+  teal: "group-data-[active=true]/nav:bg-tone-teal-soft group-data-[active=true]/nav:text-tone-teal",
   rose: "group-data-[active=true]/nav:bg-tone-rose-soft group-data-[active=true]/nav:text-tone-rose",
   slate:
     "group-data-[active=true]/nav:bg-tone-slate-soft group-data-[active=true]/nav:text-tone-slate",
@@ -118,15 +117,11 @@ function SideNavigation() {
       <SidebarHeader className="p-3 pt-4 group-data-[collapsible=icon]:px-2">
         <Link
           to="/"
-          className="flex items-center gap-2 px-2 py-1"
+          aria-label="Tokenly home"
+          className="flex items-center rounded-md px-1.5 py-1"
           onClick={() => setOpenMobile(false)}
         >
-          <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0/0.2)] [&>svg]:size-4">
-            <Zap weight="fill" />
-          </span>
-          <span className="truncate text-[15px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
-            tokenly<span className="text-primary">.</span>
-          </span>
+          <Logo />
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -204,7 +199,7 @@ function SideNavigation() {
               className="mt-1 h-11 w-full justify-start gap-2 px-2 hover:bg-sidebar-accent group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
               title="User menu"
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-accent text-[11px] font-semibold text-accent-foreground">
+              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-accent-foreground">
                 {teamMembers[0]?.initials ?? "HN"}
               </span>
               <span className="min-w-0 flex-1 text-left group-data-[collapsible=icon]:hidden">
@@ -309,7 +304,7 @@ function DatePicker() {
             }}
           >
             {label === "Today" ? "Today" : `Last ${label}`}
-            {range.label === label && <span className="text-primary">✓</span>}
+            {range.label === label && <span className="text-primary-ink">✓</span>}
           </Button>
         ))}
         <div className="mt-2 border-t pt-3">

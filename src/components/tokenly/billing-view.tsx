@@ -174,7 +174,7 @@ export function TopUpDialog({
         {done ? (
           <>
             <DialogHeader>
-              <div className="mb-2 grid size-10 place-items-center rounded-md bg-success-muted">
+              <div className="mb-2 grid size-10 place-items-center rounded-full bg-success-muted">
                 <Check className="size-5 text-success" />
               </div>
               <DialogTitle>Credits added</DialogTitle>
@@ -438,7 +438,7 @@ export function PlanCard() {
         <a
           href="#plans"
           onClick={(e) => e.preventDefault()}
-          className="text-sm font-medium text-primary hover:underline"
+          className="text-sm font-medium text-primary-ink hover:underline"
         >
           Change plan
         </a>
@@ -764,7 +764,7 @@ export function LedgerSection() {
           <span className="flex items-center gap-2.5">
             <span
               className={cn(
-                "grid size-7 place-items-center rounded-md",
+                "grid size-7 place-items-center rounded-full",
                 r.amount > 0 ? "bg-success-muted text-success" : "bg-muted text-muted-foreground",
               )}
             >
@@ -800,7 +800,7 @@ export function LedgerSection() {
     <section className="space-y-4">
       <div>
         <h3 className="flex items-center gap-2.5 font-semibold">
-          <IconTile icon={Wallet} tone="emerald" size="sm" />
+          <IconTile icon={Wallet} tone="teal" size="sm" />
           Credit transactions
         </h3>
         <p className="pl-[38px] text-sm text-muted-foreground">

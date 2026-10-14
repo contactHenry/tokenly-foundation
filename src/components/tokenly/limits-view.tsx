@@ -111,9 +111,9 @@ function Meter({ value, thresholds }: { value: number; thresholds: number[] }) {
   const tone = value >= 100 ? "bg-critical" : value >= 80 ? "bg-warning" : "bg-success";
   return (
     <div>
-      <div className="relative h-2 rounded-md bg-muted">
+      <div className="relative h-2 rounded-full bg-muted">
         <div
-          className={cn("h-full rounded-md", tone)}
+          className={cn("h-full rounded-full", tone)}
           style={{ width: `${Math.min(100, value)}%` }}
         />
         {thresholds.map((t) => (
@@ -344,7 +344,7 @@ function BudgetDrawer({
               <li key={s} className="flex-1">
                 <button type="button" onClick={() => setStep(i)} className="w-full text-left">
                   <span
-                    className={cn("block h-1 rounded-md", i <= step ? "bg-primary" : "bg-muted")}
+                    className={cn("block h-1 rounded-full", i <= step ? "bg-primary" : "bg-muted")}
                   />
                   <span
                     className={cn(
@@ -561,11 +561,11 @@ function Choice<T extends string>({
         >
           <span
             className={cn(
-              "mt-0.5 grid size-4 shrink-0 place-items-center rounded-md border",
+              "mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border",
               value === v && "border-primary",
             )}
           >
-            {value === v && <span className="size-2 rounded-md bg-primary" />}
+            {value === v && <span className="size-2 rounded-full bg-primary" />}
           </span>
           <span>
             <span className="block text-sm font-medium">{label}</span>
@@ -723,7 +723,7 @@ export function AlertRulesSection() {
                         })
                       }
                       className={cn(
-                        "grid size-7 place-items-center rounded-md border text-[10px] font-semibold disabled:cursor-not-allowed disabled:opacity-60",
+                        "grid size-7 place-items-center rounded-full border text-[10px] font-semibold disabled:cursor-not-allowed disabled:opacity-60",
                         on
                           ? "border-primary bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted",
@@ -803,7 +803,7 @@ export function AlertHistorySection() {
       render: (r) =>
         r.source.to === "/projects" ? (
           <Link
-            className="text-primary hover:underline"
+            className="text-primary-ink hover:underline"
             to="/projects"
             search={"project" in r.source && r.source.project ? { project: r.source.project } : {}}
           >
@@ -811,7 +811,7 @@ export function AlertHistorySection() {
           </Link>
         ) : r.source.to === "/usage" ? (
           <Link
-            className="text-primary hover:underline"
+            className="text-primary-ink hover:underline"
             to="/usage"
             search={{
               model: undefined,
@@ -827,7 +827,7 @@ export function AlertHistorySection() {
             {r.source.label}
           </Link>
         ) : (
-          <Link className="text-primary hover:underline" to="/billing">
+          <Link className="text-primary-ink hover:underline" to="/billing">
             {r.source.label}
           </Link>
         ),

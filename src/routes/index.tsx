@@ -55,8 +55,8 @@ function Overview() {
           actions={
             <span className="inline-flex items-center gap-2 rounded-md border bg-card px-2.5 py-1.5 text-xs text-muted-foreground">
               <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-md bg-success/60 motion-reduce:hidden" />
-                <span className="relative inline-flex size-2 rounded-md bg-success" />
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-success/60 motion-reduce:hidden" />
+                <span className="relative inline-flex size-2 rounded-full bg-success" />
               </span>
               Data through Sep 26, 2026
             </span>
