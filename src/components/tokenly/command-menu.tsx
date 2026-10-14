@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { BookOpen, Moon, Plus, Search, Sun } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { BookOpen, Moon, Plus, Sun } from "@/components/icons";
 import {
   CommandDialog,
   CommandEmpty,
@@ -38,26 +37,6 @@ export function CommandMenu({ onTopUp }: { onTopUp: () => void }) {
   };
   return (
     <>
-      <Button
-        variant="outline"
-        className="hidden h-8 w-56 justify-start gap-2 px-2.5 text-[13px] font-normal text-muted-foreground lg:inline-flex"
-        onClick={() => setOpen(true)}
-      >
-        <Search className="text-muted-foreground" />
-        Search or jump to…
-        <kbd className="ml-auto rounded-md border bg-muted px-1.5 font-sans text-[11px] text-muted-foreground">
-          ⌘K
-        </kbd>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="lg:hidden"
-        aria-label="Search"
-        onClick={() => setOpen(true)}
-      >
-        <Search />
-      </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search pages and actions…" />
         <CommandList>

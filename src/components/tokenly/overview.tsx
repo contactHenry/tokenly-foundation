@@ -48,8 +48,17 @@ import {
 } from "@/lib/mock";
 import type { DateSelection } from "@/components/tokenly/app-shell";
 
-const money = (amount: number) =>
-  amount.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+/** Figures can arrive missing (empty range, half-loaded data); render a dash, never crash. */
+const money = (amount?: number | null) =>
+  Number.isFinite(amount as number)
+    ? (amount as number).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+      })
+    : "—";
+const num = (value?: number | null) =>
+  Number.isFinite(value as number) ? Math.round(value as number).toLocaleString("en-US") : "—";
 const shortDate = (date: string) =>
   new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 const DAY = 86400000;
@@ -275,8 +284,8 @@ export function StatusRow({ data }: { data: OverviewData }) {
         icon={Wallet}
         tone="indigo"
         label="Credits remaining"
-        value={data.balance.toLocaleString()}
-        detail={`vs. ${topUp.toLocaleString()} at last top-up`}
+        value={num(data.balance)}
+        detail={`vs. ${num(topUp)} at last top-up`}
         status={creditStatus}
       >
         <Meter value={used} status={creditStatus} label="Credits spent since last top-up" />
@@ -285,7 +294,7 @@ export function StatusRow({ data }: { data: OverviewData }) {
         icon={Zap}
         tone="amber"
         label="Burn rate"
-        value={`${Math.round(data.burn).toLocaleString()}/day`}
+        value={`${num(data.burn)}/day`}
         detail="7-day average · credits/day"
         status={creditStatus}
       >
@@ -470,7 +479,7 @@ function SpendTooltip({
       {point.actual !== null && (
         <>
           <p className="mt-1">
-            Tokens: <strong>{point.tokens.toLocaleString()}</strong>
+            Tokens: <strong>{num(point.tokens)}</strong>
           </p>
           <p className="mt-1">
             Top model: <strong>{point.topModel}</strong>
