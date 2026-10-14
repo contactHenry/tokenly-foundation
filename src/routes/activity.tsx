@@ -29,8 +29,6 @@ function Page() {
   return (
     <div className="space-y-8">
       <PageHeader
-        icon={pages.activity.icon}
-        tone={pages.activity.tone}
         title={pages.activity.label}
         description={pages.activity.description}
       />

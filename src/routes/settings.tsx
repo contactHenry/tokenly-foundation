@@ -29,8 +29,6 @@ function Page() {
   return (
     <div className="space-y-8">
       <PageHeader
-        icon={pages.settings.icon}
-        tone={pages.settings.tone}
         title={pages.settings.label}
         description={pages.settings.description}
       />

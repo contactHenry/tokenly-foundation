@@ -48,8 +48,6 @@ function Overview() {
     <div className="space-y-5">
       <div className="mb-3">
         <PageHeader
-          icon={pages.overview.icon}
-          tone={pages.overview.tone}
           title={pages.overview.label}
           description={pages.overview.description}
           actions={

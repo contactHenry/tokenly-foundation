@@ -39,8 +39,6 @@ function Page() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={pages.billing.icon}
-        tone={pages.billing.tone}
         title={pages.billing.label}
         description={pages.billing.description}
       />

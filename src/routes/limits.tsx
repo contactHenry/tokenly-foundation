@@ -36,8 +36,6 @@ function Page() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={pages.limits.icon}
-        tone={pages.limits.tone}
         title={pages.limits.label}
         description={pages.limits.description}
       />

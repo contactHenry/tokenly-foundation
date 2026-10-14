@@ -81,24 +81,19 @@ export function IconTile({
     </span>
   );
 }
-/** Page title row: icon tile, title, one-line description, and optional actions on the right. */
+/** Page title row: title, one-line description, and optional actions on the right. */
 export function PageHeader({
-  icon,
-  tone,
   title,
   description,
   actions,
 }: {
-  icon?: IconComponent | undefined;
-  tone?: Tone | undefined;
   title: string;
   description?: ReactNode;
   actions?: ReactNode;
 }) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex min-w-0 items-center gap-3.5">
-        {icon && <IconTile icon={icon} tone={tone} size="lg" />}
+      <div className="min-w-0">
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold leading-tight">{title}</h1>
           {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
