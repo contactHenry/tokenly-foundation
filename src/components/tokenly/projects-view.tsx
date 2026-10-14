@@ -89,9 +89,14 @@ function CopyButton({ value, label = "Copy key" }: { value: string; label?: stri
       aria-label={label}
       onClick={(e) => {
         e.stopPropagation();
-        void navigator.clipboard?.writeText(value).catch(() => undefined);
-        setDone(true);
-        setTimeout(() => setDone(false), 1500);
+        // Only show the check mark when the copy actually worked.
+        navigator.clipboard
+          ?.writeText(value)
+          .then(() => {
+            setDone(true);
+            setTimeout(() => setDone(false), 1500);
+          })
+          .catch(() => toast.error("Couldn't copy. Select the text and copy it manually."));
       }}
     >
       {done ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5" />}
@@ -109,6 +114,7 @@ function projectHealth(pct: number) {
 
 /* ---------------- Projects grid ---------------- */
 export function ProjectsGrid() {
+  const canCreate = useRole().can("manageProjects");
   const { projects, keys } = useProjectsStore();
   const [open, setOpen] = useState(false);
   return (
@@ -120,7 +126,7 @@ export function ProjectsGrid() {
             {projects.length} projects in this workspace
           </p>
         </div>
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} disabled={!canCreate}>
           <Plus className="size-4" />
           New project
         </Button>
@@ -136,7 +142,7 @@ export function ProjectsGrid() {
               key={p.id}
               to="/projects"
               search={{ project: p.id }}
-              className="group rounded-xl border bg-card p-5 transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-primary"
+              className="group surface p-5 transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-primary"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -423,7 +429,11 @@ export function KeysTable({ projectId }: { projectId?: string }) {
         <EmptyState
           title="No keys yet"
           description="Create a key to start sending requests from this project."
-          action={<Button onClick={() => setCreating(true)}>Create key</Button>}
+          action={
+            <Button onClick={() => setCreating(true)} disabled={!canKeys}>
+              Create key
+            </Button>
+          }
         />
       )}
       <CreateKeyDialog
@@ -503,14 +513,14 @@ function CreateKeyDialog({
     if (!project) return setError("Choose a project.");
     if (c !== undefined && (!Number.isFinite(c) || c <= 0))
       return setError("Spending cap must be greater than 0.");
-    setSecret(
-      actions.createKey({
-        name: n,
-        projectId: project,
-        allowedModels: allowed,
-        ...(c ? { spendCap: c } : {}),
-      }),
-    );
+    const created = actions.createKey({
+      name: n,
+      projectId: project,
+      allowedModels: allowed,
+      ...(c ? { spendCap: c } : {}),
+    });
+    if (!created) return;
+    setSecret(created);
     toast.success(`Key "${n}" created`);
   };
   return (
@@ -684,7 +694,9 @@ function RotateDialog({ keyItem, onClose }: { keyItem: ManagedKey | null; onClos
                 </Button>
                 <Button
                   onClick={() => {
-                    setSecret(actions.rotateKey(keyItem.id));
+                    const rotated = actions.rotateKey(keyItem.id);
+                    if (!rotated) return;
+                    setSecret(rotated);
                     toast.success(`${keyItem.name} rotated`);
                   }}
                 >
@@ -728,7 +740,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
           All projects
         </Link>
       </Button>
-      <div className="rounded-xl border bg-card p-6">
+      <div className="surface p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
@@ -763,7 +775,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="mt-6 space-y-6">
-          <div className="rounded-xl border bg-card p-5">
+          <div className="surface p-5">
             <h3 className="font-semibold">Daily spend</h3>
             <p className="text-sm text-muted-foreground">Last 30 days</p>
             <div className="mt-4 h-64">
@@ -810,7 +822,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
           <KeysTable projectId={project.id} />
         </TabsContent>
         <TabsContent value="members" className="mt-6">
-          <div className="rounded-xl border bg-card">
+          <div className="surface">
             <div className="flex items-center gap-2 border-b p-5">
               <Users className="size-4 text-muted-foreground" />
               <h3 className="font-semibold">Members</h3>
@@ -849,10 +861,11 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
     [description, setDescription] = useState(project.description),
     [budget, setBudget] = useState(String(project.budget)),
     [msg, setMsg] = useState("");
+  const canEdit = useRole().can("manageProjects");
   const save = () => {
     const b = Number(budget);
-    if (!name.trim() || !Number.isFinite(b) || b <= 0)
-      return setMsg("Enter a name and a budget greater than 0.");
+    if (!name.trim() || !Number.isFinite(b) || b <= 0 || b > 1_000_000)
+      return setMsg("Enter a name and a budget between $1 and $1,000,000.");
     actions.updateProject(project.id, {
       name: name.trim().slice(0, 60),
       description: description.trim().slice(0, 140),
@@ -862,7 +875,7 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
   };
   return (
     <div className="max-w-xl space-y-6">
-      <div className="space-y-4 rounded-xl border bg-card p-5">
+      <div className="space-y-4 surface p-5">
         <h3 className="font-semibold">General</h3>
         <Field label="Name">
           <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
@@ -878,7 +891,9 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
           <Input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
         </Field>
         <div className="flex items-center gap-3">
-          <Button onClick={save}>Save changes</Button>
+          <Button onClick={save} disabled={!canEdit}>
+            Save changes
+          </Button>
           {msg && <span className="text-sm text-muted-foreground">{msg}</span>}
         </div>
       </div>
@@ -895,11 +910,17 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
         </div>
         <Button
           variant="outline"
-          onClick={() =>
-            actions.updateProject(project.id, {
-              status: project.status === "paused" ? "active" : "paused",
-            })
-          }
+          disabled={!canEdit}
+          onClick={() => {
+            const pausing = project.status !== "paused";
+            if (
+              pausing &&
+              !window.confirm(`Pause ${project.name}? All requests from its keys will be blocked.`)
+            )
+              return;
+            actions.updateProject(project.id, { status: pausing ? "paused" : "active" });
+            toast.success(pausing ? `${project.name} paused` : `${project.name} resumed`);
+          }}
         >
           {project.status === "paused" ? "Resume" : "Pause"}
         </Button>

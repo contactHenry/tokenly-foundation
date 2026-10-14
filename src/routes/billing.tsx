@@ -37,8 +37,7 @@ function Page() {
   return (
     <div className="space-y-10">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Billing</p>
-        <h2 className="mt-2 text-2xl font-semibold">Billing</h2>
+        <h1 className="text-2xl font-semibold">Billing</h1>
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <BalanceCard onTopUp={() => setTopUp(true)} />

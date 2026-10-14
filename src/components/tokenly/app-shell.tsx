@@ -99,17 +99,17 @@ function SideNavigation() {
   const projectsState = useProjectsStore(),
     limitsState = useLimitsStore();
   return (
-    <Sidebar collapsible="icon" className="border-sidebar-border">
-      <SidebarHeader className="border-b border-sidebar-border p-4 group-data-[collapsible=icon]:px-2">
+    <Sidebar collapsible="icon" className="border-sidebar-border/60">
+      <SidebarHeader className="p-3 pt-4 group-data-[collapsible=icon]:px-2">
         <Link
           to="/"
-          className="flex items-center gap-2.5 px-1 py-1"
+          className="flex items-center gap-2 px-2 py-1"
           onClick={() => setOpenMobile(false)}
         >
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-lg font-bold leading-none">t</span>
+          <span className="grid size-6 shrink-0 place-items-center rounded-md bg-foreground text-background">
+            <span className="text-sm font-bold leading-none">t</span>
           </span>
-          <span className="truncate text-lg font-semibold group-data-[collapsible=icon]:hidden">
+          <span className="truncate text-[15px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
             tokenly<span className="text-primary">.</span>
           </span>
         </Link>
@@ -117,10 +117,10 @@ function SideNavigation() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="mt-4 h-11 w-full justify-start gap-2 border px-2 shadow-none group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
+              className="mt-3 h-10 w-full justify-start gap-2 px-2 shadow-none hover:bg-sidebar-accent group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
               title="Workspace"
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-secondary text-xs font-semibold">
+              <span className="grid size-6 shrink-0 place-items-center rounded-md border bg-card text-[11px] font-semibold">
                 A
               </span>
               <span className="flex-1 truncate text-left text-xs font-medium group-data-[collapsible=icon]:hidden">
@@ -138,11 +138,9 @@ function SideNavigation() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarHeader>
-      <SidebarContent className="pt-4">
+      <SidebarContent className="pt-1">
         <SidebarGroup>
-          <SidebarGroupLabel className="px-3 text-[11px] uppercase text-muted-foreground">
-            Workspace
-          </SidebarGroupLabel>
+          <SidebarGroupLabel className="sr-only">Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map((item) => (
@@ -151,7 +149,7 @@ function SideNavigation() {
                     asChild
                     tooltip={item.label}
                     isActive={path === item.to}
-                    className="h-10 gap-3 px-3 text-muted-foreground data-[active=true]:text-primary"
+                    className="h-8 gap-2.5 px-2.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-foreground [&>svg]:size-4"
                   >
                     <Link to={item.to} onClick={() => setOpenMobile(false)}>
                       <item.icon />
@@ -164,14 +162,14 @@ function SideNavigation() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-3">
+      <SidebarFooter className="p-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               tooltip="Design system"
               isActive={path === "/design-system"}
-              className="h-9 gap-3 px-3 text-muted-foreground"
+              className="h-8 gap-2.5 px-2.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-foreground [&>svg]:size-4"
             >
               <Link to="/design-system" onClick={() => setOpenMobile(false)}>
                 <BookOpen />
@@ -184,10 +182,10 @@ function SideNavigation() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="mt-2 h-12 w-full justify-start gap-2 px-2 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
+              className="mt-1 h-11 w-full justify-start gap-2 px-2 hover:bg-sidebar-accent group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
               title="User menu"
             >
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-xs font-semibold text-primary">
+              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-accent-foreground">
                 {teamMembers[0]?.initials ?? "HN"}
               </span>
               <span className="min-w-0 flex-1 text-left group-data-[collapsible=icon]:hidden">
@@ -263,7 +261,7 @@ function DatePicker() {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="h-9 gap-2 shadow-none"
+          className="h-8 gap-2 bg-card text-[13px] shadow-none"
           aria-label={`Date range: ${range.label}`}
         >
           <CalendarDays className="size-4 text-muted-foreground" />
@@ -346,7 +344,11 @@ function ThemeToggle() {
       title={dark ? "Light mode" : "Dark mode"}
       onClick={() => {
         document.documentElement.classList.toggle("dark", !dark);
-        localStorage.setItem("tokenly-theme", !dark ? "dark" : "light");
+        try {
+          localStorage.setItem("tokenly-theme", !dark ? "dark" : "light");
+        } catch {
+          /* theme still applies for this visit */
+        }
         setDark(!dark);
       }}
     >
@@ -364,23 +366,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [dismissed, setDismissed] = useState<string[]>([]);
   const unread = alerts.filter((alert) => !alert.read && !dismissed.includes(alert.id));
-  useEffect(() => {
-    if (localStorage.getItem("tokenly-theme") === "dark")
-      document.documentElement.classList.add("dark");
-  }, []);
   return (
     <RangeContext.Provider value={{ range, setRange }}>
       <SidebarProvider>
         <SideNavigation />
         <SidebarInset className="min-w-0">
-          <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between gap-3 border-b bg-card/95 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <SidebarTrigger
                 className="size-8 shrink-0 text-muted-foreground"
                 title="Toggle sidebar"
               />
-              <span className="h-5 w-px bg-border" />
-              <h1 className="truncate text-base font-semibold">{titles[path] || "Tokenly"}</h1>
+              <span className="h-4 w-px bg-border" aria-hidden />
+              <span className="truncate text-sm font-medium">{titles[path] || "Tokenly"}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="hidden sm:block">
@@ -391,14 +389,14 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Gate
                 perm="manageBilling"
                 disabled={
-                  <Button className="hidden h-9 shadow-none sm:inline-flex" disabled>
+                  <Button className="hidden h-8 text-[13px] shadow-none sm:inline-flex" disabled>
                     <Plus />
                     Top up credits
                   </Button>
                 }
               >
                 <Button
-                  className="hidden h-9 shadow-none sm:inline-flex"
+                  className="hidden h-8 text-[13px] shadow-none sm:inline-flex"
                   onClick={() => setTopUpOpen(true)}
                 >
                   <Plus />
@@ -407,7 +405,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Gate>
             </div>
           </header>
-          <div className="flex items-center justify-between border-b bg-card px-4 py-2 sm:hidden">
+          <div className="flex items-center justify-between border-b border-border/70 bg-background px-4 py-2 sm:hidden">
             <DatePicker />
             <Gate
               perm="manageBilling"
@@ -424,8 +422,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Button>
             </Gate>
           </div>
-          <main className="min-w-0 flex-1 px-4 py-7 sm:px-6 lg:px-8 lg:py-8">
-            <div className="mx-auto max-w-7xl">
+          <main className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+            <div className="mx-auto max-w-6xl">
               <ViewAsBanner />
               {children}
             </div>
@@ -443,7 +441,7 @@ function ViewAsBanner() {
   return (
     <div
       role="status"
-      className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/20 bg-accent/60 px-4 py-2.5 text-sm"
+      className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-primary/15 bg-accent/50 px-4 py-2.5 text-sm"
     >
       <span>
         Previewing as <strong>{role}</strong>. Actions this role can't take are disabled.

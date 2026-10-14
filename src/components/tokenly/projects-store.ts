@@ -1,4 +1,6 @@
 import { useSyncExternalStore } from "react";
+import { restoreState } from "@/components/tokenly/storage";
+import { guarded } from "@/components/tokenly/workspace-store";
 import {
   apiKeys,
   budgets,
@@ -41,7 +43,7 @@ function load() {
   loaded = true;
   try {
     const raw = localStorage.getItem(STORAGE);
-    if (raw) state = JSON.parse(raw) as State;
+    state = restoreState(raw, seed());
   } catch {
     /* keep seed */
   }
@@ -77,69 +79,84 @@ function randomSecret(length = 40) {
   return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
 }
 
-export const actions = {
-  createProject(input: { name: string; description: string; budget: number; ownerId: string }) {
-    const id = `prj_${Date.now().toString(36)}`;
-    set({
-      ...state,
-      projects: [
-        ...state.projects,
-        {
-          id,
-          name: input.name,
-          description: input.description,
-          budget: input.budget,
-          status: "active",
-          ownerId: input.ownerId,
-          memberIds: [input.ownerId],
-        },
-      ],
-    });
-    return id;
+export const actions = guarded(
+  {
+    createProject(input: { name: string; description: string; budget: number; ownerId: string }) {
+      const id = `prj_${Date.now().toString(36)}`;
+      set({
+        ...state,
+        projects: [
+          ...state.projects,
+          {
+            id,
+            name: input.name,
+            description: input.description,
+            budget: input.budget,
+            status: "active",
+            ownerId: input.ownerId,
+            memberIds: [input.ownerId],
+          },
+        ],
+      });
+      return id;
+    },
+    createKey(input: {
+      name: string;
+      projectId: string;
+      spendCap?: number;
+      allowedModels: string[];
+    }) {
+      const secret = `sk-${randomSecret()}`;
+      const key: ManagedKey = {
+        id: `key_${Date.now().toString(36)}`,
+        name: input.name,
+        prefix: "sk-",
+        projectId: input.projectId,
+        createdAt: "2026-09-26",
+        lastUsedAt: "",
+        status: "active",
+        createdBy: "usr_01",
+        last4: secret.slice(-4),
+        allowedModels: input.allowedModels,
+        ...(input.spendCap ? { spendCap: input.spendCap } : {}),
+      };
+      set({ ...state, keys: [key, ...state.keys] });
+      return secret;
+    },
+    revokeKey(id: string) {
+      set({
+        ...state,
+        keys: state.keys.map((k) => (k.id === id ? { ...k, status: "revoked" } : k)),
+      });
+    },
+    rotateKey(id: string) {
+      const secret = `sk-${randomSecret()}`;
+      set({
+        ...state,
+        keys: state.keys.map((k) =>
+          k.id === id ? { ...k, last4: secret.slice(-4), createdAt: "2026-09-26" } : k,
+        ),
+      });
+      return secret;
+    },
+    updateProject(
+      id: string,
+      patch: Partial<Pick<ManagedProject, "name" | "description" | "budget" | "status">>,
+    ) {
+      set({
+        ...state,
+        projects: state.projects.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      });
+    },
   },
-  createKey(input: {
-    name: string;
-    projectId: string;
-    spendCap?: number;
-    allowedModels: string[];
-  }) {
-    const secret = `sk-${randomSecret()}`;
-    const key: ManagedKey = {
-      id: `key_${Date.now().toString(36)}`,
-      name: input.name,
-      prefix: "sk-",
-      projectId: input.projectId,
-      createdAt: "2026-09-26",
-      lastUsedAt: "",
-      status: "active",
-      createdBy: "usr_01",
-      last4: secret.slice(-4),
-      allowedModels: input.allowedModels,
-      ...(input.spendCap ? { spendCap: input.spendCap } : {}),
-    };
-    set({ ...state, keys: [key, ...state.keys] });
-    return secret;
+  {
+    createProject: "manageProjects",
+    updateProject: "manageProjects",
+    createKey: "manageKeys",
+    revokeKey: "manageKeys",
+    rotateKey: "manageKeys",
   },
-  revokeKey(id: string) {
-    set({ ...state, keys: state.keys.map((k) => (k.id === id ? { ...k, status: "revoked" } : k)) });
-  },
-  rotateKey(id: string) {
-    const secret = `sk-${randomSecret()}`;
-    set({
-      ...state,
-      keys: state.keys.map((k) =>
-        k.id === id ? { ...k, last4: secret.slice(-4), createdAt: "2026-09-26" } : k,
-      ),
-    });
-    return secret;
-  },
-  updateProject(
-    id: string,
-    patch: Partial<Pick<ManagedProject, "name" | "description" | "budget" | "status">>,
-  ) {
-    set({ ...state, projects: state.projects.map((p) => (p.id === id ? { ...p, ...patch } : p)) });
-  },
-};
+);
 
 export const LAST_DAY = "2026-09-26";
 export const shift = (date: string, days: number) => {

@@ -46,8 +46,7 @@ function Page() {
   return (
     <div className="space-y-10">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Projects & Keys</p>
-        <h2 className="mt-2 text-2xl font-semibold">Projects & Keys</h2>
+        <h1 className="text-2xl font-semibold">Projects & Keys</h1>
       </div>
       <ProjectsGrid />
       <KeysTable />

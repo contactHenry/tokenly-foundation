@@ -38,7 +38,7 @@ export function OnboardingChecklist() {
   const doneCount = steps.filter((s) => s.done).length,
     next = steps.findIndex((s) => !s.done);
   return (
-    <section aria-labelledby="onb" className="rounded-xl border bg-card">
+    <section aria-labelledby="onb" className="surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b p-5">
         <div>
           <h3 id="onb" className="font-semibold">

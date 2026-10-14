@@ -1,3 +1,4 @@
+import { useBillingStore } from "@/components/tokenly/billing-store";
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { OnboardingChecklist } from "@/components/tokenly/onboarding";
@@ -38,27 +39,20 @@ function Overview() {
     const frame = requestAnimationFrame(() => setReady(true));
     return () => cancelAnimationFrame(frame);
   }, []);
-  const data = getOverviewData(range);
+  const { balance } = useBillingStore();
+  const data = getOverviewData(range, balance);
   if (!ready) return <OverviewSkeleton />;
   return (
     <div className="space-y-5">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-muted-foreground">
-            Workspace overview <span className="mx-1">/</span>{" "}
-            {range.label === "Custom"
-              ? "Custom range"
-              : range.label === "Today"
-                ? "Today"
-                : `Last ${range.label}`}
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold sm:text-[28px]">Credit overview</h2>
+          <h1 className="text-2xl font-semibold">Overview</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Your balance, runway, and what’s driving spend.
           </p>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-xs text-muted-foreground">
-          <span className="size-2 rounded-full bg-success" />
+        <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="size-1.5 rounded-full bg-success" aria-hidden />
           Usage data through Sep 26, 2026
         </span>
       </div>

@@ -1,4 +1,6 @@
 import { useSyncExternalStore } from "react";
+import { restoreState } from "@/components/tokenly/storage";
+import { toast } from "sonner";
 import { teamMembers } from "@/lib/mock";
 
 export const ROLES = ["Owner", "Admin", "Developer", "Finance viewer"] as const;
@@ -105,7 +107,8 @@ export function useWorkspace() {
         loaded = true;
         try {
           const r = localStorage.getItem(KEY);
-          if (r) state = { ...seed(), ...(JSON.parse(r) as State) };
+          state = restoreState(r, seed());
+          if (state.viewAs && !ROLES.includes(state.viewAs)) state = { ...state, viewAs: null };
         } catch {
           /* seed */
         }
@@ -118,65 +121,124 @@ export function useWorkspace() {
     () => server,
   );
 }
-export function useRole() {
-  const s = useWorkspace();
+function roleOf(s: State): Role {
   const me = s.members.find((m) => m.id === s.currentUserId);
-  const role: Role = s.viewAs ?? me?.role ?? "Owner";
+  const real: Role = me && ROLES.includes(me.role) ? me.role : "Owner";
+  // Previewing can only narrow permissions, never grant more than your real role has.
+  const preview =
+    s.viewAs && ROLE_PERMS[s.viewAs]?.every((p) => ROLE_PERMS[real].includes(p)) ? s.viewAs : null;
+  return preview ?? real;
+}
+export function useRole() {
+  const role = roleOf(useWorkspace());
   return { role, can: (p: Permission) => ROLE_PERMS[role].includes(p) };
 }
-export const workspaceActions = {
-  setViewAs(viewAs: Role | null) {
-    set({ ...state, viewAs });
-  },
-  setGeneral(general: State["general"]) {
-    set({ ...state, general });
-  },
-  invite(email: string, role: Role) {
-    const name = email.split("@")[0] ?? email;
-    set({
-      ...state,
-      members: [
-        ...state.members,
-        {
-          id: `inv_${Date.now().toString(36)}`,
-          name,
-          email,
-          role,
-          initials: name.slice(0, 2).toUpperCase(),
-          lastActive: "",
-          pending: true,
-        },
-      ],
-    });
-  },
-  setRole(id: string, role: Role) {
-    set({ ...state, members: state.members.map((m) => (m.id === id ? { ...m, role } : m)) });
-  },
-  remove(id: string) {
-    set({ ...state, members: state.members.filter((m) => m.id !== id) });
-  },
-  setPref(type: string, channel: Channel, on: boolean) {
-    set({
-      ...state,
-      prefs: {
-        ...state.prefs,
-        [type]: {
-          ...(state.prefs[type] ?? { inApp: true, email: true, slack: false }),
-          [channel]: on,
-        },
-      },
-    });
-  },
-  setSlack(slack: State["slack"]) {
-    set({ ...state, slack });
-  },
-  setWebhook(webhook: State["webhook"]) {
-    set({ ...state, webhook });
-  },
-  startOnboarding(base: { projects: number; keys: number; budgets: number } | null) {
-    set({ ...state, onboarding: base });
-  },
-  markRead(ids: string[]) {
-    set({ ...state, readNotifications: [...new Set([...state.readNotifications, ...ids])] });
-  },
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ActionMap = Record<string, (...args: any[]) => any>;
+type Guarded<T extends ActionMap> = {
+  [K in keyof T]: (...args: Parameters<T[K]>) => ReturnType<T[K]> | undefined;
 };
+/**
+ * Wraps store actions so each one re-checks the active role before it runs. <Gate> only
+ * disables buttons; this stops any code path (a missed button, a console call) from
+ * mutating data the role isn't allowed to touch. Denied calls toast and return undefined.
+ */
+export function guarded<T extends ActionMap>(
+  actions: T,
+  perms: Partial<Record<keyof T, Permission>>,
+): Guarded<T> {
+  return Object.fromEntries(
+    Object.entries(actions).map(([name, fn]) => [
+      name,
+      (...args: unknown[]) => {
+        const perm = perms[name as keyof T];
+        const role = roleOf(state);
+        if (perm && !ROLE_PERMS[role].includes(perm)) {
+          toast.error(deniedReason(role));
+          return undefined;
+        }
+        return fn(...args);
+      },
+    ]),
+  ) as unknown as Guarded<T>;
+}
+export const workspaceActions = guarded(
+  {
+    setViewAs(viewAs: Role | null) {
+      set({ ...state, viewAs });
+    },
+    setGeneral(general: State["general"]) {
+      set({ ...state, general });
+    },
+    invite(email: string, role: Role) {
+      email = email.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+      if (state.members.some((m) => m.email.toLowerCase() === email)) return false;
+      // Only an Owner can hand out the Owner role.
+      if (role === "Owner" && roleOf(state) !== "Owner") return false;
+      const name = email.split("@")[0] ?? email;
+      set({
+        ...state,
+        members: [
+          ...state.members,
+          {
+            id: `inv_${Date.now().toString(36)}`,
+            name,
+            email,
+            role,
+            initials: name.slice(0, 2).toUpperCase(),
+            lastActive: "",
+            pending: true,
+          },
+        ],
+      });
+      return true;
+    },
+    setRole(id: string, role: Role) {
+      const target = state.members.find((m) => m.id === id);
+      // Nobody changes their own role, and only an Owner can grant or take away Owner.
+      if (!target || id === state.currentUserId) return;
+      if ((role === "Owner" || target.role === "Owner") && roleOf(state) !== "Owner") return;
+      set({ ...state, members: state.members.map((m) => (m.id === id ? { ...m, role } : m)) });
+    },
+    remove(id: string) {
+      const target = state.members.find((m) => m.id === id);
+      // The current user and Owners can't be removed from here (avoids an ownerless workspace).
+      if (!target || id === state.currentUserId || target.role === "Owner") return;
+      set({ ...state, members: state.members.filter((m) => m.id !== id) });
+    },
+    setPref(type: string, channel: Channel, on: boolean) {
+      set({
+        ...state,
+        prefs: {
+          ...state.prefs,
+          [type]: {
+            ...(state.prefs[type] ?? { inApp: true, email: true, slack: false }),
+            [channel]: on,
+          },
+        },
+      });
+    },
+    setSlack(slack: State["slack"]) {
+      set({ ...state, slack });
+    },
+    setWebhook(webhook: State["webhook"]) {
+      set({ ...state, webhook });
+    },
+    startOnboarding(base: { projects: number; keys: number; budgets: number } | null) {
+      set({ ...state, onboarding: base });
+    },
+    markRead(ids: string[]) {
+      set({ ...state, readNotifications: [...new Set([...state.readNotifications, ...ids])] });
+    },
+  },
+  {
+    setGeneral: "manageWorkspace",
+    setSlack: "manageWorkspace",
+    setWebhook: "manageWorkspace",
+    invite: "manageTeam",
+    setRole: "manageTeam",
+    remove: "manageTeam",
+  },
+);

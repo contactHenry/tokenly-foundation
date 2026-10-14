@@ -1,4 +1,6 @@
 import { useSyncExternalStore } from "react";
+import { restoreState } from "@/components/tokenly/storage";
+import { guarded } from "@/components/tokenly/workspace-store";
 import { alerts, apiKeys, budgets, projects, usageEvents } from "@/lib/mock";
 
 export type Scope = "org" | "project" | "key";
@@ -121,7 +123,7 @@ export function useLimitsStore() {
         loaded = true;
         try {
           const r = localStorage.getItem(KEY);
-          if (r) state = JSON.parse(r) as State;
+          state = restoreState(r, seed());
         } catch {
           /* seed */
         }
@@ -134,25 +136,33 @@ export function useLimitsStore() {
     () => server,
   );
 }
-export const limitActions = {
-  saveBudget(b: BudgetRule) {
-    set({
-      ...state,
-      budgets: state.budgets.some((x) => x.id === b.id)
-        ? state.budgets.map((x) => (x.id === b.id ? b : x))
-        : [...state.budgets, b],
-    });
+export const limitActions = guarded(
+  {
+    saveBudget(b: BudgetRule) {
+      set({
+        ...state,
+        budgets: state.budgets.some((x) => x.id === b.id)
+          ? state.budgets.map((x) => (x.id === b.id ? b : x))
+          : [...state.budgets, b],
+      });
+    },
+    deleteBudget(id: string) {
+      set({ ...state, budgets: state.budgets.filter((b) => b.id !== id) });
+    },
+    updateRule(type: AlertRuleType, patch: Partial<AlertRule>) {
+      set({ ...state, rules: state.rules.map((r) => (r.type === type ? { ...r, ...patch } : r)) });
+    },
+    setStatus(id: string, status: AlertStatus) {
+      set({ ...state, statuses: { ...state.statuses, [id]: status } });
+    },
   },
-  deleteBudget(id: string) {
-    set({ ...state, budgets: state.budgets.filter((b) => b.id !== id) });
+  {
+    saveBudget: "manageLimits",
+    deleteBudget: "manageLimits",
+    updateRule: "manageLimits",
+    setStatus: "manageLimits",
   },
-  updateRule(type: AlertRuleType, patch: Partial<AlertRule>) {
-    set({ ...state, rules: state.rules.map((r) => (r.type === type ? { ...r, ...patch } : r)) });
-  },
-  setStatus(id: string, status: AlertStatus) {
-    set({ ...state, statuses: { ...state.statuses, [id]: status } });
-  },
-};
+);
 
 export const shift = (date: string, days: number) => {
   const d = new Date(`${date}T00:00:00Z`);

@@ -34,8 +34,7 @@ function Page() {
   return (
     <div className="space-y-10">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Limits & Alerts</p>
-        <h2 className="mt-2 text-2xl font-semibold">Limits & Alerts</h2>
+        <h1 className="text-2xl font-semibold">Limits & Alerts</h1>
         <p className="mt-1 text-sm text-muted-foreground">Catch overspend before it happens.</p>
       </div>
       <BudgetsSection

@@ -27,8 +27,7 @@ function Page() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Settings</p>
-        <h2 className="mt-2 text-2xl font-semibold">Settings</h2>
+        <h1 className="text-2xl font-semibold">Settings</h1>
       </div>
       <SettingsView />
     </div>

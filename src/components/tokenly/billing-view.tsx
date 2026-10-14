@@ -28,6 +28,7 @@ import {
 import { AlertBanner, DataTable, StatusBadge, type Column } from "@/components/tokenly/primitives";
 import { invoices, models } from "@/lib/mock";
 import { cn } from "@/lib/utils";
+import { useRole } from "@/components/tokenly/workspace-store";
 import {
   BONUS_TIERS,
   PLAN,
@@ -64,7 +65,7 @@ export function BalanceCard({ onTopUp }: { onTopUp: () => void }) {
   const days = runwayDays(balance),
     burn = burnPerDay();
   return (
-    <div className="rounded-xl border bg-card p-6 min-w-0 lg:col-span-7">
+    <div className="surface p-6 min-w-0 lg:col-span-7">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm text-muted-foreground">Credit balance</p>
@@ -330,7 +331,9 @@ export function TopUpDialog({
 
 /* ---------- Auto-recharge ---------- */
 export function AutoRechargeCard() {
-  const { autoRecharge: a } = useBillingStore();
+  const { autoRecharge: a, methods } = useBillingStore();
+  const canEdit = useRole().can("manageBilling");
+  const minimum = { threshold: 1, amount: 100, monthlyCap: 1 };
   const cost = a.amount * USD_PER_CREDIT;
   const field = (
     label: string,
@@ -341,15 +344,24 @@ export function AutoRechargeCard() {
     <div className="space-y-1.5">
       <Label className="text-xs text-muted-foreground">{label}</Label>
       <div className="flex items-center gap-2">
+        {/* Committed on blur so the field can be cleared and retyped; invalid input reverts. */}
         <Input
+          key={value}
           type="number"
-          min={1}
+          min={minimum[key]}
+          step={1}
           className="h-9 min-w-0"
-          value={value}
-          disabled={!a.enabled}
-          onChange={(e) => {
-            const v = Number(e.target.value);
-            if (Number.isFinite(v) && v >= 0) billingActions.setAutoRecharge({ [key]: v });
+          defaultValue={value}
+          disabled={!a.enabled || !canEdit}
+          onBlur={(e) => {
+            const v = Math.round(Number(e.target.value));
+            if (v === value) return;
+            if (!Number.isFinite(v) || v < minimum[key] || v > 10_000_000) {
+              e.target.value = String(value);
+              toast.error(`${label} must be at least ${num(minimum[key])}.`);
+              return;
+            }
+            billingActions.setAutoRecharge({ [key]: v });
           }}
           aria-label={label}
         />
@@ -358,7 +370,7 @@ export function AutoRechargeCard() {
     </div>
   );
   return (
-    <div className="rounded-xl border bg-card p-6 min-w-0 lg:col-span-5">
+    <div className="surface p-6 min-w-0 lg:col-span-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <Zap className="size-4 text-muted-foreground" />
@@ -366,6 +378,7 @@ export function AutoRechargeCard() {
         </div>
         <Switch
           checked={a.enabled}
+          disabled={!canEdit || (!a.enabled && methods.length === 0)}
           onCheckedChange={(enabled) => {
             billingActions.setAutoRecharge({ enabled });
             toast.success(enabled ? "Auto-recharge on" : "Auto-recharge off");
@@ -388,8 +401,16 @@ export function AutoRechargeCard() {
       >
         {a.enabled
           ? `When your balance drops below ${num(a.threshold)} credits, we'll add ${num(a.amount)} credits (${money(cost)}) to your default card — up to ${money(a.monthlyCap)} per month.`
-          : "Auto-recharge is off. Your API calls will stop if credits run out."}
+          : methods.length === 0
+            ? "Add a payment method to turn on auto-recharge."
+            : "Auto-recharge is off. Your API calls will stop if credits run out."}
       </p>
+      {a.enabled && a.monthlyCap < cost && (
+        <p className="mt-2 text-xs text-warning" role="alert">
+          The monthly cap ({money(a.monthlyCap)}) is below one recharge ({money(cost)}), so
+          auto-recharge will never run. Raise the cap or lower the amount.
+        </p>
+      )}
     </div>
   );
 }
@@ -397,7 +418,7 @@ export function AutoRechargeCard() {
 /* ---------- Plan ---------- */
 export function PlanCard() {
   return (
-    <div className="rounded-xl border bg-card min-w-0 lg:col-span-7">
+    <div className="surface min-w-0 lg:col-span-7">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b p-6">
         <div>
           <p className="text-sm text-muted-foreground">Current plan</p>
@@ -451,6 +472,7 @@ export function PlanCard() {
 
 /* ---------- Payment methods ---------- */
 export function PaymentMethodsCard() {
+  const canEdit = useRole().can("manageBilling");
   const { methods } = useBillingStore();
   const [adding, setAdding] = useState(false),
     [card, setCard] = useState(""),
@@ -478,7 +500,7 @@ export function PaymentMethodsCard() {
     toast.success("Card added");
   };
   return (
-    <div className="rounded-xl border bg-card p-6 min-w-0 lg:col-span-5">
+    <div className="surface p-6 min-w-0 lg:col-span-5">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Payment methods</h3>
         <Gate
@@ -514,6 +536,7 @@ export function PaymentMethodsCard() {
                   size="sm"
                   variant="ghost"
                   className="h-7 text-xs"
+                  disabled={!canEdit}
                   onClick={() => {
                     billingActions.makeDefault(m.id);
                     toast.success(`${m.brand} •••• ${m.last4} is now default`);
@@ -527,7 +550,14 @@ export function PaymentMethodsCard() {
                 size="icon"
                 className="size-7"
                 aria-label={`Remove ${m.brand} ending ${m.last4}`}
+                disabled={!canEdit}
                 onClick={() => {
+                  if (
+                    !window.confirm(
+                      `Remove ${m.brand} ending ${m.last4}?${m.isDefault ? " It is your default card." : ""}`,
+                    )
+                  )
+                    return;
                   billingActions.removeMethod(m.id);
                   toast.success("Card removed");
                 }}
@@ -615,6 +645,7 @@ function downloadPdf(number: string, date: string, amount: number, status: strin
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 export function InvoicesSection() {
+  const canPay = useRole().can("manageBilling");
   const { invoiceStatus } = useBillingStore();
   const [retrying, setRetrying] = useState(false);
   const rows = invoices.map((i) => ({
@@ -688,7 +719,7 @@ export function InvoicesSection() {
               variant="outline"
               className="bg-card"
               onClick={retry}
-              disabled={retrying}
+              disabled={retrying || !canPay}
             >
               <RotateCcw className={cn("size-3.5", retrying && "animate-spin")} />
               {retrying ? "Retrying…" : "Retry"}

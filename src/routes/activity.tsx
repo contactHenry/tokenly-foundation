@@ -27,8 +27,7 @@ function Page() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Activity</p>
-        <h2 className="mt-2 text-2xl font-semibold">Activity</h2>
+        <h1 className="text-2xl font-semibold">Activity</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Who did what, and when. Follows the date range at the top.
         </p>

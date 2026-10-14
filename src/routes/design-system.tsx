@@ -71,7 +71,7 @@ function DesignSystem() {
     <div className="space-y-10">
       <div>
         <p className="text-sm text-muted-foreground">Foundation / Components</p>
-        <h2 className="mt-2 text-2xl font-semibold">Design system</h2>
+        <h1 className="text-2xl font-semibold">Design system</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           The building blocks behind every Tokenly workspace.
         </p>
@@ -117,7 +117,7 @@ function DesignSystem() {
             data={dailyUsage.slice(-30)}
             timeframe="30d"
           />
-          <div className="rounded-xl border bg-card p-5 space-y-6">
+          <div className="surface p-5 space-y-6">
             <h3 className="font-semibold">Budget thresholds</h3>
             <ThresholdProgress label="Production API" value={42} />
             <ThresholdProgress label="Research Lab" value={87} />

@@ -1,3 +1,4 @@
+import { budgetSpend, useLimitsStore } from "@/components/tokenly/limits-store";
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
@@ -53,7 +54,7 @@ const utc = (date: string) => new Date(`${date}T00:00:00Z`).getTime();
 const shift = (date: string, days: number) =>
   new Date(utc(date) + days * DAY).toISOString().slice(0, 10);
 
-export function getOverviewData(range: DateSelection) {
+export function getOverviewData(range: DateSelection, balance = creditAccount.balance) {
   const days = dailyUsage.filter((day) => day.date >= range.from && day.date <= range.to);
   const events = usageEvents.filter((event) => event.date >= range.from && event.date <= range.to);
   const dayCount = Math.max(1, Math.round((utc(range.to) - utc(range.from)) / DAY) + 1);
@@ -77,7 +78,7 @@ export function getOverviewData(range: DateSelection) {
   const priorBurn = previousSeven.length
     ? sum(previousSeven.map((day) => day.cost)) / previousSeven.length / creditAccount.usdPerCredit
     : 0;
-  const runway = burn > 0 ? Math.ceil(creditAccount.balance / burn) : null;
+  const runway = burn > 0 ? Math.ceil(balance / burn) : null;
   const depletion = runway !== null ? shift(range.to, runway) : null;
   const monthlyBudget = sum(budgets.map((b) => b.monthlyLimit));
   const budget = (monthlyBudget * dayCount) / 30;
@@ -118,6 +119,7 @@ export function getOverviewData(range: DateSelection) {
       topModel: "Projected",
     });
   return {
+    balance,
     days,
     events,
     spend,
@@ -173,7 +175,7 @@ function Metric({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-48 min-w-0 flex-col justify-between rounded-xl border bg-card p-5">
+    <div className="flex min-h-40 min-w-0 flex-col justify-between gap-4 surface p-5">
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-medium text-muted-foreground">{label}</p>
         <span
@@ -189,7 +191,7 @@ function Metric({
         />
       </div>
       <div className="min-w-0">
-        <p className="text-3xl font-semibold leading-tight sm:text-[32px]">{value}</p>
+        <p className="text-[28px] font-semibold leading-tight tracking-tight">{value}</p>
         <p className="mt-2 text-xs text-muted-foreground">{detail}</p>
         {children}
       </div>
@@ -244,7 +246,7 @@ function Meter({
 }
 export function StatusRow({ data }: { data: OverviewData }) {
   const topUp = creditAccount.topUps[0]?.amount ?? 0;
-  const sinceTopUp = Math.max(0, topUp - creditAccount.balance);
+  const sinceTopUp = Math.max(0, topUp - data.balance);
   const used = topUp > 0 ? (sinceTopUp / topUp) * 100 : 0;
   const creditStatus: Severity =
     data.runway !== null && data.runway < 7
@@ -259,7 +261,7 @@ export function StatusRow({ data }: { data: OverviewData }) {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Metric
         label="Credits remaining"
-        value={creditAccount.balance.toLocaleString()}
+        value={data.balance.toLocaleString()}
         detail={`vs. ${topUp.toLocaleString()} at last top-up`}
         status={creditStatus}
       >
@@ -329,7 +331,11 @@ export function StatusRow({ data }: { data: OverviewData }) {
 }
 
 export function NeedsAttention({ data }: { data: OverviewData }) {
-  const flagged = budgets
+  // Read budgets from the limits store so edits and deletions show up here immediately.
+  const { budgets: rules } = useLimitsStore();
+  const flagged = rules
+    .filter((r) => r.scope === "project" && r.period === "monthly" && r.amount > 0)
+    .map((r) => ({ projectId: r.targetId, spent: budgetSpend(r), monthlyLimit: r.amount }))
     .filter((b) => b.spent / b.monthlyLimit >= 0.8)
     .sort((a, b) => b.spent / b.monthlyLimit - a.spent / a.monthlyLimit);
   const spike = data.events.some((e) => e.date === "2026-09-18");
@@ -363,7 +369,7 @@ export function NeedsAttention({ data }: { data: OverviewData }) {
       : []),
   ].slice(0, 3);
   return (
-    <section aria-labelledby="attention-title" className="rounded-xl border bg-card">
+    <section aria-labelledby="attention-title" className="surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
         <div className="flex items-center gap-2">
           <BellRing className="size-4 text-warning" />
@@ -459,7 +465,7 @@ function SpendTooltip({
 export function SpendTrend({ data, range }: { data: OverviewData; range: DateSelection }) {
   const dailyBudget = data.monthlyBudget / 30;
   return (
-    <section aria-labelledby="spend-title" className="min-w-0 rounded-xl border bg-card p-5 sm:p-6">
+    <section aria-labelledby="spend-title" className="min-w-0 surface p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 id="spend-title" className="font-semibold">
@@ -581,10 +587,7 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
   );
   const rows = ranked(data.events, prior, kind);
   return (
-    <section
-      aria-labelledby="consumers-title"
-      className="min-w-0 rounded-xl border bg-card p-5 sm:p-6"
-    >
+    <section aria-labelledby="consumers-title" className="min-w-0 surface p-5 sm:p-6">
       <div>
         <h3 id="consumers-title" className="font-semibold">
           Top consumers
@@ -685,7 +688,7 @@ export function RecentActivity({ range }: { range: DateSelection }) {
     .filter((event) => event.date >= range.from && event.date <= range.to)
     .slice(0, 6);
   return (
-    <section aria-labelledby="activity-title" className="rounded-xl border bg-card">
+    <section aria-labelledby="activity-title" className="surface">
       <div className="flex items-center justify-between gap-3 border-b px-5 py-4">
         <div>
           <h3 id="activity-title" className="font-semibold">

@@ -34,6 +34,8 @@ import {
 import { DataTable, StatusBadge, type Column } from "@/components/tokenly/primitives";
 import { apiKeys, projects, teamMembers } from "@/lib/mock";
 import { cn } from "@/lib/utils";
+import { Gate } from "@/components/tokenly/role-gate";
+import { useRole } from "@/components/tokenly/workspace-store";
 import {
   alertHistory,
   budgetSpend,
@@ -136,6 +138,7 @@ function Meter({ value, thresholds }: { value: number; thresholds: number[] }) {
 
 /* ---------------- Budgets ---------------- */
 export function BudgetsSection({ focusProject }: { focusProject?: string }) {
+  const canEdit = useRole().can("manageLimits");
   const { budgets } = useLimitsStore();
   const [editing, setEditing] = useState<BudgetRule | "new" | null>(null);
   useEffect(() => {
@@ -153,12 +156,22 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
             Limits that stop overspend before it happens.
           </p>
         </div>
-        <Button onClick={() => setEditing("new")}>
-          <Plus className="size-4" />
-          New budget
-        </Button>
+        <Gate
+          perm="manageLimits"
+          disabled={
+            <Button disabled>
+              <Plus className="size-4" />
+              New budget
+            </Button>
+          }
+        >
+          <Button onClick={() => setEditing("new")}>
+            <Plus className="size-4" />
+            New budget
+          </Button>
+        </Gate>
       </div>
-      <div className="divide-y rounded-xl border bg-card">
+      <div className="divide-y surface">
         {budgets.map((b) => {
           const spent = budgetSpend(b),
             pct = (spent / b.amount) * 100,
@@ -222,6 +235,7 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
                   variant="ghost"
                   size="icon"
                   aria-label={`Edit budget for ${scopeName(b.scope, b.targetId)}`}
+                  disabled={!canEdit}
                   onClick={() => setEditing(b)}
                 >
                   <Pencil className="size-4" />
@@ -229,8 +243,14 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Delete budget"
-                  onClick={() => limitActions.deleteBudget(b.id)}
+                  aria-label={`Delete budget for ${scopeName(b.scope, b.targetId)}`}
+                  disabled={!canEdit}
+                  onClick={() => {
+                    limitActions.deleteBudget(b.id);
+                    toast("Budget deleted", {
+                      action: { label: "Undo", onClick: () => limitActions.saveBudget(b) },
+                    });
+                  }}
                 >
                   <Trash2 className="size-4" />
                 </Button>
@@ -561,32 +581,33 @@ const ruleMeta: Record<
     icon: Wallet,
     unit: "credits",
     sentence: (r) =>
-      `Notify ${names(r.recipients)} when the credit balance drops below ${r.value.toLocaleString()} credits.`,
+      `Notify ${names(r.recipients) || "no one"} when the credit balance drops below ${r.value.toLocaleString()} credits.`,
   },
   spike: {
     title: "Usage spike",
     icon: TrendingUp,
     unit: "% above 7d avg",
     sentence: (r) =>
-      `Notify ${names(r.recipients)} when daily spend is ${r.value}% above the 7-day average.`,
+      `Notify ${names(r.recipients) || "no one"} when daily spend is ${r.value}% above the 7-day average.`,
   },
   budget: {
     title: "Budget threshold",
     icon: Bell,
     unit: "% of budget",
     sentence: (r) =>
-      `Notify ${names(r.recipients)} when any budget reaches ${r.value}% of its limit.`,
+      `Notify ${names(r.recipients) || "no one"} when any budget reaches ${r.value}% of its limit.`,
   },
   "new-key": {
     title: "New key created",
     icon: KeyRound,
-    sentence: (r) => `Notify ${names(r.recipients)} whenever someone creates an API key.`,
+    sentence: (r) =>
+      `Notify ${names(r.recipients) || "no one"} whenever someone creates an API key.`,
   },
   "failed-payment": {
     title: "Failed payment",
     icon: CreditCard,
     sentence: (r) =>
-      `Notify ${names(r.recipients)} immediately if a payment or auto-recharge fails.`,
+      `Notify ${names(r.recipients) || "no one"} immediately if a payment or auto-recharge fails.`,
   },
 };
 const channelLabels: Record<Channel, string> = {
@@ -598,6 +619,7 @@ const channelLabels: Record<Channel, string> = {
 
 export function AlertRulesSection() {
   const { rules } = useLimitsStore();
+  const canEdit = useRole().can("manageLimits");
   return (
     <section className="space-y-4">
       <div>
@@ -609,10 +631,7 @@ export function AlertRulesSection() {
           const m = ruleMeta[r.type],
             Icon = m.icon;
           return (
-            <div
-              key={r.type}
-              className={cn("rounded-xl border bg-card p-5", !r.enabled && "opacity-70")}
-            >
+            <div key={r.type} className={cn("surface p-5", !r.enabled && "opacity-70")}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <span className="grid size-8 place-items-center rounded-lg bg-muted">
@@ -622,6 +641,7 @@ export function AlertRulesSection() {
                 </div>
                 <Switch
                   checked={r.enabled}
+                  disabled={!canEdit}
                   onCheckedChange={(enabled) => limitActions.updateRule(r.type, { enabled })}
                   aria-label={`Enable ${m.title}`}
                 />
@@ -632,11 +652,13 @@ export function AlertRulesSection() {
                   <Input
                     type="number"
                     min={1}
+                    max={r.type === "budget" ? 100 : undefined}
+                    disabled={!canEdit}
                     className="h-8 w-28"
                     value={r.value}
                     onChange={(e) => {
                       const v = Number(e.target.value);
-                      if (Number.isFinite(v) && v >= 0)
+                      if (Number.isFinite(v) && v >= 1 && (r.type !== "budget" || v <= 100))
                         limitActions.updateRule(r.type, { value: v });
                     }}
                     aria-label={`${m.title} value`}
@@ -651,6 +673,7 @@ export function AlertRulesSection() {
                     <button
                       key={c}
                       type="button"
+                      disabled={!canEdit}
                       aria-pressed={on}
                       onClick={() =>
                         limitActions.updateRule(r.type, {
@@ -658,7 +681,7 @@ export function AlertRulesSection() {
                         })
                       }
                       className={cn(
-                        "rounded-full border px-2.5 py-1 text-xs",
+                        "rounded-full border px-2.5 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60",
                         on
                           ? "border-primary bg-accent text-accent-foreground"
                           : "text-muted-foreground hover:bg-muted",
@@ -677,6 +700,7 @@ export function AlertRulesSection() {
                     <button
                       key={u.id}
                       type="button"
+                      disabled={!canEdit}
                       title={u.name}
                       aria-pressed={on}
                       aria-label={`${on ? "Remove" : "Add"} ${u.name}`}
@@ -688,7 +712,7 @@ export function AlertRulesSection() {
                         })
                       }
                       className={cn(
-                        "grid size-7 place-items-center rounded-full border text-[10px] font-semibold",
+                        "grid size-7 place-items-center rounded-full border text-[10px] font-semibold disabled:cursor-not-allowed disabled:opacity-60",
                         on
                           ? "border-primary bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted",
@@ -710,6 +734,7 @@ export function AlertRulesSection() {
 /* ---------------- History ---------------- */
 type HistoryRow = (typeof alertHistory)[number];
 export function AlertHistorySection() {
+  const canEdit = useRole().can("manageLimits");
   const { statuses } = useLimitsStore();
   const statusOf = (id: string): AlertStatus => statuses[id] ?? "resolved";
   const tone: Record<AlertStatus, "critical" | "warning" | "neutral" | "healthy"> = {
@@ -804,6 +829,7 @@ export function AlertHistorySection() {
           <Button
             size="sm"
             variant="outline"
+            disabled={!canEdit}
             onClick={() => {
               limitActions.setStatus(r.id, "acknowledged");
               toast.success("Alert acknowledged");
@@ -815,7 +841,11 @@ export function AlertHistorySection() {
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => limitActions.setStatus(r.id, "resolved")}
+            disabled={!canEdit}
+            onClick={() => {
+              limitActions.setStatus(r.id, "resolved");
+              toast.success("Alert resolved");
+            }}
           >
             Resolve
           </Button>

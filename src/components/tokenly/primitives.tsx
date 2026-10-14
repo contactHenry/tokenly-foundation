@@ -171,7 +171,7 @@ export function StatCard({
   detail?: string;
 }) {
   return (
-    <div className="rounded-xl border bg-card p-5 min-h-40 flex flex-col justify-between">
+    <div className="surface p-5 min-h-40 flex flex-col justify-between">
       <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-medium text-muted-foreground">{label}</span>
         {status && (
@@ -182,7 +182,7 @@ export function StatCard({
       </div>
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-2xl font-semibold leading-tight sm:text-[28px]">
+          <div className="text-2xl font-semibold leading-tight tracking-tight">
             <CountUp value={value} />
           </div>
           <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
@@ -292,7 +292,7 @@ export function DataTable<T>({
   );
   return (
     <>
-      <div className="hidden overflow-x-auto rounded-xl border bg-card md:block">
+      <div className="hidden overflow-x-auto surface md:block">
         <table className="w-full text-left text-sm">
           <thead className="sticky top-0 z-10 bg-muted/70 text-xs text-muted-foreground backdrop-blur-sm">
             <tr>
@@ -360,7 +360,7 @@ export function DataTable<T>({
               tabIndex={onRowClick ? 0 : undefined}
               onKeyDown={activate(row)}
               onClick={() => onRowClick?.(row)}
-              className={cn("rounded-xl border bg-card p-4 text-sm", rowCls)}
+              className={cn("surface p-4 text-sm", rowCls)}
             >
               {first && <div className="mb-2 font-medium">{first.render(row)}</div>}
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
@@ -433,7 +433,7 @@ export function EmptyState({
 }
 export function LoadingSkeleton() {
   return (
-    <div className="rounded-xl border bg-card p-5 space-y-4">
+    <div className="surface p-5 space-y-4">
       <div className="flex items-center gap-3">
         <Skeleton className="size-9 rounded-full" />
         <div className="space-y-2">
@@ -510,7 +510,7 @@ export function ChartCard({
   legend?: string[];
 }) {
   return (
-    <div className="rounded-xl border bg-card p-5 sm:p-6">
+    <div className="surface p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="font-semibold">{title}</h3>

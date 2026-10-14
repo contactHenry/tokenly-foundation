@@ -36,7 +36,7 @@ import {
   type Role,
 } from "./workspace-store";
 
-const card = "rounded-xl border bg-card p-6";
+const card = "surface p-6";
 const TIMEZONES = [
   "UTC",
   "Africa/Lagos",
@@ -144,9 +144,10 @@ function Team() {
     const e = email.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) || e.length > 255)
       return setErr("Enter a valid email address.");
-    if (members.some((m) => m.email === e))
+    if (members.some((m) => m.email.toLowerCase() === e))
       return setErr("That person is already in this workspace.");
-    workspaceActions.invite(e, role);
+    if (!workspaceActions.invite(e, role))
+      return setErr("You can't invite someone with that role.");
     toast.success(`Invite sent to ${e}`);
     setEmail("");
     setErr("");
@@ -155,7 +156,7 @@ function Team() {
   const manage = can("manageTeam");
   return (
     <div className="space-y-8">
-      <section className="rounded-xl border bg-card">
+      <section className="surface">
         <div className="flex items-center justify-between gap-3 border-b p-5">
           <div>
             <h3 className="font-semibold">Members</h3>
@@ -255,6 +256,7 @@ function Team() {
                         className="size-8"
                         aria-label={`Remove ${m.name}`}
                         onClick={() => {
+                          if (!window.confirm(`Remove ${m.name} from the workspace?`)) return;
                           workspaceActions.remove(m.id);
                           toast.success(`${m.name} removed`);
                         }}
@@ -269,7 +271,7 @@ function Team() {
           })}
         </ul>
       </section>
-      <section className="rounded-xl border bg-card">
+      <section className="surface">
         <div className="border-b p-5">
           <h3 className="font-semibold">Roles & permissions</h3>
           <p className="text-sm text-muted-foreground">What each role can do in this workspace.</p>
@@ -381,7 +383,7 @@ function Notifications() {
     ["slack", "Slack"],
   ];
   return (
-    <section className="max-w-3xl rounded-xl border bg-card">
+    <section className="max-w-3xl surface">
       <div className="border-b p-5">
         <h3 className="font-semibold">Your notification preferences</h3>
         <p className="text-sm text-muted-foreground">
@@ -433,6 +435,7 @@ function Notifications() {
 
 function Integrations() {
   const { slack, webhook } = useWorkspace();
+  const canEdit = useRole().can("manageWorkspace");
   const [channel, setChannel] = useState(slack.channel),
     [url, setUrl] = useState(webhook.url),
     [err, setErr] = useState("");
@@ -478,6 +481,7 @@ function Integrations() {
             <>
               <Button
                 variant="outline"
+                disabled={!canEdit}
                 onClick={() => {
                   workspaceActions.setSlack({ connected: false, channel });
                   toast.success("Slack disconnected");
@@ -486,6 +490,7 @@ function Integrations() {
                 Disconnect
               </Button>
               <Button
+                disabled={!canEdit}
                 onClick={() => {
                   workspaceActions.setSlack({ connected: true, channel });
                   toast.success(`Alerts will post to ${channel}`);
@@ -524,7 +529,7 @@ function Integrations() {
           </div>
           <Switch
             checked={webhook.enabled}
-            disabled={!webhook.url}
+            disabled={!webhook.url || !canEdit}
             aria-label="Enable webhook"
             onCheckedChange={(enabled) => {
               workspaceActions.setWebhook({ ...webhook, enabled });
@@ -550,8 +555,10 @@ function Integrations() {
               size="icon"
               aria-label="Copy signing secret"
               onClick={() => {
-                void navigator.clipboard?.writeText(webhook.secret);
-                toast.success("Secret copied");
+                navigator.clipboard
+                  ?.writeText(webhook.secret)
+                  .then(() => toast.success("Secret copied"))
+                  .catch(() => toast.error("Couldn't copy the secret"));
               }}
             >
               <Copy className="size-4" />
@@ -571,7 +578,9 @@ function Integrations() {
           >
             Send test
           </Button>
-          <Button onClick={saveHook}>Save</Button>
+          <Button onClick={saveHook} disabled={!canEdit}>
+            Save
+          </Button>
         </div>
       </section>
     </div>

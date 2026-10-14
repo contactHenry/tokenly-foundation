@@ -1,4 +1,6 @@
 import { useSyncExternalStore } from "react";
+import { restoreState } from "@/components/tokenly/storage";
+import { guarded } from "@/components/tokenly/workspace-store";
 import { creditAccount, invoices, usageEvents } from "@/lib/mock";
 
 export type PaymentMethod = {
@@ -69,7 +71,7 @@ export function useBillingStore() {
         loaded = true;
         try {
           const r = localStorage.getItem(KEY);
-          if (r) state = { ...seed(), ...(JSON.parse(r) as State) };
+          state = restoreState(r, seed());
         } catch {
           /* seed */
         }
@@ -83,58 +85,73 @@ export function useBillingStore() {
   );
 }
 
-export const billingActions = {
-  topUp(usd: number, methodLabel: string) {
-    const base = creditsFor(usd),
-      bonus = Math.round((base * bonusPct(usd)) / 100),
-      stamp = Date.now().toString(36);
-    const entries: LedgerEntry[] = [
-      {
-        id: `tu_${stamp}`,
-        date: LAST_DAY,
-        type: "top-up",
-        description: `Top-up · ${methodLabel}`,
-        amount: base,
-      },
-    ];
-    if (bonus)
-      entries.push({
-        id: `bn_${stamp}`,
-        date: LAST_DAY,
-        type: "bonus",
-        description: `${bonusPct(usd)}% top-up bonus`,
-        amount: bonus,
+export const billingActions = guarded(
+  {
+    topUp(usd: number, methodLabel: string) {
+      const base = creditsFor(usd),
+        bonus = Math.round((base * bonusPct(usd)) / 100),
+        stamp = Date.now().toString(36);
+      const entries: LedgerEntry[] = [
+        {
+          id: `tu_${stamp}`,
+          date: LAST_DAY,
+          type: "top-up",
+          description: `Top-up · ${methodLabel}`,
+          amount: base,
+        },
+      ];
+      if (bonus)
+        entries.push({
+          id: `bn_${stamp}`,
+          date: LAST_DAY,
+          type: "bonus",
+          description: `${bonusPct(usd)}% top-up bonus`,
+          amount: bonus,
+        });
+      set({
+        ...state,
+        balance: state.balance + base + bonus,
+        extraLedger: [...state.extraLedger, ...entries],
       });
-    set({
-      ...state,
-      balance: state.balance + base + bonus,
-      extraLedger: [...state.extraLedger, ...entries],
-    });
+    },
+    setAutoRecharge(patch: Partial<State["autoRecharge"]>) {
+      // Never charge without a card on file.
+      if (patch.enabled && state.methods.length === 0) return;
+      set({ ...state, autoRecharge: { ...state.autoRecharge, ...patch } });
+    },
+    addMethod(m: Omit<PaymentMethod, "id" | "isDefault">) {
+      set({
+        ...state,
+        methods: [
+          ...state.methods,
+          { ...m, id: `pm_${Date.now().toString(36)}`, isDefault: state.methods.length === 0 },
+        ],
+      });
+    },
+    removeMethod(id: string) {
+      const rest = state.methods.filter((m) => m.id !== id);
+      if (rest.length && !rest.some((m) => m.isDefault)) rest[0] = { ...rest[0]!, isDefault: true };
+      const autoRecharge = rest.length
+        ? state.autoRecharge
+        : { ...state.autoRecharge, enabled: false };
+      set({ ...state, methods: rest, autoRecharge });
+    },
+    makeDefault(id: string) {
+      set({ ...state, methods: state.methods.map((m) => ({ ...m, isDefault: m.id === id })) });
+    },
+    payInvoice(id: string) {
+      set({ ...state, invoiceStatus: { ...state.invoiceStatus, [id]: "paid" } });
+    },
   },
-  setAutoRecharge(patch: Partial<State["autoRecharge"]>) {
-    set({ ...state, autoRecharge: { ...state.autoRecharge, ...patch } });
+  {
+    topUp: "manageBilling",
+    setAutoRecharge: "manageBilling",
+    addMethod: "manageBilling",
+    removeMethod: "manageBilling",
+    makeDefault: "manageBilling",
+    payInvoice: "manageBilling",
   },
-  addMethod(m: Omit<PaymentMethod, "id" | "isDefault">) {
-    set({
-      ...state,
-      methods: [
-        ...state.methods,
-        { ...m, id: `pm_${Date.now().toString(36)}`, isDefault: state.methods.length === 0 },
-      ],
-    });
-  },
-  removeMethod(id: string) {
-    const rest = state.methods.filter((m) => m.id !== id);
-    if (rest.length && !rest.some((m) => m.isDefault)) rest[0] = { ...rest[0]!, isDefault: true };
-    set({ ...state, methods: rest });
-  },
-  makeDefault(id: string) {
-    set({ ...state, methods: state.methods.map((m) => ({ ...m, isDefault: m.id === id })) });
-  },
-  payInvoice(id: string) {
-    set({ ...state, invoiceStatus: { ...state.invoiceStatus, [id]: "paid" } });
-  },
-};
+);
 
 export const shift = (date: string, days: number) => {
   const d = new Date(`${date}T00:00:00Z`);

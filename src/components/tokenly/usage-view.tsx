@@ -66,6 +66,9 @@ const names = {
   token: "Token type",
 };
 const metrics = ["Cost", "Tokens", "Requests"] as const;
+// The "Last 7d" column holds a sparkline array; sort it by its total.
+const sortNumber = (value: unknown) =>
+  Array.isArray(value) ? value.reduce((a: number, b: number) => a + b, 0) : Number(value);
 const getStored = (): SavedView[] => {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem("tokenly-saved-usage-views") ?? "[]");
@@ -89,7 +92,9 @@ function downloadCsv(rows: GroupRow[], dimension: Dimension) {
         r.percent.toFixed(2),
         r.trend.toFixed(2),
       ]
-        .map((v) => `"${String(v).replaceAll('"', '""')}"`)
+        // Prefix values a spreadsheet would run as a formula (=, +, -, @) so they stay plain text.
+        .map((v) => (typeof v === "string" && /^[=+\-@\t\r]/.test(v) ? `'${v}` : String(v)))
+        .map((v) => `"${v.replaceAll('"', '""')}"`)
         .join(","),
     ),
   ].join("\n");
@@ -138,7 +143,7 @@ export function UsageView() {
     (a, b) =>
       (typeof a[sort] === "string"
         ? String(a[sort]).localeCompare(String(b[sort]))
-        : Number(a[sort]) - Number(b[sort])) * (descending ? -1 : 1),
+        : sortNumber(a[sort]) - sortNumber(b[sort])) * (descending ? -1 : 1),
   );
   const pageSize = 5,
     pages = Math.max(1, Math.ceil(rows.length / pageSize));
@@ -218,11 +223,17 @@ export function UsageView() {
         },
       },
     ];
-    localStorage.setItem("tokenly-saved-usage-views", JSON.stringify(next));
+    try {
+      localStorage.setItem("tokenly-saved-usage-views", JSON.stringify(next));
+    } catch {
+      toast.error("Couldn't save this view on this device (storage is full or blocked).");
+      return;
+    }
+    const replaced = saved.some((v) => v.name === name);
     setSaved(next);
     setSaveOpen(false);
     setViewName("");
-    toast.success(`View "${name}" saved`);
+    toast.success(replaced ? `View "${name}" updated` : `View "${name}" saved`);
   };
   const clear = () =>
     update({
@@ -238,8 +249,7 @@ export function UsageView() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-sm text-muted-foreground">Workspace / Usage</p>
-        <h2 className="mt-2 text-2xl font-semibold">Usage</h2>
+        <h1 className="text-2xl font-semibold">Usage</h1>
       </div>
       <div className="sticky top-16 z-20 -mx-4 border-y bg-background/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex flex-wrap items-center gap-2">
@@ -296,7 +306,16 @@ export function UsageView() {
             <Select
               onValueChange={(name) => {
                 const view = saved.find((v) => v.name === name);
-                if (view) update({ ...view.filters });
+                // Reset every filter first so a view saved with "All" clears filters set now.
+                if (view)
+                  update({
+                    model: undefined,
+                    project: undefined,
+                    key: undefined,
+                    user: undefined,
+                    token: undefined,
+                    ...view.filters,
+                  });
               }}
             >
               <SelectTrigger className="h-9 w-36 bg-card text-xs" aria-label="My saved views">
@@ -366,7 +385,7 @@ export function UsageView() {
           ],
           ["Requests", events.length.toLocaleString()],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-xl border bg-card p-4">
+          <div key={label} className="surface p-4">
             <p className="text-xs text-muted-foreground">{label}</p>
             <p className="mt-2 text-xl font-semibold">{value}</p>
           </div>
@@ -384,7 +403,7 @@ export function UsageView() {
         />
       ) : (
         <>
-          <section className="rounded-xl border bg-card p-5 sm:p-6">
+          <section className="surface p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h3 className="font-semibold">Usage over time</h3>
@@ -493,7 +512,7 @@ export function UsageView() {
               </ResponsiveContainer>
             </div>
           </section>
-          <section className="rounded-xl border bg-card">
+          <section className="surface">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
               <div>
                 <h3 className="font-semibold">Usage by {group === "key" ? "API key" : group}</h3>
