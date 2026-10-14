@@ -89,7 +89,7 @@ export function PageHeader({
   description,
   actions,
 }: {
-  icon: IconComponent;
+  icon?: IconComponent | undefined;
   tone?: Tone | undefined;
   title: string;
   description?: ReactNode;
@@ -98,7 +98,7 @@ export function PageHeader({
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div className="flex min-w-0 items-center gap-3.5">
-        <IconTile icon={icon} tone={tone} size="lg" />
+        {icon && <IconTile icon={icon} tone={tone} size="lg" />}
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold leading-tight">{title}</h1>
           {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
