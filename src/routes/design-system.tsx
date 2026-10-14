@@ -1,4 +1,4 @@
-import { Activity, BookOpen, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
+import { Activity, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
 import { toast } from "sonner";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
