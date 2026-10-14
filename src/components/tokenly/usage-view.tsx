@@ -1,33 +1,124 @@
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { ArrowDownRight, ArrowRight, ArrowUpDown, ArrowUpRight, Download, Save, X } from "lucide-react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpDown,
+  ArrowUpRight,
+  Download,
+  Save,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DetailDrawer, EmptyState, Sparkline } from "@/components/tokenly/primitives";
 import { useDateRange } from "@/components/tokenly/app-shell";
 import { models, teamMembers } from "@/lib/mock";
-import { compact, dimensions, filteredEvents, groupEvents, labelFor, measure, money, shiftDate, type Dimension, type GroupRow, type UsageFilters } from "@/components/tokenly/usage-data";
+import {
+  compact,
+  dimensions,
+  filteredEvents,
+  groupEvents,
+  labelFor,
+  measure,
+  money,
+  shiftDate,
+  type Dimension,
+  type GroupRow,
+  type UsageFilters,
+} from "@/components/tokenly/usage-data";
 
 type Search = UsageFilters & { action?: string | undefined };
 type SavedView = { name: string; filters: UsageFilters };
 const FILTERS = ["model", "project", "key", "user", "token"] as const;
-const names = { model: "Model", project: "Project", key: "API key", user: "User", token: "Token type" };
+const names = {
+  model: "Model",
+  project: "Project",
+  key: "API key",
+  user: "User",
+  token: "Token type",
+};
 const metrics = ["Cost", "Tokens", "Requests"] as const;
-const getStored = (): SavedView[] => { try { const parsed: unknown = JSON.parse(localStorage.getItem("tokenly-saved-usage-views") ?? "[]"); return Array.isArray(parsed) ? parsed.filter(v => typeof v?.name === "string" && typeof v?.filters === "object") : []; } catch { return []; } };
-function downloadCsv(rows: GroupRow[], dimension: Dimension) { const content = ["name,requests,input_tokens,output_tokens,cost,percent,trend_percent", ...rows.map(r => [r.name, r.requests, r.input, r.output, r.cost.toFixed(4), r.percent.toFixed(2), r.trend.toFixed(2)].map(v => `"${String(v).replaceAll('"', '""')}"`).join(","))].join("\n"); const url = URL.createObjectURL(new Blob([content], { type: "text/csv" })); const a = document.createElement("a"); a.href = url; a.download = `tokenly-usage-by-${dimension}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+// The "Last 7d" column holds a sparkline array; sort it by its total.
+const sortNumber = (value: unknown) =>
+  Array.isArray(value) ? value.reduce((a: number, b: number) => a + b, 0) : Number(value);
+const getStored = (): SavedView[] => {
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem("tokenly-saved-usage-views") ?? "[]");
+    return Array.isArray(parsed)
+      ? parsed.filter((v) => typeof v?.name === "string" && typeof v?.filters === "object")
+      : [];
+  } catch {
+    return [];
+  }
+};
+function downloadCsv(rows: GroupRow[], dimension: Dimension) {
+  const content = [
+    "name,requests,input_tokens,output_tokens,cost,percent,trend_percent",
+    ...rows.map((r) =>
+      [
+        r.name,
+        r.requests,
+        r.input,
+        r.output,
+        r.cost.toFixed(4),
+        r.percent.toFixed(2),
+        r.trend.toFixed(2),
+      ]
+        // Prefix values a spreadsheet would run as a formula (=, +, -, @) so they stay plain text.
+        .map((v) => (typeof v === "string" && /^[=+\-@\t\r]/.test(v) ? `'${v}` : String(v)))
+        .map((v) => `"${v.replaceAll('"', '""')}"`)
+        .join(","),
+    ),
+  ].join("\n");
+  const url = URL.createObjectURL(new Blob([content], { type: "text/csv" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `tokenly-usage-by-${dimension}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 export function UsageView() {
   const search = useSearch({ from: "/usage" });
   const navigate = useNavigate({ from: "/usage" });
   const range = useDateRange();
-  const from = search.from ?? range.from, to = search.to ?? range.to;
+  const from = search.from ?? range.from,
+    to = search.to ?? range.to;
   const filters: Search = search;
-  const update = (patch: Partial<Search>) => navigate({ to: "/usage", search: prev => ({ ...prev, ...patch }), replace: true });
-  const events = useMemo(() => filteredEvents(filters, range.from, range.to), [search, range.from, range.to]);
+  const update = (patch: Partial<Search>) =>
+    navigate({ to: "/usage", search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const events = useMemo(
+    () => filteredEvents(filters, range.from, range.to),
+    [search, range.from, range.to],
+  );
   const [group, setGroup] = useState<Dimension>("model");
   const [metric, setMetric] = useState<(typeof metrics)[number]>("Cost");
   const [hidden, setHidden] = useState<string[]>([]);
@@ -38,29 +129,643 @@ export function UsageView() {
   const [saveOpen, setSaveOpen] = useState(false);
   const [viewName, setViewName] = useState("");
   const [saved, setSaved] = useState<SavedView[]>([]);
-  useEffect(() => { setSaved(getStored()); }, []);
-  useEffect(() => { setPage(1); }, [search, group]);
-  const rows = useMemo(() => groupEvents(events, group, search.token, to), [events, group, search.token, to]);
-  const sorted = [...rows].sort((a, b) => (typeof a[sort] === "string" ? String(a[sort]).localeCompare(String(b[sort])) : Number(a[sort]) - Number(b[sort])) * (descending ? -1 : 1));
-  const pageSize = 5, pages = Math.max(1, Math.ceil(rows.length / pageSize));
+  useEffect(() => {
+    setSaved(getStored());
+  }, []);
+  useEffect(() => {
+    setPage(1);
+  }, [search, group]);
+  const rows = useMemo(
+    () => groupEvents(events, group, search.token, to),
+    [events, group, search.token, to],
+  );
+  const sorted = [...rows].sort(
+    (a, b) =>
+      (typeof a[sort] === "string"
+        ? String(a[sort]).localeCompare(String(b[sort]))
+        : sortNumber(a[sort]) - sortNumber(b[sort])) * (descending ? -1 : 1),
+  );
+  const pageSize = 5,
+    pages = Math.max(1, Math.ceil(rows.length / pageSize));
   const visible = sorted.slice((page - 1) * pageSize, page * pageSize);
-  const measured = events.map(e => measure(e, search.token));
-  const input = measured.reduce((s, e) => s + e.input, 0), output = measured.reduce((s, e) => s + e.output, 0), cost = measured.reduce((s, e) => s + e.cost, 0);
-  const days = Array.from({ length: Math.min(90, Math.max(0, Math.round((new Date(`${to}T00:00:00Z`).getTime() - new Date(`${from}T00:00:00Z`).getTime()) / 86400000) + 1)) }, (_, i) => shiftDate(from, i));
+  const measured = events.map((e) => measure(e, search.token));
+  const input = measured.reduce((s, e) => s + e.input, 0),
+    output = measured.reduce((s, e) => s + e.output, 0),
+    cost = measured.reduce((s, e) => s + e.cost, 0);
+  const days = Array.from(
+    {
+      length: Math.min(
+        90,
+        Math.max(
+          0,
+          Math.round(
+            (new Date(`${to}T00:00:00Z`).getTime() - new Date(`${from}T00:00:00Z`).getTime()) /
+              86400000,
+          ) + 1,
+        ),
+      ),
+    },
+    (_, i) => shiftDate(from, i),
+  );
   const series = rows.slice(0, 5);
-  const chartData = days.map(date => { const matching = events.filter(e => e.date === date); return { date, ...Object.fromEntries(series.map(row => { const subset = matching.filter(e => e[group === "model" ? "modelId" : group === "project" ? "projectId" : "keyId"] === row.id); return [row.id, subset.reduce((s, e) => { const v = measure(e, search.token); return s + (metric === "Cost" ? v.cost : metric === "Tokens" ? v.input + v.output : 1); }, 0)]; })) }; });
-  const selectedEvents = selected ? events.filter(e => e[group === "model" ? "modelId" : group === "project" ? "projectId" : "keyId"] === selected.id) : [];
+  const chartData = days.map((date) => {
+    const matching = events.filter((e) => e.date === date);
+    return {
+      date,
+      ...Object.fromEntries(
+        series.map((row) => {
+          const subset = matching.filter(
+            (e) =>
+              e[group === "model" ? "modelId" : group === "project" ? "projectId" : "keyId"] ===
+              row.id,
+          );
+          return [
+            row.id,
+            subset.reduce((s, e) => {
+              const v = measure(e, search.token);
+              return (
+                s + (metric === "Cost" ? v.cost : metric === "Tokens" ? v.input + v.output : 1)
+              );
+            }, 0),
+          ];
+        }),
+      ),
+    };
+  });
+  const selectedEvents = selected
+    ? events.filter(
+        (e) =>
+          e[group === "model" ? "modelId" : group === "project" ? "projectId" : "keyId"] ===
+          selected.id,
+      )
+    : [];
   const selectedInputCost = selectedEvents.reduce((sum, e) => sum + measure(e, "input").cost, 0);
   const selectedOutputCost = selectedEvents.reduce((sum, e) => sum + measure(e, "output").cost, 0);
-  const endpoints = ["/v1/chat/completions", "/v1/responses", "/v1/embeddings"].map(name => ({ name, count: selectedEvents.filter(e => e.endpoint === name).length })).filter(item => item.count).sort((a, b) => b.count - a.count);
-  const save = () => { const name = viewName.trim(); if (!name) return; const next = [...saved.filter(v => v.name !== name), { name, filters: { model: search.model, project: search.project, key: search.key, user: search.user, token: search.token, from, to } }]; localStorage.setItem("tokenly-saved-usage-views", JSON.stringify(next)); setSaved(next); setSaveOpen(false); setViewName(""); toast.success(`View "${name}" saved`); };
-  const clear = () => update({ model: undefined, project: undefined, key: undefined, user: undefined, token: undefined, from: undefined, to: undefined, action: undefined });
-  return <div className="space-y-6"><div><p className="text-sm text-muted-foreground">Workspace / Usage</p><h2 className="mt-2 text-2xl font-semibold">Usage</h2></div>
-    <div className="sticky top-16 z-20 -mx-4 border-y bg-background/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"><div className="flex flex-wrap items-center gap-2">{FILTERS.map(kind => <Select key={kind} value={search[kind] ?? "all"} onValueChange={value => update({ [kind]: value === "all" ? undefined : value })}><SelectTrigger className="h-9 w-auto min-w-28 max-w-44 bg-card text-xs" aria-label={`Filter by ${names[kind]}`}><SelectValue placeholder={names[kind]} /></SelectTrigger><SelectContent><SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>{kind === "token" ? <><SelectItem value="input">Input</SelectItem><SelectItem value="output">Output</SelectItem></> : dimensions[kind].map(entity => <SelectItem key={entity.id} value={entity.id}>{entity.name}</SelectItem>)}</SelectContent></Select>)}<div className="flex items-center gap-1"><Input aria-label="From date" type="date" value={from} max={to} onChange={e => update({ from: e.target.value })} className="h-9 w-32 bg-card text-xs" /><span className="text-xs text-muted-foreground">–</span><Input aria-label="To date" type="date" value={to} min={from} max="2026-09-26" onChange={e => update({ to: e.target.value })} className="h-9 w-32 bg-card text-xs" /></div><div className="ml-auto flex gap-2"><Select onValueChange={name => { const view = saved.find(v => v.name === name); if (view) update({ ...view.filters }); }}><SelectTrigger className="h-9 w-36 bg-card text-xs" aria-label="My saved views"><SelectValue placeholder="My saved views" /></SelectTrigger><SelectContent>{saved.length ? saved.map(v => <SelectItem key={v.name} value={v.name}>{v.name}</SelectItem>) : <SelectItem disabled value="none">No saved views</SelectItem>}</SelectContent></Select><Button variant="outline" size="sm" onClick={() => setSaveOpen(true)}><Save className="size-4" />Save view</Button></div></div><div className="mt-2 flex flex-wrap gap-2">{FILTERS.filter(kind => search[kind]).map(kind => <Button key={kind} size="sm" variant="secondary" className="h-7 rounded-full text-xs" onClick={() => update({ [kind]: undefined })}>{names[kind]}: {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}<X className="size-3" /></Button>)}{(search.from || search.to) && <Button size="sm" variant="secondary" className="h-7 rounded-full text-xs" onClick={() => update({ from: undefined, to: undefined })}>Date: {from} – {to}<X className="size-3" /></Button>}</div></div>
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">{[["Total cost", money(cost)], ["Total tokens", compact(input + output)], ["Input : output", output ? `${(input / output).toFixed(1)} : 1` : "—"], ["Avg cost / 1K", input + output ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(cost * 1000 / (input + output)) : "—"], ["Requests", events.length.toLocaleString()]].map(([label, value]) => <div key={label} className="rounded-xl border bg-card p-4"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-2 text-xl font-semibold">{value}</p></div>)}</div>
-    {events.length === 0 ? <EmptyState title="No usage matches these filters" description="Try another range or remove a filter." action={<Button variant="outline" onClick={clear}>Clear filters</Button>} /> : <><section className="rounded-xl border bg-card p-5 sm:p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><h3 className="font-semibold">Usage over time</h3><p className="mt-1 text-sm text-muted-foreground">Grouped by {group === "key" ? "API key" : group}</p></div><div className="flex flex-wrap gap-2"><div className="inline-flex rounded-lg bg-muted p-1">{metrics.map(option => <Button key={option} variant={metric === option ? "secondary" : "ghost"} size="sm" className="h-7 px-3 text-xs" onClick={() => setMetric(option)}>{option}</Button>)}</div><Select value={group} onValueChange={value => { setGroup(value as Dimension); setHidden([]); }}><SelectTrigger className="w-36" aria-label="Group by"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="model">By model</SelectItem><SelectItem value="project">By project</SelectItem><SelectItem value="key">By API key</SelectItem></SelectContent></Select></div></div><div className="mt-4 flex flex-wrap gap-3">{series.map((row, i) => <Button key={row.id} variant="ghost" size="sm" className={hidden.includes(row.id) ? "text-muted-foreground opacity-40" : "text-foreground"} onClick={() => setHidden(current => current.includes(row.id) ? current.filter(v => v !== row.id) : [...current, row.id])}><span className={`size-2 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`} />{row.name}</Button>)}</div><div className="mt-4 h-72"><ResponsiveContainer width="100%" height="100%"><BarChart data={chartData} margin={{ top: 8, right: 8, left: -15, bottom: 0 }}><CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 4" /><XAxis dataKey="date" tickFormatter={value => value.slice(5)} minTickGap={24} axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} tickFormatter={value => metric === "Cost" ? `$${value}` : compact(value)} /><Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--popover-foreground)" }} formatter={(value, name) => [metric === "Cost" ? money(Number(value)) : Number(value).toLocaleString(), labelFor(group, String(name))]} />{series.filter(row => !hidden.includes(row.id)).map(row => <Bar key={row.id} dataKey={row.id} stackId="a" fill={`var(--chart-${series.indexOf(row) + 1})`} isAnimationActive={false} />)}</BarChart></ResponsiveContainer></div></section>
-    <section className="rounded-xl border bg-card"><div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4"><div><h3 className="font-semibold">Usage by {group === "key" ? "API key" : group}</h3><p className="mt-1 text-xs text-muted-foreground">{rows.length} groups · click a row for details</p></div><Button size="sm" variant="outline" onClick={() => downloadCsv(sorted, group)}><Download className="size-4" />CSV</Button></div><div className="overflow-x-auto"><table className="w-full min-w-[900px] text-left text-sm"><thead className="sticky top-0 bg-muted/70 text-xs text-muted-foreground"><tr>{([["name", "Name"], ["requests", "Requests"], ["input", "Input tokens"], ["output", "Output tokens"], ["cost", "Cost"], ["percent", "% of total"], ["spark", "Last 7d"], ["trend", "Trend"]] as const).map(([key, title]) => <th key={key} scope="col" className="px-4 py-3 font-medium"><Button variant="ghost" size="sm" className="-ml-2 h-7 px-2 text-xs" onClick={() => { setDescending(sort === key ? !descending : true); setSort(key); }}>{title}<ArrowUpDown className="size-3" /></Button></th>)}</tr></thead><tbody>{visible.map(row => <tr key={row.id} tabIndex={0} role="button" aria-label={`Details for ${row.name}`} className="cursor-pointer border-t hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-primary" onClick={() => setSelected(row)} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(row); } }}><td className="px-4 py-3 font-medium">{row.name}</td><td className="px-4 py-3">{row.requests.toLocaleString()}</td><td className="px-4 py-3">{compact(row.input)}</td><td className="px-4 py-3">{compact(row.output)}</td><td className="px-4 py-3 font-medium">{money(row.cost)}</td><td className="px-4 py-3">{row.percent.toFixed(1)}%</td><td className="px-4 py-3"><Sparkline data={row.spark} /></td><td className="px-4 py-3">{row.trend > 0 ? <span className="inline-flex items-center text-critical"><ArrowUpRight className="size-4" />{row.trend.toFixed(0)}%</span> : <span className="inline-flex items-center text-success"><ArrowDownRight className="size-4" />{Math.abs(row.trend).toFixed(0)}%</span>}</td></tr>)}</tbody></table></div><div className="flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground"><span>Page {page} of {pages}</span><div className="flex gap-2"><Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage(page - 1)}>Previous</Button><Button size="sm" variant="outline" disabled={page >= pages} onClick={() => setPage(page + 1)}>Next</Button></div></div></section></>}
-    <DetailDrawer open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }} title={selected?.name ?? "Usage details"} description={`${group === "key" ? "API key" : group} · ${from} – ${to}`}><div className="space-y-6">{selected && <><div className="grid grid-cols-2 gap-3">{[["Cost", money(selected.cost)], ["Requests", selected.requests.toLocaleString()], ["Input tokens", compact(selected.input)], ["Output tokens", compact(selected.output)]].map(([label, value]) => <div key={label} className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 font-semibold">{value}</p></div>)}</div><div><h4 className="text-sm font-semibold">Last 7 days</h4><div className="mt-3 h-28"><ResponsiveContainer width="100%" height="100%"><AreaChart data={selected.spark.map((value, index) => ({ day: shiftDate(to, index - 6), value }))}><Area type="monotone" dataKey="value" stroke="var(--chart-1)" fill="var(--accent)" isAnimationActive={false} /><Tooltip formatter={value => money(Number(value))} /></AreaChart></ResponsiveContainer></div></div><div className="space-y-2 text-sm"><h4 className="font-semibold">Cost breakdown</h4><p className="flex justify-between"><span className="text-muted-foreground">Input tokens</span><span>{money(selectedInputCost)}</span></p><p className="flex justify-between"><span className="text-muted-foreground">Output tokens</span><span>{money(selectedOutputCost)}</span></p></div><div><h4 className="text-sm font-semibold">Top users</h4><div className="mt-2 space-y-2">{teamMembers.map(user => ({ user, count: events.filter(e => e.userId === user.id && e[group === "model" ? "modelId" : group === "project" ? "projectId" : "keyId"] === selected.id).length })).filter(v => v.count).sort((a, b) => b.count - a.count).slice(0, 3).map(v => <p key={v.user.id} className="flex justify-between text-sm"><span>{v.user.name}</span><span className="text-muted-foreground">{v.count} requests</span></p>)}</div></div><div><h4 className="text-sm font-semibold">Top endpoints</h4><div className="mt-2 space-y-2">{endpoints.map(item => <p key={item.name} className="flex justify-between gap-4 text-sm"><span className="truncate">{item.name}</span><span className="shrink-0 text-muted-foreground">{item.count} requests</span></p>)}</div></div><div className="flex gap-2"><Button asChild size="sm" variant="outline"><Link to="/limits" search={{ project: group === "project" ? selected.id : undefined, action: "adjust-limit" }}>Set limit <ArrowRight className="size-3.5" /></Link></Button><Button asChild size="sm" variant="outline"><Link to="/projects">View key <ArrowRight className="size-3.5" /></Link></Button></div></>}</div></DetailDrawer>
-    <Dialog open={saveOpen} onOpenChange={setSaveOpen}><DialogContent><DialogHeader><DialogTitle>Save view</DialogTitle><DialogDescription>Keep this filter set on this device.</DialogDescription></DialogHeader><Input aria-label="View name" placeholder="e.g. Production spend" value={viewName} onChange={e => setViewName(e.target.value)} onKeyDown={e => { if (e.key === "Enter") save(); }} /><Button disabled={!viewName.trim()} onClick={save}>Save view</Button></DialogContent></Dialog>
-  </div>;
+  const endpoints = ["/v1/chat/completions", "/v1/responses", "/v1/embeddings"]
+    .map((name) => ({ name, count: selectedEvents.filter((e) => e.endpoint === name).length }))
+    .filter((item) => item.count)
+    .sort((a, b) => b.count - a.count);
+  const save = () => {
+    const name = viewName.trim();
+    if (!name) return;
+    const next = [
+      ...saved.filter((v) => v.name !== name),
+      {
+        name,
+        filters: {
+          model: search.model,
+          project: search.project,
+          key: search.key,
+          user: search.user,
+          token: search.token,
+          from,
+          to,
+        },
+      },
+    ];
+    try {
+      localStorage.setItem("tokenly-saved-usage-views", JSON.stringify(next));
+    } catch {
+      toast.error("Couldn't save this view on this device (storage is full or blocked).");
+      return;
+    }
+    const replaced = saved.some((v) => v.name === name);
+    setSaved(next);
+    setSaveOpen(false);
+    setViewName("");
+    toast.success(replaced ? `View "${name}" updated` : `View "${name}" saved`);
+  };
+  const clear = () =>
+    update({
+      model: undefined,
+      project: undefined,
+      key: undefined,
+      user: undefined,
+      token: undefined,
+      from: undefined,
+      to: undefined,
+      action: undefined,
+    });
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold">Usage</h1>
+      </div>
+      <div className="sticky top-16 z-20 -mx-4 border-y bg-background/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex flex-wrap items-center gap-2">
+          {FILTERS.map((kind) => (
+            <Select
+              key={kind}
+              value={search[kind] ?? "all"}
+              onValueChange={(value) => update({ [kind]: value === "all" ? undefined : value })}
+            >
+              <SelectTrigger
+                className="h-9 w-auto min-w-28 max-w-44 bg-card text-xs"
+                aria-label={`Filter by ${names[kind]}`}
+              >
+                <SelectValue placeholder={names[kind]} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>
+                {kind === "token" ? (
+                  <>
+                    <SelectItem value="input">Input</SelectItem>
+                    <SelectItem value="output">Output</SelectItem>
+                  </>
+                ) : (
+                  dimensions[kind].map((entity) => (
+                    <SelectItem key={entity.id} value={entity.id}>
+                      {entity.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          ))}
+          <div className="flex items-center gap-1">
+            <Input
+              aria-label="From date"
+              type="date"
+              value={from}
+              max={to}
+              onChange={(e) => update({ from: e.target.value })}
+              className="h-9 w-32 bg-card text-xs"
+            />
+            <span className="text-xs text-muted-foreground">–</span>
+            <Input
+              aria-label="To date"
+              type="date"
+              value={to}
+              min={from}
+              max="2026-09-26"
+              onChange={(e) => update({ to: e.target.value })}
+              className="h-9 w-32 bg-card text-xs"
+            />
+          </div>
+          <div className="ml-auto flex gap-2">
+            <Select
+              onValueChange={(name) => {
+                const view = saved.find((v) => v.name === name);
+                // Reset every filter first so a view saved with "All" clears filters set now.
+                if (view)
+                  update({
+                    model: undefined,
+                    project: undefined,
+                    key: undefined,
+                    user: undefined,
+                    token: undefined,
+                    ...view.filters,
+                  });
+              }}
+            >
+              <SelectTrigger className="h-9 w-36 bg-card text-xs" aria-label="My saved views">
+                <SelectValue placeholder="My saved views" />
+              </SelectTrigger>
+              <SelectContent>
+                {saved.length ? (
+                  saved.map((v) => (
+                    <SelectItem key={v.name} value={v.name}>
+                      {v.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem disabled value="none">
+                    No saved views
+                  </SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="sm" onClick={() => setSaveOpen(true)}>
+              <Save className="size-4" />
+              Save view
+            </Button>
+          </div>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {FILTERS.filter((kind) => search[kind]).map((kind) => (
+            <Button
+              key={kind}
+              size="sm"
+              variant="secondary"
+              className="h-7 rounded-full text-xs"
+              onClick={() => update({ [kind]: undefined })}
+            >
+              {names[kind]}: {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
+              <X className="size-3" />
+            </Button>
+          ))}
+          {(search.from || search.to) && (
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-7 rounded-full text-xs"
+              onClick={() => update({ from: undefined, to: undefined })}
+            >
+              Date: {from} – {to}
+              <X className="size-3" />
+            </Button>
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+        {[
+          ["Total cost", money(cost)],
+          ["Total tokens", compact(input + output)],
+          ["Input : output", output ? `${(input / output).toFixed(1)} : 1` : "—"],
+          [
+            "Avg cost / 1K",
+            input + output
+              ? new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 4,
+                  maximumFractionDigits: 4,
+                }).format((cost * 1000) / (input + output))
+              : "—",
+          ],
+          ["Requests", events.length.toLocaleString()],
+        ].map(([label, value]) => (
+          <div key={label} className="surface p-4">
+            <p className="text-xs text-muted-foreground">{label}</p>
+            <p className="mt-2 text-xl font-semibold">{value}</p>
+          </div>
+        ))}
+      </div>
+      {events.length === 0 ? (
+        <EmptyState
+          title="No usage matches these filters"
+          description="Try another range or remove a filter."
+          action={
+            <Button variant="outline" onClick={clear}>
+              Clear filters
+            </Button>
+          }
+        />
+      ) : (
+        <>
+          <section className="surface p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h3 className="font-semibold">Usage over time</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Grouped by {group === "key" ? "API key" : group}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <div className="inline-flex rounded-lg bg-muted p-1">
+                  {metrics.map((option) => (
+                    <Button
+                      key={option}
+                      variant={metric === option ? "secondary" : "ghost"}
+                      size="sm"
+                      className="h-7 px-3 text-xs"
+                      onClick={() => setMetric(option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+                <Select
+                  value={group}
+                  onValueChange={(value) => {
+                    setGroup(value as Dimension);
+                    setHidden([]);
+                  }}
+                >
+                  <SelectTrigger className="w-36" aria-label="Group by">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="model">By model</SelectItem>
+                    <SelectItem value="project">By project</SelectItem>
+                    <SelectItem value="key">By API key</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {series.map((row, i) => (
+                <Button
+                  key={row.id}
+                  variant="ghost"
+                  size="sm"
+                  className={
+                    hidden.includes(row.id) ? "text-muted-foreground opacity-40" : "text-foreground"
+                  }
+                  onClick={() =>
+                    setHidden((current) =>
+                      current.includes(row.id)
+                        ? current.filter((v) => v !== row.id)
+                        : [...current, row.id],
+                    )
+                  }
+                >
+                  <span
+                    className={`size-2 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
+                  />
+                  {row.name}
+                </Button>
+              ))}
+            </div>
+            <div className="mt-4 h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 8, right: 8, left: -15, bottom: 0 }}>
+                  <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 4" />
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={(value) => value.slice(5)}
+                    minTickGap={24}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                    tickFormatter={(value) => (metric === "Cost" ? `$${value}` : compact(value))}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                      color: "var(--popover-foreground)",
+                    }}
+                    formatter={(value, name) => [
+                      metric === "Cost" ? money(Number(value)) : Number(value).toLocaleString(),
+                      labelFor(group, String(name)),
+                    ]}
+                  />
+                  {series
+                    .filter((row) => !hidden.includes(row.id))
+                    .map((row) => (
+                      <Bar
+                        key={row.id}
+                        dataKey={row.id}
+                        stackId="a"
+                        fill={`var(--chart-${series.indexOf(row) + 1})`}
+                        isAnimationActive={false}
+                      />
+                    ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+          <section className="surface">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
+              <div>
+                <h3 className="font-semibold">Usage by {group === "key" ? "API key" : group}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {rows.length} groups · click a row for details
+                </p>
+              </div>
+              <Button size="sm" variant="outline" onClick={() => downloadCsv(sorted, group)}>
+                <Download className="size-4" />
+                CSV
+              </Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[900px] text-left text-sm">
+                <thead className="sticky top-0 bg-muted/70 text-xs text-muted-foreground">
+                  <tr>
+                    {(
+                      [
+                        ["name", "Name"],
+                        ["requests", "Requests"],
+                        ["input", "Input tokens"],
+                        ["output", "Output tokens"],
+                        ["cost", "Cost"],
+                        ["percent", "% of total"],
+                        ["spark", "Last 7d"],
+                        ["trend", "Trend"],
+                      ] as const
+                    ).map(([key, title]) => (
+                      <th key={key} scope="col" className="px-4 py-3 font-medium">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="-ml-2 h-7 px-2 text-xs"
+                          onClick={() => {
+                            setDescending(sort === key ? !descending : true);
+                            setSort(key);
+                          }}
+                        >
+                          {title}
+                          <ArrowUpDown className="size-3" />
+                        </Button>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {visible.map((row) => (
+                    <tr
+                      key={row.id}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Details for ${row.name}`}
+                      className="cursor-pointer border-t hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-primary"
+                      onClick={() => setSelected(row)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelected(row);
+                        }
+                      }}
+                    >
+                      <td className="px-4 py-3 font-medium">{row.name}</td>
+                      <td className="px-4 py-3">{row.requests.toLocaleString()}</td>
+                      <td className="px-4 py-3">{compact(row.input)}</td>
+                      <td className="px-4 py-3">{compact(row.output)}</td>
+                      <td className="px-4 py-3 font-medium">{money(row.cost)}</td>
+                      <td className="px-4 py-3">{row.percent.toFixed(1)}%</td>
+                      <td className="px-4 py-3">
+                        <Sparkline data={row.spark} />
+                      </td>
+                      <td className="px-4 py-3">
+                        {row.trend > 0 ? (
+                          <span className="inline-flex items-center text-critical">
+                            <ArrowUpRight className="size-4" />
+                            {row.trend.toFixed(0)}%
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center text-success">
+                            <ArrowDownRight className="size-4" />
+                            {Math.abs(row.trend).toFixed(0)}%
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground">
+              <span>
+                Page {page} of {pages}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={page <= 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={page >= pages}
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+      <DetailDrawer
+        open={selected !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelected(null);
+        }}
+        title={selected?.name ?? "Usage details"}
+        description={`${group === "key" ? "API key" : group} · ${from} – ${to}`}
+      >
+        <div className="space-y-6">
+          {selected && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  ["Cost", money(selected.cost)],
+                  ["Requests", selected.requests.toLocaleString()],
+                  ["Input tokens", compact(selected.input)],
+                  ["Output tokens", compact(selected.output)],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-lg border p-3">
+                    <p className="text-xs text-muted-foreground">{label}</p>
+                    <p className="mt-1 font-semibold">{value}</p>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold">Last 7 days</h4>
+                <div className="mt-3 h-28">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={selected.spark.map((value, index) => ({
+                        day: shiftDate(to, index - 6),
+                        value,
+                      }))}
+                    >
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="var(--chart-1)"
+                        fill="var(--accent)"
+                        isAnimationActive={false}
+                      />
+                      <Tooltip formatter={(value) => money(Number(value))} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm">
+                <h4 className="font-semibold">Cost breakdown</h4>
+                <p className="flex justify-between">
+                  <span className="text-muted-foreground">Input tokens</span>
+                  <span>{money(selectedInputCost)}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-muted-foreground">Output tokens</span>
+                  <span>{money(selectedOutputCost)}</span>
+                </p>
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold">Top users</h4>
+                <div className="mt-2 space-y-2">
+                  {teamMembers
+                    .map((user) => ({
+                      user,
+                      count: events.filter(
+                        (e) =>
+                          e.userId === user.id &&
+                          e[
+                            group === "model"
+                              ? "modelId"
+                              : group === "project"
+                                ? "projectId"
+                                : "keyId"
+                          ] === selected.id,
+                      ).length,
+                    }))
+                    .filter((v) => v.count)
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 3)
+                    .map((v) => (
+                      <p key={v.user.id} className="flex justify-between text-sm">
+                        <span>{v.user.name}</span>
+                        <span className="text-muted-foreground">{v.count} requests</span>
+                      </p>
+                    ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold">Top endpoints</h4>
+                <div className="mt-2 space-y-2">
+                  {endpoints.map((item) => (
+                    <p key={item.name} className="flex justify-between gap-4 text-sm">
+                      <span className="truncate">{item.name}</span>
+                      <span className="shrink-0 text-muted-foreground">{item.count} requests</span>
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    to="/limits"
+                    search={{
+                      project: group === "project" ? selected.id : undefined,
+                      action: "adjust-limit",
+                    }}
+                  >
+                    Set limit <ArrowRight className="size-3.5" />
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/projects">
+                    View key <ArrowRight className="size-3.5" />
+                  </Link>
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </DetailDrawer>
+      <Dialog open={saveOpen} onOpenChange={setSaveOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save view</DialogTitle>
+            <DialogDescription>Keep this filter set on this device.</DialogDescription>
+          </DialogHeader>
+          <Input
+            aria-label="View name"
+            placeholder="e.g. Production spend"
+            value={viewName}
+            onChange={(e) => setViewName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") save();
+            }}
+          />
+          <Button disabled={!viewName.trim()} onClick={save}>
+            Save view
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
