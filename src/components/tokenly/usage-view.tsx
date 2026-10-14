@@ -255,8 +255,6 @@ export function UsageView() {
   return (
     <div className="space-y-6">
       <PageHeader
-        icon={pageMeta.usage.icon}
-        tone={pageMeta.usage.tone}
         title={pageMeta.usage.label}
         description={pageMeta.usage.description}
       />

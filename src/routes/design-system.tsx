@@ -1,4 +1,4 @@
-import { Activity, BookOpen, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
+import { Activity, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
 import { toast } from "sonner";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -72,8 +72,6 @@ function DesignSystem() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={BookOpen}
-        tone="slate"
         title="Design system"
         description="The building blocks behind every Tokenly workspace."
       />
