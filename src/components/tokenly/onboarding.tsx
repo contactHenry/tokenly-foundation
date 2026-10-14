@@ -50,7 +50,7 @@ export function OnboardingChecklist() {
         </div>
         <div className="flex items-center gap-3">
           <div
-            className="h-1.5 w-32 rounded-md bg-muted"
+            className="h-1.5 w-32 rounded-full bg-muted"
             role="progressbar"
             aria-valuenow={doneCount}
             aria-valuemin={0}
@@ -58,7 +58,7 @@ export function OnboardingChecklist() {
             aria-label="Setup progress"
           >
             <div
-              className="h-full rounded-md bg-primary transition-[width] duration-200"
+              className="h-full rounded-full bg-primary transition-[width] duration-200"
               style={{ width: `${(doneCount / 3) * 100}%` }}
             />
           </div>
@@ -72,11 +72,11 @@ export function OnboardingChecklist() {
           <li key={s.title} className="flex items-center gap-4 p-5">
             <span
               className={cn(
-                "grid size-8 shrink-0 place-items-center rounded-md border text-sm font-semibold",
+                "grid size-8 shrink-0 place-items-center rounded-full border text-sm font-semibold",
                 s.done
                   ? "border-success bg-success-muted text-success"
                   : i === next
-                    ? "border-primary text-primary"
+                    ? "border-primary text-primary-ink"
                     : "text-muted-foreground",
               )}
             >

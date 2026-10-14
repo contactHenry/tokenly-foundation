@@ -24,7 +24,7 @@ export const pages = {
     label: "Overview",
     to: "/",
     icon: LayoutDashboard,
-    tone: "indigo",
+    tone: "brand",
     description: "Your balance, runway, and what's driving spend.",
   },
   usage: {
@@ -59,7 +59,7 @@ export const pages = {
     label: "Billing",
     to: "/billing",
     icon: CreditCard,
-    tone: "emerald",
+    tone: "teal",
     description: "Credits, auto-recharge, payment methods and invoices.",
   },
   settings: {

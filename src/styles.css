@@ -6,15 +6,18 @@
 
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  /* One corner radius everywhere: every rounded-* step resolves to 4px. */
-  --radius-xs: var(--radius);
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
-  --radius-2xl: var(--radius);
-  --radius-3xl: var(--radius);
-  --radius-4xl: var(--radius);
+  /*
+   * Brand radii. sm/md (6px): controls, badges, menu items. lg/xl (12px): cards, popovers.
+   * 2xl (16px): dialogs, large panels. 3xl+ (24px): hero surfaces. xs (4px): tiny marks only.
+   */
+  --radius-xs: 4px;
+  --radius-sm: var(--tokenly-radius-sm);
+  --radius-md: var(--tokenly-radius-sm);
+  --radius-lg: var(--tokenly-radius-md);
+  --radius-xl: var(--tokenly-radius-md);
+  --radius-2xl: var(--tokenly-radius-lg);
+  --radius-3xl: var(--tokenly-radius-xl);
+  --radius-4xl: var(--tokenly-radius-xl);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -23,6 +26,9 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-ink: var(--primary-ink);
+  --color-brand-forest: var(--tokenly-forest);
+  --color-brand-lime: var(--tokenly-accent);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -55,16 +61,16 @@
   --color-critical: var(--critical);
   --color-critical-muted: var(--critical-muted);
   /* Friendly accent tones for icon tiles (navigation, page headers, stat cards). */
-  --color-tone-indigo: var(--tone-indigo);
-  --color-tone-indigo-soft: var(--tone-indigo-soft);
+  --color-tone-brand: var(--tone-brand);
+  --color-tone-brand-soft: var(--tone-brand-soft);
   --color-tone-sky: var(--tone-sky);
   --color-tone-sky-soft: var(--tone-sky-soft);
   --color-tone-violet: var(--tone-violet);
   --color-tone-violet-soft: var(--tone-violet-soft);
   --color-tone-amber: var(--tone-amber);
   --color-tone-amber-soft: var(--tone-amber-soft);
-  --color-tone-emerald: var(--tone-emerald);
-  --color-tone-emerald-soft: var(--tone-emerald-soft);
+  --color-tone-teal: var(--tone-teal);
+  --color-tone-teal-soft: var(--tone-teal-soft);
   --color-tone-rose: var(--tone-rose);
   --color-tone-rose-soft: var(--tone-rose-soft);
   --color-tone-slate: var(--tone-slate);
@@ -78,122 +84,155 @@
   --shadow-xl: var(--shadow-raised);
 }
 /*
- * Palette: near-neutral surfaces, hairline borders, one restrained indigo accent.
- * Semantic colours (success / warning / critical) are reserved for meaning.
+ * Tokenly brand palette. Raw brand values live in --tokenly-*; the semantic tokens below
+ * (background, primary, muted, ...) are what components use, so light and dark stay in step.
+ *
+ * Contrast rule: brand green (#22C55E) is a fill colour. Text on it is forest (#0F2D1F, 7.4:1).
+ * Green text on light surfaces uses --primary-ink (#166534, 7.1:1), never the fill green.
  */
 :root {
-  --radius: 4px;
-  --background: oklch(0.985 0.001 270);
-  --foreground: oklch(0.2 0.006 270);
-  --card: oklch(1 0 0);
+  /* Brand */
+  --tokenly-primary: #22c55e;
+  --tokenly-accent: #a3e635;
+  --tokenly-forest: #0f2d1f;
+  --tokenly-background: #f5f7eb;
+  /* Extended palette */
+  --tokenly-white: #ffffff;
+  --tokenly-soft-green: #dcfce7;
+  --tokenly-muted-green: #166534;
+  /* Text */
+  --tokenly-text-primary: #14251b;
+  --tokenly-text-secondary: #647067;
+  /* Surfaces */
+  --tokenly-surface: #ffffff;
+  --tokenly-surface-subtle: #f5f7eb;
+  --tokenly-border: #e5e7de;
+  /* Semantic */
+  --tokenly-success: #16a34a;
+  --tokenly-warning: #d97706;
+  --tokenly-error: #dc2626;
+  /* Shape and elevation */
+  --tokenly-radius-sm: 6px;
+  --tokenly-radius-md: 12px;
+  --tokenly-radius-lg: 16px;
+  --tokenly-radius-xl: 24px;
+  --tokenly-shadow-card: 0 4px 16px rgba(15, 45, 31, 0.06);
+
+  --radius: var(--tokenly-radius-sm);
+  --background: var(--tokenly-background);
+  --foreground: var(--tokenly-text-primary);
+  --card: var(--tokenly-surface);
   --card-foreground: var(--foreground);
-  --popover: oklch(1 0 0);
+  --popover: var(--tokenly-surface);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.52 0.2 276);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.967 0.002 270);
+  --primary: var(--tokenly-primary);
+  --primary-foreground: var(--tokenly-forest);
+  --primary-ink: var(--tokenly-muted-green);
+  --secondary: #eef1e3;
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.967 0.002 270);
-  --muted-foreground: oklch(0.53 0.01 270);
-  --accent: oklch(0.955 0.012 276);
-  --accent-foreground: oklch(0.45 0.18 276);
-  --destructive: oklch(0.577 0.215 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.925 0.003 270);
-  --input: oklch(0.9 0.004 270);
-  --ring: oklch(0.52 0.2 276 / 0.55);
-  --chart-1: oklch(0.52 0.2 276);
-  --chart-2: oklch(0.72 0.12 276);
-  --chart-3: oklch(0.83 0.06 276);
-  --chart-4: oklch(0.62 0.01 270);
-  --chart-5: oklch(0.84 0.005 270);
+  --muted: #eef1e3;
+  --muted-foreground: var(--tokenly-text-secondary);
+  --accent: var(--tokenly-soft-green);
+  --accent-foreground: var(--tokenly-muted-green);
+  --destructive: var(--tokenly-error);
+  --destructive-foreground: #ffffff;
+  --border: var(--tokenly-border);
+  --input: #d8dccd;
+  --ring: rgba(34, 197, 94, 0.55);
+  --chart-1: #22c55e;
+  --chart-2: #a3e635;
+  --chart-3: #166534;
+  --chart-4: #86efac;
+  --chart-5: #647067;
   --sidebar: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.2 0.006 270 / 0.05);
+  --sidebar-accent: rgba(15, 45, 31, 0.06);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
-  --success: oklch(0.52 0.13 158);
-  --success-muted: oklch(0.965 0.03 158);
-  --warning: oklch(0.6 0.13 70);
-  --warning-muted: oklch(0.975 0.035 85);
-  --critical: oklch(0.577 0.2 27);
-  --critical-muted: oklch(0.97 0.025 20);
-  --shadow-surface: 0 1px 2px oklch(0.2 0.01 270 / 0.05);
-  --shadow-raised:
-    0 1px 2px oklch(0.2 0.01 270 / 0.06), 0 10px 28px -10px oklch(0.2 0.01 270 / 0.18);
-  --tone-indigo: oklch(0.52 0.2 276);
-  --tone-indigo-soft: oklch(0.955 0.03 276);
-  --tone-sky: oklch(0.55 0.13 235);
-  --tone-sky-soft: oklch(0.955 0.03 230);
-  --tone-violet: oklch(0.53 0.2 300);
-  --tone-violet-soft: oklch(0.955 0.035 300);
-  --tone-amber: oklch(0.6 0.14 65);
-  --tone-amber-soft: oklch(0.965 0.045 80);
-  --tone-emerald: oklch(0.53 0.12 160);
-  --tone-emerald-soft: oklch(0.96 0.035 160);
-  --tone-rose: oklch(0.57 0.19 15);
-  --tone-rose-soft: oklch(0.96 0.03 15);
-  --tone-slate: oklch(0.48 0.02 260);
-  --tone-slate-soft: oklch(0.95 0.006 260);
+  --success: var(--tokenly-success);
+  --success-muted: var(--tokenly-soft-green);
+  --warning: #b45309;
+  --warning-muted: #fef3c7;
+  --critical: var(--tokenly-error);
+  --critical-muted: #fee2e2;
+  --shadow-surface: var(--tokenly-shadow-card);
+  --shadow-raised: 0 1px 2px rgba(15, 45, 31, 0.06), 0 16px 40px -12px rgba(15, 45, 31, 0.22);
+  /* Icon-tile tones: soft fill + legible ink, tuned to sit beside the green brand. */
+  --tone-brand: #166534;
+  --tone-brand-soft: #dcfce7;
+  --tone-sky: #0369a1;
+  --tone-sky-soft: #e0f2fe;
+  --tone-violet: #6d28d9;
+  --tone-violet-soft: #ede9fe;
+  --tone-amber: #b45309;
+  --tone-amber-soft: #fef3c7;
+  --tone-teal: #0f766e;
+  --tone-teal-soft: #ccfbf1;
+  --tone-rose: #be123c;
+  --tone-rose-soft: #ffe4e6;
+  --tone-slate: #475249;
+  --tone-slate-soft: #eceee6;
 }
 .dark {
-  --background: oklch(0.145 0.003 270);
-  --foreground: oklch(0.96 0.002 270);
-  --card: oklch(0.18 0.004 270);
+  /* Dark mode keeps the forest family instead of neutral grey, so the brand carries through. */
+  --background: #08130d;
+  --foreground: #eaf1e4;
+  --card: #0f1f16;
   --card-foreground: var(--foreground);
-  --popover: oklch(0.2 0.005 270);
+  --popover: #12251a;
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.7 0.15 276);
-  --primary-foreground: oklch(0.15 0.02 276);
-  --secondary: oklch(0.235 0.005 270);
+  --primary: var(--tokenly-primary);
+  --primary-foreground: var(--tokenly-forest);
+  --primary-ink: #4ade80;
+  --secondary: #16291e;
   --secondary-foreground: var(--foreground);
-  --muted: oklch(0.235 0.005 270);
-  --muted-foreground: oklch(0.7 0.008 270);
-  --accent: oklch(0.26 0.03 276);
-  --accent-foreground: oklch(0.86 0.08 276);
-  --destructive: oklch(0.7 0.17 22);
-  --destructive-foreground: oklch(0.15 0 0);
-  --border: oklch(0.26 0.005 270);
-  --input: oklch(0.3 0.006 270);
-  --ring: oklch(0.7 0.15 276 / 0.6);
-  --chart-1: oklch(0.7 0.15 276);
-  --chart-2: oklch(0.55 0.11 276);
-  --chart-3: oklch(0.42 0.06 276);
-  --chart-4: oklch(0.62 0.01 270);
-  --chart-5: oklch(0.4 0.006 270);
+  --muted: #16291e;
+  --muted-foreground: #98a69b;
+  --accent: #173823;
+  --accent-foreground: #bef264;
+  --destructive: #f87171;
+  --destructive-foreground: #1c0a0a;
+  --border: #1e3527;
+  --input: #2a4535;
+  --ring: rgba(74, 222, 128, 0.55);
+  --chart-1: #22c55e;
+  --chart-2: #a3e635;
+  --chart-3: #86efac;
+  --chart-4: #3f7d5a;
+  --chart-5: #8a968d;
   --sidebar: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(1 0 0 / 0.06);
+  --sidebar-accent: rgba(163, 230, 53, 0.08);
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
-  --success: oklch(0.74 0.13 158);
-  --success-muted: oklch(0.26 0.04 158);
-  --warning: oklch(0.8 0.12 75);
-  --warning-muted: oklch(0.28 0.045 75);
-  --critical: oklch(0.74 0.15 22);
-  --critical-muted: oklch(0.28 0.05 20);
+  --success: #4ade80;
+  --success-muted: #143322;
+  --warning: #fbbf24;
+  --warning-muted: #33270c;
+  --critical: #f87171;
+  --critical-muted: #3a1515;
   --shadow-surface: 0 0 0 0 transparent;
-  --shadow-raised: 0 0 0 1px oklch(1 0 0 / 0.04), 0 14px 36px -10px oklch(0 0 0 / 0.6);
-  --tone-indigo: oklch(0.76 0.12 276);
-  --tone-indigo-soft: oklch(0.28 0.06 276);
-  --tone-sky: oklch(0.78 0.1 230);
-  --tone-sky-soft: oklch(0.28 0.05 235);
-  --tone-violet: oklch(0.76 0.13 300);
-  --tone-violet-soft: oklch(0.28 0.06 300);
-  --tone-amber: oklch(0.82 0.12 75);
-  --tone-amber-soft: oklch(0.3 0.05 70);
-  --tone-emerald: oklch(0.78 0.12 160);
-  --tone-emerald-soft: oklch(0.28 0.045 160);
-  --tone-rose: oklch(0.76 0.13 15);
-  --tone-rose-soft: oklch(0.29 0.05 15);
-  --tone-slate: oklch(0.78 0.01 260);
-  --tone-slate-soft: oklch(0.27 0.006 260);
+  --shadow-raised: 0 0 0 1px rgba(163, 230, 53, 0.05), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
+  --tone-brand: #4ade80;
+  --tone-brand-soft: #143322;
+  --tone-sky: #7dd3fc;
+  --tone-sky-soft: #0c2a3a;
+  --tone-violet: #c4b5fd;
+  --tone-violet-soft: #241d3d;
+  --tone-amber: #fcd34d;
+  --tone-amber-soft: #33270c;
+  --tone-teal: #5eead4;
+  --tone-teal-soft: #0d2f2b;
+  --tone-rose: #fda4af;
+  --tone-rose-soft: #3a1520;
+  --tone-slate: #b4bfb6;
+  --tone-slate-soft: #1b2a21;
 }
 @layer base {
   * {
@@ -223,7 +262,8 @@
     text-wrap: balance;
   }
   ::selection {
-    background: oklch(0.52 0.2 276 / 0.18);
+    background: rgba(163, 230, 53, 0.45);
+    color: var(--tokenly-forest);
   }
   button {
     cursor: pointer;
@@ -255,7 +295,7 @@
 
 /* Cards: hairline border, near-invisible shadow. Use `surface` instead of repeating the recipe. */
 @utility surface {
-  border-radius: var(--radius-xl);
+  border-radius: var(--tokenly-radius-md);
   border-width: 1px;
   border-color: var(--color-border);
   background-color: var(--color-card);
@@ -263,7 +303,7 @@
   box-shadow: var(--shadow-surface);
 }
 
-/* Buttons and form fields share the 4px corner radius */
+/* Buttons and form fields use the small brand radius (6px) */
 @layer components {
   button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]),
   input:not([type="checkbox"]):not([type="radio"]),

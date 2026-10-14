@@ -100,7 +100,7 @@ function DesignSystem() {
           />
           <StatCard
             icon={Wallet}
-            tone="indigo"
+            tone="brand"
             label="Available credits"
             value="42,000"
             status="healthy"
@@ -238,7 +238,7 @@ function DesignSystem() {
 function SectionTitle({ number, title }: { number: string; title: string }) {
   return (
     <div className="flex items-center gap-3 border-b pb-3">
-      <span className="text-xs font-medium text-primary">{number}</span>
+      <span className="text-xs font-medium text-primary-ink">{number}</span>
       <h3 className="text-base font-semibold">{title}</h3>
     </div>
   );

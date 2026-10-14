@@ -170,18 +170,48 @@ src/
 
 ## Design system
 
-The look aims to be calm, modern and friendly, in the spirit of Linear and Stripe: dense with
-data but never cluttered. Everything visual comes from tokens in `src/styles.css`, defined for
+The look aims to be calm, modern and friendly: dense with data but never cluttered, and
+unmistakably Tokenly green. Everything visual comes from tokens in `src/styles.css`, defined for
 both light and dark mode.
 
-- **Colour:** near-neutral surfaces with one indigo accent. Success, warning and critical colours
-  are used only to signal meaning.
-- **Tones:** seven soft accents (indigo, sky, violet, amber, emerald, rose, slate) give each page
-  and section an identity through `IconTile`.
-- **Shape:** every corner radius is **4px**. All `rounded-*` steps resolve to `--radius`.
-  Radio buttons are the one exception and stay circular.
-- **Surfaces:** cards use the `surface` utility (1px border, very light shadow). Popovers and
-  dialogs use `--shadow-raised`.
+- **Logo:** five lime bars on a forest tile. It lives in `src/components/tokenly/logo.tsx` as
+  inline SVG, and `public/` holds the favicon set (`favicon.svg`, `favicon.ico`,
+  `apple-touch-icon.png`).
+- **Brand colours:** raw brand values are `--tokenly-*` variables. Components only use the
+  semantic tokens built on them (`bg-background`, `bg-primary`, `text-muted-foreground`, …).
+
+  | Token                  | Light     | Role                                               |
+  | ---------------------- | --------- | -------------------------------------------------- |
+  | `--tokenly-primary`    | `#22C55E` | Primary fills: buttons, active states, chart 1     |
+  | `--tokenly-accent`     | `#A3E635` | Lime highlights: the logo bars, selection, chart 2 |
+  | `--tokenly-forest`     | `#0F2D1F` | Logo tile, text on green, tooltips                 |
+  | `--tokenly-background` | `#F5F7EB` | Page background                                    |
+  | `--tokenly-border`     | `#E5E7DE` | Hairline borders                                   |
+
+- **Contrast rule:**
+  - Brand green is a _fill_ colour, and text on it is forest (7.4:1).
+  - Green _text_ on light surfaces uses `text-primary-ink` (`#166534`, 7.1:1). Never set text in
+    `#22C55E`, which reaches only 2.3:1 on white.
+- **Dark mode:** a deep forest family (background `#08130D`, cards `#0F1F16`) rather than
+  neutral grey, so the brand carries through. It keeps the same green fills, with lighter inks
+  for text.
+- **Tones:** seven soft accents (brand, sky, violet, amber, teal, rose, slate) give each page and
+  section an identity through `IconTile`.
+- **Shape:** these are the brand radii.
+
+  | Classes                    | Radius | Used for                            |
+  | -------------------------- | ------ | ----------------------------------- |
+  | `rounded-sm`, `rounded-md` | 6px    | Buttons, inputs, badges, menu items |
+  | `rounded-lg`, `rounded-xl` | 12px   | Cards, popovers, menus, toasts      |
+  | `rounded-2xl`              | 16px   | Dialogs and large panels            |
+  | `rounded-3xl`              | 24px   | Hero surfaces                       |
+
+  Dots, avatars, toggles and progress bars stay fully round.
+
+- **Surfaces:** cards use the `surface` utility (1px border plus the brand card shadow,
+  `0 4px 16px rgba(15, 45, 31, 0.06)`). Popovers and dialogs use `--shadow-raised`.
+- **Charts:** the brand order is green, lime, dark green, light green, grey. Line charts draw their
+  second series in dark green, because lime is too faint as a thin line on a light background.
 - **Type:** Inter with optical sizing and tabular numbers, so figures line up.
 - **Icons:**
   - Always import from `@/components/icons`. Use the two-tone style for content and the bold

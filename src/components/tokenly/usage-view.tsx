@@ -475,7 +475,7 @@ export function UsageView() {
                   }
                 >
                   <span
-                    className={`size-2 rounded-md ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
+                    className={`size-2 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
                   />
                   {row.name}
                 </Button>
@@ -530,7 +530,7 @@ export function UsageView() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
               <div>
                 <h3 className="flex items-center gap-2.5 font-semibold">
-                  <IconTile icon={Activity} tone="indigo" size="sm" />
+                  <IconTile icon={Activity} tone="brand" size="sm" />
                   Usage by {group === "key" ? "API key" : group}
                 </h3>
                 <p className="pl-[38px] mt-1 text-xs text-muted-foreground">

@@ -153,7 +153,7 @@ export function ProjectsGrid() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-semibold group-hover:text-primary">{p.name}</p>
+                  <p className="truncate font-semibold group-hover:text-primary-ink">{p.name}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     Owner · {memberName(p.ownerId)}
                   </p>
@@ -410,7 +410,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="flex items-center gap-2.5 font-semibold">
-            <IconTile icon={KeyRound} tone="indigo" size="sm" />
+            <IconTile icon={KeyRound} tone="brand" size="sm" />
             API keys
           </h3>
           <p className="pl-[38px] text-sm text-muted-foreground">
@@ -438,7 +438,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
       ) : (
         <EmptyState
           icon={KeyRound}
-          tone="indigo"
+          tone="brand"
           title="No keys yet"
           description="Create a key to start sending requests from this project."
           action={
@@ -841,7 +841,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
             <div className="flex items-center gap-2 border-b p-5">
               <Users className="size-4 text-muted-foreground" />
               <h3 className="flex items-center gap-2.5 font-semibold">
-                <IconTile icon={Users} tone="emerald" size="sm" />
+                <IconTile icon={Users} tone="teal" size="sm" />
                 Members
               </h3>
               <span className="text-sm text-muted-foreground">{project.memberIds.length}</span>
@@ -851,7 +851,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
               if (!m) return null;
               return (
                 <div key={id} className="flex items-center gap-3 border-b px-5 py-3 last:border-0">
-                  <span className="grid size-8 place-items-center rounded-md bg-accent text-xs font-semibold text-accent-foreground">
+                  <span className="grid size-8 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
                     {m.initials}
                   </span>
                   <div className="min-w-0 flex-1">

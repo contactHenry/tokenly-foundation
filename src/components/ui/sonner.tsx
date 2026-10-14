@@ -9,7 +9,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:rounded-md group-[.toaster]:bg-popover group-[.toaster]:text-popover-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg group-[.toaster]:text-[13px]",
+            "group toast group-[.toaster]:rounded-xl group-[.toaster]:bg-popover group-[.toaster]:text-popover-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg group-[.toaster]:text-[13px]",
           description: "group-[.toast]:text-muted-foreground",
           actionButton:
             "group-[.toast]:!rounded-md group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",

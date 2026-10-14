@@ -140,8 +140,8 @@ function Avatar({ id }: { id: string | null }) {
   return (
     <span
       className={cn(
-        "grid size-8 shrink-0 place-items-center rounded-md text-xs font-semibold",
-        m ? "bg-accent text-primary" : "bg-muted text-muted-foreground",
+        "grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold",
+        m ? "bg-accent text-primary-ink" : "bg-muted text-muted-foreground",
       )}
       aria-hidden
     >
@@ -266,7 +266,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
                               <span className="font-medium">{a.target}</span>
                             </span>
                             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
-                              <span className="flex items-center gap-1 font-medium text-primary">
+                              <span className="flex items-center gap-1 font-medium text-primary-ink">
                                 <I className="size-3" aria-hidden />
                                 {typeMeta[a.type].label}
                               </span>
