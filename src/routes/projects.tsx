@@ -1,3 +1,6 @@
+import { Search } from "@/components/icons";
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/tokenly/primitives";
@@ -31,6 +34,8 @@ function Page() {
       <ProjectDetail key={project.id} project={project} />
     ) : (
       <EmptyState
+        icon={Search}
+        tone="slate"
         title="Project not found"
         description="It may have been removed."
         action={
@@ -45,9 +50,12 @@ function Page() {
   }
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-semibold">Projects & Keys</h1>
-      </div>
+      <PageHeader
+        icon={pages.projects.icon}
+        tone={pages.projects.tone}
+        title={pages.projects.label}
+        description={pages.projects.description}
+      />
       <ProjectsGrid />
       <KeysTable />
     </div>

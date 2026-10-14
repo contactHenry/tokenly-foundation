@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertHistorySection,
@@ -33,10 +35,12 @@ function Page() {
   const search = Route.useSearch();
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-semibold">Limits & Alerts</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Catch overspend before it happens.</p>
-      </div>
+      <PageHeader
+        icon={pages.limits.icon}
+        tone={pages.limits.tone}
+        title={pages.limits.label}
+        description={pages.limits.description}
+      />
       <BudgetsSection
         {...(search.action === "adjust-limit" && search.project
           ? { focusProject: search.project }

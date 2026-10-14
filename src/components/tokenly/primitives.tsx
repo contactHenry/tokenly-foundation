@@ -22,7 +22,7 @@ import {
   ChevronDown,
   MoreHorizontal,
   X,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -40,8 +40,101 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import type { IconComponent } from "@/components/icons";
 import type { Severity } from "@/lib/mock";
 
+export type Tone = "indigo" | "sky" | "violet" | "amber" | "emerald" | "rose" | "slate";
+const toneClass: Record<Tone, string> = {
+  indigo: "bg-tone-indigo-soft text-tone-indigo",
+  sky: "bg-tone-sky-soft text-tone-sky",
+  violet: "bg-tone-violet-soft text-tone-violet",
+  amber: "bg-tone-amber-soft text-tone-amber",
+  emerald: "bg-tone-emerald-soft text-tone-emerald",
+  rose: "bg-tone-rose-soft text-tone-rose",
+  slate: "bg-tone-slate-soft text-tone-slate",
+};
+/** A soft, tinted square holding a two-tone icon. The friendly anchor for headers and cards. */
+export function IconTile({
+  icon: Icon,
+  tone = "indigo",
+  size = "md",
+  className,
+}: {
+  icon: IconComponent;
+  tone?: Tone | undefined;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "grid shrink-0 place-items-center rounded-md",
+        toneClass[tone],
+        size === "sm" && "size-7 [&>svg]:size-4",
+        size === "md" && "size-9 [&>svg]:size-5",
+        size === "lg" && "size-12 [&>svg]:size-6",
+        className,
+      )}
+    >
+      <Icon />
+    </span>
+  );
+}
+/** Page title row: icon tile, title, one-line description, and optional actions on the right. */
+export function PageHeader({
+  icon,
+  tone,
+  title,
+  description,
+  actions,
+}: {
+  icon: IconComponent;
+  tone?: Tone | undefined;
+  title: string;
+  description?: ReactNode;
+  actions?: ReactNode;
+}) {
+  return (
+    <header className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-3.5">
+        <IconTile icon={icon} tone={tone} size="lg" />
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold leading-tight">{title}</h1>
+          {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
+        </div>
+      </div>
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+    </header>
+  );
+}
+/** Heading for a section inside a page. */
+export function SectionHeader({
+  icon,
+  tone = "slate",
+  title,
+  description,
+  actions,
+}: {
+  icon?: IconComponent;
+  tone?: Tone | undefined;
+  title: string;
+  description?: ReactNode;
+  actions?: ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex min-w-0 items-center gap-2.5">
+        {icon && <IconTile icon={icon} tone={tone} size="sm" />}
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold">{title}</h2>
+          {description && <p className="text-sm text-muted-foreground">{description}</p>}
+        </div>
+      </div>
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+    </div>
+  );
+}
 export function StatusBadge({
   status,
   children,
@@ -60,7 +153,7 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-current/15",
         status === "healthy" && "bg-success-muted text-success",
         status === "warning" && "bg-warning-muted text-warning",
         status === "critical" && "bg-critical-muted text-critical",
@@ -162,6 +255,8 @@ export function StatCard({
   sparkline,
   status,
   detail,
+  icon,
+  tone,
 }: {
   label: string;
   value: string;
@@ -169,11 +264,16 @@ export function StatCard({
   sparkline?: number[];
   status?: Severity;
   detail?: string;
+  icon?: IconComponent;
+  tone?: Tone | undefined;
 }) {
   return (
-    <div className="surface p-5 min-h-40 flex flex-col justify-between">
+    <div className="surface flex min-h-40 flex-col justify-between gap-4 p-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="flex items-center gap-2.5 text-sm font-medium text-muted-foreground">
+          {icon && <IconTile icon={icon} tone={tone} size="sm" />}
+          {label}
+        </span>
         {status && (
           <StatusBadge status={status}>
             {status === "healthy" ? "Healthy" : status === "warning" ? "Attention" : "Critical"}
@@ -227,10 +327,10 @@ export function ThresholdProgress({
         {label && <span className="text-muted-foreground">{label}</span>}
         <span className="ml-auto font-medium">{Math.round(value)}%</span>
       </div>
-      <div className="relative h-2 rounded-full bg-muted">
+      <div className="relative h-2 rounded-md bg-muted">
         <div
           className={cn(
-            "h-full rounded-full transition-[width]",
+            "h-full rounded-md transition-[width]",
             state === "healthy" ? "bg-success" : state === "warning" ? "bg-warning" : "bg-critical",
           )}
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
@@ -400,7 +500,7 @@ export function FilterBar({
           variant={selected === option ? "secondary" : "outline"}
           size="sm"
           className={cn(
-            "rounded-full shadow-none",
+            "rounded-md shadow-none",
             selected === option && "border border-primary/20 text-primary",
           )}
           onClick={() => onChange(option)}
@@ -415,16 +515,18 @@ export function EmptyState({
   title,
   description,
   action,
+  icon = BellOff,
+  tone = "slate",
 }: {
   title: string;
   description: string;
   action?: ReactNode;
+  icon?: IconComponent;
+  tone?: Tone | undefined;
 }) {
   return (
-    <div className="flex min-h-52 flex-col items-center justify-center rounded-xl border border-dashed bg-card px-6 py-8 text-center">
-      <div className="mb-4 grid size-10 place-items-center rounded-lg bg-muted text-muted-foreground">
-        <BellOff className="size-5" />
-      </div>
+    <div className="flex min-h-56 flex-col items-center justify-center rounded-md border border-dashed bg-card px-6 py-10 text-center">
+      <IconTile icon={icon} tone={tone} size="lg" className="mb-4" />
       <h3 className="text-sm font-semibold">{title}</h3>
       <p className="mt-1 max-w-xs text-sm text-muted-foreground">{description}</p>
       {action && <div className="mt-4">{action}</div>}
@@ -435,7 +537,7 @@ export function LoadingSkeleton() {
   return (
     <div className="surface p-5 space-y-4">
       <div className="flex items-center gap-3">
-        <Skeleton className="size-9 rounded-full" />
+        <Skeleton className="size-9 rounded-md" />
         <div className="space-y-2">
           <Skeleton className="h-3 w-32" />
           <Skeleton className="h-3 w-20" />
@@ -551,9 +653,7 @@ export function ChartCard({
       <div className="mt-5 flex flex-wrap gap-5 text-xs text-muted-foreground">
         {legend.map((item, index) => (
           <span key={item} className="flex items-center gap-2">
-            <span
-              className={cn("size-2 rounded-full", index === 0 ? "bg-chart-1" : "bg-chart-2")}
-            />
+            <span className={cn("size-2 rounded-md", index === 0 ? "bg-chart-1" : "bg-chart-2")} />
             {item}
           </span>
         ))}
@@ -591,7 +691,7 @@ export function ChartCard({
               contentStyle={{
                 background: "var(--popover)",
                 border: "1px solid var(--border)",
-                borderRadius: 8,
+                borderRadius: 4,
                 color: "var(--popover-foreground)",
               }}
               formatter={(value) => Number(value).toLocaleString()}

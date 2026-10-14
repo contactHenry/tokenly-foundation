@@ -1,5 +1,16 @@
 import { useEffect, useState } from "react";
-import { Check, Copy, Hash, Minus, Trash2, UserPlus, Webhook } from "lucide-react";
+import {
+  Bell,
+  Check,
+  Copy,
+  Hash,
+  Minus,
+  ShieldAlert,
+  Trash2,
+  UserPlus,
+  Users,
+  Webhook,
+} from "@/components/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +32,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { StatusBadge } from "@/components/tokenly/primitives";
+import { IconTile, StatusBadge } from "@/components/tokenly/primitives";
 import { Gate } from "./role-gate";
 import { relative } from "./format";
 import {
@@ -159,8 +170,11 @@ function Team() {
       <section className="surface">
         <div className="flex items-center justify-between gap-3 border-b p-5">
           <div>
-            <h3 className="font-semibold">Members</h3>
-            <p className="text-sm text-muted-foreground">{members.length} people</p>
+            <h3 className="flex items-center gap-2.5 font-semibold">
+              <IconTile icon={Users} tone="emerald" size="sm" />
+              Members
+            </h3>
+            <p className="pl-[38px] text-sm text-muted-foreground">{members.length} people</p>
           </div>
           <Gate
             perm="manageTeam"
@@ -187,7 +201,7 @@ function Team() {
                 className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-5 py-3 transition-colors duration-150 hover:bg-muted/40 md:grid-cols-[auto_minmax(0,1fr)_10rem_8rem_2.5rem]"
               >
                 <span
-                  className="grid size-9 place-items-center rounded-full bg-accent text-xs font-semibold text-primary"
+                  className="grid size-9 place-items-center rounded-md bg-accent text-xs font-semibold text-primary"
                   aria-hidden
                 >
                   {m.initials}
@@ -273,8 +287,13 @@ function Team() {
       </section>
       <section className="surface">
         <div className="border-b p-5">
-          <h3 className="font-semibold">Roles & permissions</h3>
-          <p className="text-sm text-muted-foreground">What each role can do in this workspace.</p>
+          <h3 className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={ShieldAlert} tone="violet" size="sm" />
+            Roles & permissions
+          </h3>
+          <p className="pl-[38px] text-sm text-muted-foreground">
+            What each role can do in this workspace.
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
@@ -385,8 +404,11 @@ function Notifications() {
   return (
     <section className="max-w-3xl surface">
       <div className="border-b p-5">
-        <h3 className="font-semibold">Your notification preferences</h3>
-        <p className="text-sm text-muted-foreground">
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={Bell} tone="amber" size="sm" />
+          Your notification preferences
+        </h3>
+        <p className="pl-[38px] text-sm text-muted-foreground">
           Only affects what you receive.
           {!slack.connected && " Connect Slack under Integrations to use it."}
         </p>
@@ -455,9 +477,7 @@ function Integrations() {
       <section className={card}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-lg border">
-              <Hash className="size-5" />
-            </span>
+            <IconTile icon={Hash} tone="violet" />
             <div>
               <h3 className="font-semibold">Slack</h3>
               <p className="text-sm text-muted-foreground">Post alerts to a channel.</p>
@@ -519,9 +539,7 @@ function Integrations() {
       <section className={card}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-lg border">
-              <Webhook className="size-5" />
-            </span>
+            <IconTile icon={Webhook} tone="sky" />
             <div>
               <h3 className="font-semibold">Webhook</h3>
               <p className="text-sm text-muted-foreground">Send alert events to your endpoint.</p>

@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -36,9 +38,12 @@ function Page() {
   const [topUp, setTopUp] = useState(false);
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-semibold">Billing</h1>
-      </div>
+      <PageHeader
+        icon={pages.billing.icon}
+        tone={pages.billing.tone}
+        title={pages.billing.label}
+        description={pages.billing.description}
+      />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <BalanceCard onTopUp={() => setTopUp(true)} />
         <AutoRechargeCard />

@@ -9,7 +9,7 @@ import {
   OctagonAlert,
   SlidersHorizontal,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -113,7 +113,7 @@ export function NotificationCenter() {
         >
           <Bell />
           {unread.length > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-critical px-1 text-[10px] font-semibold leading-4 text-primary-foreground">
+            <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-md bg-critical px-1 text-[10px] font-semibold leading-4 text-primary-foreground">
               {unread.length}
             </span>
           )}
@@ -181,7 +181,7 @@ export function NotificationCenter() {
                       </span>
                     </span>
                     {!read && (
-                      <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary">
+                      <span className="mt-1.5 size-2 shrink-0 rounded-md bg-primary">
                         <span className="sr-only">Unread</span>
                       </span>
                     )}
