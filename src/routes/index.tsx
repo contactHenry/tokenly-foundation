@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { useBillingStore } from "@/components/tokenly/billing-store";
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -44,17 +46,22 @@ function Overview() {
   if (!ready) return <OverviewSkeleton />;
   return (
     <div className="space-y-5">
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Overview</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Your balance, runway, and what’s driving spend.
-          </p>
-        </div>
-        <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-success" aria-hidden />
-          Usage data through Sep 26, 2026
-        </span>
+      <div className="mb-3">
+        <PageHeader
+          icon={pages.overview.icon}
+          tone={pages.overview.tone}
+          title={pages.overview.label}
+          description={pages.overview.description}
+          actions={
+            <span className="inline-flex items-center gap-2 rounded-md border bg-card px-2.5 py-1.5 text-xs text-muted-foreground">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-md bg-success/60 motion-reduce:hidden" />
+                <span className="relative inline-flex size-2 rounded-md bg-success" />
+              </span>
+              Data through Sep 26, 2026
+            </span>
+          }
+        />
       </div>
       <OnboardingChecklist />
       <StatusRow data={data} />

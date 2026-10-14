@@ -1,3 +1,6 @@
+import { IconTile } from "@/components/tokenly/primitives";
+import { pages as pageMeta } from "@/components/tokenly/nav";
+import { PageHeader } from "@/components/tokenly/primitives";
 import { toast } from "sonner";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
@@ -14,14 +17,17 @@ import {
   YAxis,
 } from "recharts";
 import {
+  Activity,
   ArrowDownRight,
   ArrowRight,
   ArrowUpDown,
   ArrowUpRight,
   Download,
   Save,
+  Search,
+  TrendingUp,
   X,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -248,10 +254,13 @@ export function UsageView() {
     });
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Usage</h1>
-      </div>
-      <div className="sticky top-16 z-20 -mx-4 border-y bg-background/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <PageHeader
+        icon={pageMeta.usage.icon}
+        tone={pageMeta.usage.tone}
+        title={pageMeta.usage.label}
+        description={pageMeta.usage.description}
+      />
+      <div className="sticky top-14 z-20 -mx-4 border-y bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
         <div className="flex flex-wrap items-center gap-2">
           {FILTERS.map((kind) => (
             <Select
@@ -347,7 +356,7 @@ export function UsageView() {
               key={kind}
               size="sm"
               variant="secondary"
-              className="h-7 rounded-full text-xs"
+              className="h-7 rounded-md text-xs"
               onClick={() => update({ [kind]: undefined })}
             >
               {names[kind]}: {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
@@ -358,7 +367,7 @@ export function UsageView() {
             <Button
               size="sm"
               variant="secondary"
-              className="h-7 rounded-full text-xs"
+              className="h-7 rounded-md text-xs"
               onClick={() => update({ from: undefined, to: undefined })}
             >
               Date: {from} – {to}
@@ -393,6 +402,8 @@ export function UsageView() {
       </div>
       {events.length === 0 ? (
         <EmptyState
+          icon={Search}
+          tone="sky"
           title="No usage matches these filters"
           description="Try another range or remove a filter."
           action={
@@ -406,8 +417,11 @@ export function UsageView() {
           <section className="surface p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <h3 className="font-semibold">Usage over time</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <h3 className="flex items-center gap-2.5 font-semibold">
+                  <IconTile icon={TrendingUp} tone="sky" size="sm" />
+                  Usage over time
+                </h3>
+                <p className="pl-[38px] mt-1 text-sm text-muted-foreground">
                   Grouped by {group === "key" ? "API key" : group}
                 </p>
               </div>
@@ -461,7 +475,7 @@ export function UsageView() {
                   }
                 >
                   <span
-                    className={`size-2 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
+                    className={`size-2 rounded-md ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
                   />
                   {row.name}
                 </Button>
@@ -489,7 +503,7 @@ export function UsageView() {
                     contentStyle={{
                       background: "var(--popover)",
                       border: "1px solid var(--border)",
-                      borderRadius: 8,
+                      borderRadius: 4,
                       color: "var(--popover-foreground)",
                     }}
                     formatter={(value, name) => [
@@ -515,8 +529,11 @@ export function UsageView() {
           <section className="surface">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
               <div>
-                <h3 className="font-semibold">Usage by {group === "key" ? "API key" : group}</h3>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <h3 className="flex items-center gap-2.5 font-semibold">
+                  <IconTile icon={Activity} tone="indigo" size="sm" />
+                  Usage by {group === "key" ? "API key" : group}
+                </h3>
+                <p className="pl-[38px] mt-1 text-xs text-muted-foreground">
                   {rows.length} groups · click a row for details
                 </p>
               </div>

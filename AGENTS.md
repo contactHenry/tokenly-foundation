@@ -16,3 +16,5 @@
 - Limits & Alerts budgets, rule settings and alert statuses are saved on the current device only; why: the preview has no accounts yet.
 - Billing (balance, top-ups, auto-recharge, cards, invoice status) and workspace settings/team/role preview live in device-only stores (tokenly-billing-v1, tokenly-workspace-v1); why: no accounts or payment provider yet.
 - Permissions come from ROLE_PERMS in workspace-store; gate actions with <Gate perm> so denied actions render disabled with a tooltip; why: one source of truth for role-aware UI.
+- Icons come from src/components/icons.tsx (Phosphor duotone/bold behind lucide-style names), never directly from an icon package; why: one friendly, consistent icon style.
+- Every corner radius is 4px (all rounded-* steps resolve to --radius in src/styles.css); page headers use <PageHeader> with icon/tone from src/components/tokenly/nav.ts; why: one consistent shape and page identity.

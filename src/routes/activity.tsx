@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { createFileRoute } from "@tanstack/react-router";
 import { useDateRange } from "@/components/tokenly/app-shell";
 import { ActivityView } from "@/components/tokenly/activity-view";
@@ -26,12 +28,12 @@ function Page() {
   const range = useDateRange();
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold">Activity</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Who did what, and when. Follows the date range at the top.
-        </p>
-      </div>
+      <PageHeader
+        icon={pages.activity.icon}
+        tone={pages.activity.tone}
+        title={pages.activity.label}
+        description={pages.activity.description}
+      />
       <ActivityView from={range.from} to={range.to} />
     </div>
   );

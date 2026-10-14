@@ -1,3 +1,4 @@
+import { IconTile } from "@/components/tokenly/primitives";
 import { toast } from "sonner";
 import { Gate } from "./role-gate";
 import { useState } from "react";
@@ -11,8 +12,9 @@ import {
   Plus,
   RotateCcw,
   Trash2,
+  Wallet,
   Zap,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -172,7 +174,7 @@ export function TopUpDialog({
         {done ? (
           <>
             <DialogHeader>
-              <div className="mb-2 grid size-10 place-items-center rounded-full bg-success-muted">
+              <div className="mb-2 grid size-10 place-items-center rounded-md bg-success-muted">
                 <Check className="size-5 text-success" />
               </div>
               <DialogTitle>Credits added</DialogTitle>
@@ -255,7 +257,7 @@ export function TopUpDialog({
                   <span
                     key={t.min}
                     className={cn(
-                      "rounded-full border px-2.5 py-1",
+                      "rounded-md border px-2.5 py-1",
                       usd >= t.min && bonusPct(usd) === t.pct
                         ? "border-success/40 bg-success-muted text-success"
                         : "text-muted-foreground",
@@ -372,10 +374,10 @@ export function AutoRechargeCard() {
   return (
     <div className="surface p-6 min-w-0 lg:col-span-5">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Zap className="size-4 text-muted-foreground" />
-          <h3 className="font-semibold">Auto-recharge</h3>
-        </div>
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={Zap} tone="amber" size="sm" />
+          Auto-recharge
+        </h3>
         <Switch
           checked={a.enabled}
           disabled={!canEdit || (!a.enabled && methods.length === 0)}
@@ -502,7 +504,10 @@ export function PaymentMethodsCard() {
   return (
     <div className="surface p-6 min-w-0 lg:col-span-5">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">Payment methods</h3>
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={CreditCard} tone="violet" size="sm" />
+          Payment methods
+        </h3>
         <Gate
           perm="manageBilling"
           disabled={
@@ -707,7 +712,10 @@ export function InvoicesSection() {
   };
   return (
     <section className="space-y-4">
-      <h3 className="font-semibold">Invoices</h3>
+      <h3 className="flex items-center gap-2.5 font-semibold">
+        <IconTile icon={Download} tone="sky" size="sm" />
+        Invoices
+      </h3>
       {failed && (
         <AlertBanner
           tone="critical"
@@ -756,7 +764,7 @@ export function LedgerSection() {
           <span className="flex items-center gap-2.5">
             <span
               className={cn(
-                "grid size-7 place-items-center rounded-full",
+                "grid size-7 place-items-center rounded-md",
                 r.amount > 0 ? "bg-success-muted text-success" : "bg-muted text-muted-foreground",
               )}
             >
@@ -791,8 +799,13 @@ export function LedgerSection() {
   return (
     <section className="space-y-4">
       <div>
-        <h3 className="font-semibold">Credit transactions</h3>
-        <p className="text-sm text-muted-foreground">Usage is rolled up daily. Last 30 days.</p>
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={Wallet} tone="emerald" size="sm" />
+          Credit transactions
+        </h3>
+        <p className="pl-[38px] text-sm text-muted-foreground">
+          Usage is rolled up daily. Last 30 days.
+        </p>
       </div>
       <DataTable rows={rows.slice(page * size, page * size + size)} columns={columns} />
       <div className="flex items-center justify-between text-sm text-muted-foreground">

@@ -23,11 +23,16 @@ import {
   KeyRound,
   SlidersHorizontal,
   Wallet,
-} from "lucide-react";
+  CircleCheck,
+  TrendingUp,
+  Users,
+  Zap,
+  type IconComponent,
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StatusBadge } from "@/components/tokenly/primitives";
+import { IconTile, StatusBadge, type Tone } from "@/components/tokenly/primitives";
 import { cn } from "@/lib/utils";
 import {
   activityEvents,
@@ -166,21 +171,28 @@ function Metric({
   value,
   detail,
   status = "healthy",
+  icon,
+  tone,
   children,
 }: {
   label: string;
   value: string;
   detail: string;
   status?: Severity;
+  icon: IconComponent;
+  tone: Tone;
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-40 min-w-0 flex-col justify-between gap-4 surface p-5">
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
+    <div className="flex min-h-40 min-w-0 flex-col justify-between gap-4 surface p-5 transition-shadow hover:shadow-md">
+      <div className="flex items-center justify-between gap-2">
+        <p className="flex items-center gap-2.5 text-sm font-medium text-muted-foreground">
+          <IconTile icon={icon} tone={tone} size="sm" />
+          {label}
+        </p>
         <span
           className={cn(
-            "size-2 shrink-0 rounded-full",
+            "size-2 shrink-0 rounded-md",
             status === "healthy"
               ? "bg-success"
               : status === "warning"
@@ -212,7 +224,7 @@ function Meter({
   return (
     <div className="mt-4">
       <div
-        className="relative h-2 rounded-full bg-muted"
+        className="relative h-2 rounded-md bg-muted"
         role="progressbar"
         aria-label={label}
         aria-valuenow={Math.round(value)}
@@ -221,7 +233,7 @@ function Meter({
       >
         <div
           className={cn(
-            "h-full rounded-full",
+            "h-full rounded-md",
             status === "healthy"
               ? "bg-success"
               : status === "warning"
@@ -260,6 +272,8 @@ export function StatusRow({ data }: { data: OverviewData }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Metric
+        icon={Wallet}
+        tone="indigo"
         label="Credits remaining"
         value={data.balance.toLocaleString()}
         detail={`vs. ${topUp.toLocaleString()} at last top-up`}
@@ -268,6 +282,8 @@ export function StatusRow({ data }: { data: OverviewData }) {
         <Meter value={used} status={creditStatus} label="Credits spent since last top-up" />
       </Metric>
       <Metric
+        icon={Zap}
+        tone="amber"
         label="Burn rate"
         value={`${Math.round(data.burn).toLocaleString()}/day`}
         detail="7-day average · credits/day"
@@ -294,6 +310,8 @@ export function StatusRow({ data }: { data: OverviewData }) {
         </p>
       </Metric>
       <Metric
+        icon={CalendarClock}
+        tone="sky"
         label="Runway"
         value={data.runway === null ? "—" : `${data.runway} days left`}
         detail={
@@ -314,6 +332,8 @@ export function StatusRow({ data }: { data: OverviewData }) {
         </div>
       </Metric>
       <Metric
+        icon={CreditCard}
+        tone="violet"
         label="Spend this period"
         value={money(data.spend)}
         detail={`of ${money(data.budget)} period budget`}
@@ -371,12 +391,10 @@ export function NeedsAttention({ data }: { data: OverviewData }) {
   return (
     <section aria-labelledby="attention-title" className="surface">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
-        <div className="flex items-center gap-2">
-          <BellRing className="size-4 text-warning" />
-          <h3 id="attention-title" className="font-semibold">
-            Needs attention
-          </h3>
-        </div>
+        <h3 id="attention-title" className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={BellRing} tone="amber" size="sm" />
+          Needs attention
+        </h3>
         {items.length > 0 && (
           <span className="text-xs text-muted-foreground">
             {items.length} {items.length === 1 ? "item" : "items"}
@@ -385,8 +403,8 @@ export function NeedsAttention({ data }: { data: OverviewData }) {
       </div>
       {items.length === 0 ? (
         <div className="flex items-center gap-3 px-5 py-6">
-          <span className="size-2 rounded-full bg-success" />
-          <p className="text-sm text-muted-foreground">All good. No action needed.</p>
+          <IconTile icon={CircleCheck} tone="emerald" size="sm" />
+          <p className="text-sm text-muted-foreground">All good. Nothing needs you right now.</p>
         </div>
       ) : (
         <div className="divide-y">
@@ -468,10 +486,11 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
     <section aria-labelledby="spend-title" className="min-w-0 surface p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 id="spend-title" className="font-semibold">
+          <h3 id="spend-title" className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={TrendingUp} tone="indigo" size="sm" />
             Spend trend
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="pl-[38px] mt-1 text-sm text-muted-foreground">
             Daily spend ·{" "}
             {range.label === "Custom"
               ? `${shortDate(range.from)}–${shortDate(range.to)}`
@@ -589,10 +608,11 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
   return (
     <section aria-labelledby="consumers-title" className="min-w-0 surface p-5 sm:p-6">
       <div>
-        <h3 id="consumers-title" className="font-semibold">
+        <h3 id="consumers-title" className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={Users} tone="sky" size="sm" />
           Top consumers
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground">Where your spend goes</p>
+        <p className="pl-[38px] mt-1 text-sm text-muted-foreground">Where your spend goes</p>
       </div>
       <Tabs value={kind} onValueChange={(value) => setKind(value as ConsumerKind)} className="mt-5">
         <TabsList className="grid h-9 w-full grid-cols-3">
@@ -639,9 +659,9 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                     <span className="shrink-0 font-semibold">{money(row.cost)}</span>
                   </span>
                   <span className="mt-2 flex items-center gap-2">
-                    <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
+                    <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-md bg-muted">
                       <span
-                        className="block h-full rounded-full bg-chart-1"
+                        className="block h-full rounded-md bg-chart-1"
                         style={{ width: `${row.percent}%` }}
                       />
                     </span>
@@ -691,10 +711,13 @@ export function RecentActivity({ range }: { range: DateSelection }) {
     <section aria-labelledby="activity-title" className="surface">
       <div className="flex items-center justify-between gap-3 border-b px-5 py-4">
         <div>
-          <h3 id="activity-title" className="font-semibold">
+          <h3 id="activity-title" className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={Gauge} tone="rose" size="sm" />
             Recent activity
           </h3>
-          <p className="mt-1 text-xs text-muted-foreground">Changes across your workspace</p>
+          <p className="pl-[38px] mt-1 text-xs text-muted-foreground">
+            Changes across your workspace
+          </p>
         </div>
         <Button asChild variant="ghost" size="sm" className="shrink-0 text-primary">
           <Link to="/activity">

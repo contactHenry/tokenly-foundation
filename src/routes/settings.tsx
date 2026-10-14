@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/tokenly/primitives";
+import { pages } from "@/components/tokenly/nav";
 import { createFileRoute } from "@tanstack/react-router";
 import { SettingsView } from "@/components/tokenly/settings-view";
 
@@ -26,9 +28,12 @@ export const Route = createFileRoute("/settings")({
 function Page() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold">Settings</h1>
-      </div>
+      <PageHeader
+        icon={pages.settings.icon}
+        tone={pages.settings.tone}
+        title={pages.settings.label}
+        description={pages.settings.description}
+      />
       <SettingsView />
     </div>
   );

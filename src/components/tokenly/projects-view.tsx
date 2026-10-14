@@ -1,3 +1,4 @@
+import { IconTile } from "@/components/tokenly/primitives";
 import { Gate } from "./role-gate";
 import { useRole } from "./workspace-store";
 import { toast } from "sonner";
@@ -18,11 +19,14 @@ import {
   Check,
   Copy,
   KeyRound,
+  LayoutDashboard,
   MoreHorizontal,
   Plus,
   RefreshCw,
+  Settings2,
+  TrendingUp,
   Users,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -121,8 +125,11 @@ export function ProjectsGrid() {
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-semibold">Projects</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={LayoutDashboard} tone="violet" size="sm" />
+            Projects
+          </h3>
+          <p className="pl-[38px] text-sm text-muted-foreground">
             {projects.length} projects in this workspace
           </p>
         </div>
@@ -402,8 +409,11 @@ export function KeysTable({ projectId }: { projectId?: string }) {
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-semibold">API keys</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={KeyRound} tone="indigo" size="sm" />
+            API keys
+          </h3>
+          <p className="pl-[38px] text-sm text-muted-foreground">
             {rows.filter((r) => r.status === "active").length} active ·{" "}
             {rows.filter((r) => r.status === "revoked").length} revoked
           </p>
@@ -427,6 +437,8 @@ export function KeysTable({ projectId }: { projectId?: string }) {
         <DataTable rows={rows} columns={columns} />
       ) : (
         <EmptyState
+          icon={KeyRound}
+          tone="indigo"
           title="No keys yet"
           description="Create a key to start sending requests from this project."
           action={
@@ -744,7 +756,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-semibold">{project.name}</h2>
+              <h1 className="text-2xl font-semibold">{project.name}</h1>
               <StatusBadge status={project.status === "paused" ? "neutral" : h.s}>
                 {project.status === "paused" ? "Paused" : h.t}
               </StatusBadge>
@@ -776,8 +788,11 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
         </TabsList>
         <TabsContent value="overview" className="mt-6 space-y-6">
           <div className="surface p-5">
-            <h3 className="font-semibold">Daily spend</h3>
-            <p className="text-sm text-muted-foreground">Last 30 days</p>
+            <h3 className="flex items-center gap-2.5 font-semibold">
+              <IconTile icon={TrendingUp} tone="sky" size="sm" />
+              Daily spend
+            </h3>
+            <p className="pl-[38px] text-sm text-muted-foreground">Last 30 days</p>
             <div className="mt-4 h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chart}>
@@ -801,7 +816,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
                     contentStyle={{
                       background: "var(--popover)",
                       border: "1px solid var(--border)",
-                      borderRadius: 8,
+                      borderRadius: 4,
                     }}
                   />
                   <Area
@@ -825,7 +840,10 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
           <div className="surface">
             <div className="flex items-center gap-2 border-b p-5">
               <Users className="size-4 text-muted-foreground" />
-              <h3 className="font-semibold">Members</h3>
+              <h3 className="flex items-center gap-2.5 font-semibold">
+                <IconTile icon={Users} tone="emerald" size="sm" />
+                Members
+              </h3>
               <span className="text-sm text-muted-foreground">{project.memberIds.length}</span>
             </div>
             {project.memberIds.map((id) => {
@@ -833,7 +851,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
               if (!m) return null;
               return (
                 <div key={id} className="flex items-center gap-3 border-b px-5 py-3 last:border-0">
-                  <span className="grid size-8 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
+                  <span className="grid size-8 place-items-center rounded-md bg-accent text-xs font-semibold text-accent-foreground">
                     {m.initials}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -876,7 +894,10 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
   return (
     <div className="max-w-xl space-y-6">
       <div className="space-y-4 surface p-5">
-        <h3 className="font-semibold">General</h3>
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={Settings2} tone="slate" size="sm" />
+          General
+        </h3>
         <Field label="Name">
           <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
         </Field>

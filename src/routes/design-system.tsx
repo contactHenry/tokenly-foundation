@@ -1,7 +1,8 @@
+import { Activity, BookOpen, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
 import { toast } from "sonner";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   AlertBanner,
@@ -13,6 +14,7 @@ import {
   FilterBar,
   LoadingSkeleton,
   StatCard,
+  PageHeader,
   StatusBadge,
   ThresholdProgress,
   type Column,
@@ -69,17 +71,18 @@ function DesignSystem() {
   const [banners, setBanners] = useState(["info", "warning", "critical"]);
   return (
     <div className="space-y-10">
-      <div>
-        <p className="text-sm text-muted-foreground">Foundation / Components</p>
-        <h1 className="text-2xl font-semibold">Design system</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The building blocks behind every Tokenly workspace.
-        </p>
-      </div>
+      <PageHeader
+        icon={BookOpen}
+        tone="slate"
+        title="Design system"
+        description="The building blocks behind every Tokenly workspace."
+      />
       <section className="space-y-4">
         <SectionTitle number="01" title="Stats & status" />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
+            icon={Activity}
+            tone="sky"
             label="Total tokens"
             value="18.4M"
             delta={12.8}
@@ -87,6 +90,8 @@ function DesignSystem() {
             sparkline={dailyUsage.slice(-14).map((day) => day.inputTokens)}
           />
           <StatCard
+            icon={CreditCard}
+            tone="violet"
             label="Total spend"
             value="$1,487.20"
             delta={-4.6}
@@ -94,12 +99,21 @@ function DesignSystem() {
             sparkline={dailyUsage.slice(-14).map((day) => day.cost)}
           />
           <StatCard
+            icon={Wallet}
+            tone="indigo"
             label="Available credits"
             value="42,000"
             status="healthy"
             detail="ready to use"
           />
-          <StatCard label="Budget health" value="87%" status="warning" detail="Research Lab" />
+          <StatCard
+            icon={ShieldAlert}
+            tone="amber"
+            label="Budget health"
+            value="87%"
+            status="warning"
+            detail="Research Lab"
+          />
         </div>
         <div className="flex flex-wrap gap-2">
           <StatusBadge status="healthy">Healthy</StatusBadge>

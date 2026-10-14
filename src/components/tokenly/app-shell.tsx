@@ -5,27 +5,19 @@ import { Gate } from "@/components/tokenly/role-gate";
 import { ROLES, useRole, workspaceActions } from "@/components/tokenly/workspace-store";
 import { toast } from "sonner";
 import { TopUpDialog } from "@/components/tokenly/billing-view";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Activity,
-  Bell,
   BookOpen,
   CalendarDays,
   ChevronDown,
   CircleHelp,
-  CreditCard,
-  Gauge,
-  KeyRound,
-  LayoutDashboard,
   Moon,
   Plus,
   Settings,
-  ShieldAlert,
   Sun,
-  Wallet,
-  X,
-} from "lucide-react";
+  Zap,
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -53,8 +45,12 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { DetailDrawer, StatusBadge } from "@/components/tokenly/primitives";
-import { alerts, creditAccount, organization, teamMembers } from "@/lib/mock";
+import { type Tone } from "@/components/tokenly/primitives";
+import { CommandMenu } from "@/components/tokenly/command-menu";
+import { navGroups, type Page } from "@/components/tokenly/nav";
+import { setDarkMode, useIsDark } from "@/components/tokenly/theme";
+import { cn } from "@/lib/utils";
+import { organization, teamMembers } from "@/lib/mock";
 
 export type DateSelection = {
   label: "Today" | "7d" | "30d" | "90d" | "Custom";
@@ -74,15 +70,34 @@ const RangeContext = createContext<{
 export function useDateRange() {
   return useContext(RangeContext).range;
 }
-const navigation = [
-  { label: "Overview", to: "/", icon: LayoutDashboard },
-  { label: "Usage", to: "/usage", icon: Activity },
-  { label: "Projects & Keys", to: "/projects", icon: KeyRound },
-  { label: "Limits & Alerts", to: "/limits", icon: ShieldAlert },
-  { label: "Billing", to: "/billing", icon: CreditCard },
-  { label: "Activity", to: "/activity", icon: Gauge },
-  { label: "Settings", to: "/settings", icon: Settings },
-] as const;
+const toneText: Record<Tone, string> = {
+  indigo:
+    "group-data-[active=true]/nav:bg-tone-indigo-soft group-data-[active=true]/nav:text-tone-indigo",
+  sky: "group-data-[active=true]/nav:bg-tone-sky-soft group-data-[active=true]/nav:text-tone-sky",
+  violet:
+    "group-data-[active=true]/nav:bg-tone-violet-soft group-data-[active=true]/nav:text-tone-violet",
+  amber:
+    "group-data-[active=true]/nav:bg-tone-amber-soft group-data-[active=true]/nav:text-tone-amber",
+  emerald:
+    "group-data-[active=true]/nav:bg-tone-emerald-soft group-data-[active=true]/nav:text-tone-emerald",
+  rose: "group-data-[active=true]/nav:bg-tone-rose-soft group-data-[active=true]/nav:text-tone-rose",
+  slate:
+    "group-data-[active=true]/nav:bg-tone-slate-soft group-data-[active=true]/nav:text-tone-slate",
+};
+const navButton =
+  "group/nav h-9 gap-2.5 px-1.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-foreground group-data-[collapsible=icon]:!p-0.5";
+function NavIcon({ icon: Icon, tone }: { icon: Page["icon"]; tone: Tone }) {
+  return (
+    <span
+      className={cn(
+        "grid size-7 shrink-0 place-items-center rounded-md transition-colors [&>svg]:size-[18px]",
+        toneText[tone],
+      )}
+    >
+      <Icon />
+    </span>
+  );
+}
 const titles: Record<string, string> = {
   "/": "Overview",
   "/usage": "Usage",
@@ -106,8 +121,8 @@ function SideNavigation() {
           className="flex items-center gap-2 px-2 py-1"
           onClick={() => setOpenMobile(false)}
         >
-          <span className="grid size-6 shrink-0 place-items-center rounded-md bg-foreground text-background">
-            <span className="text-sm font-bold leading-none">t</span>
+          <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(1_0_0/0.2)] [&>svg]:size-4">
+            <Zap weight="fill" />
           </span>
           <span className="truncate text-[15px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
             tokenly<span className="text-primary">.</span>
@@ -138,29 +153,33 @@ function SideNavigation() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarHeader>
-      <SidebarContent className="pt-1">
-        <SidebarGroup>
-          <SidebarGroupLabel className="sr-only">Workspace</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigation.map((item) => (
-                <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={item.label}
-                    isActive={path === item.to}
-                    className="h-8 gap-2.5 px-2.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-foreground [&>svg]:size-4"
-                  >
-                    <Link to={item.to} onClick={() => setOpenMobile(false)}>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className="gap-0 pt-1">
+        {navGroups.map((group) => (
+          <SidebarGroup key={group.label} className="py-1.5">
+            <SidebarGroupLabel className="h-7 px-2 text-[11px] font-medium text-muted-foreground/80">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5">
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.to}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.label}
+                      isActive={path === item.to}
+                      className={navButton}
+                    >
+                      <Link to={item.to} onClick={() => setOpenMobile(false)}>
+                        <NavIcon icon={item.icon} tone={item.tone} />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter className="p-3">
         <SidebarMenu>
@@ -169,10 +188,10 @@ function SideNavigation() {
               asChild
               tooltip="Design system"
               isActive={path === "/design-system"}
-              className="h-8 gap-2.5 px-2.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-foreground [&>svg]:size-4"
+              className={navButton}
             >
               <Link to="/design-system" onClick={() => setOpenMobile(false)}>
-                <BookOpen />
+                <NavIcon icon={BookOpen} tone="slate" />
                 <span>Design system</span>
               </Link>
             </SidebarMenuButton>
@@ -185,7 +204,7 @@ function SideNavigation() {
               className="mt-1 h-11 w-full justify-start gap-2 px-2 hover:bg-sidebar-accent group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-0"
               title="User menu"
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-[11px] font-semibold text-accent-foreground">
+              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-accent text-[11px] font-semibold text-accent-foreground">
                 {teamMembers[0]?.initials ?? "HN"}
               </span>
               <span className="min-w-0 flex-1 text-left group-data-[collapsible=icon]:hidden">
@@ -332,25 +351,14 @@ function DatePicker() {
   );
 }
 function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
+  const dark = useIsDark();
   return (
     <Button
       variant="ghost"
       size="icon"
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       title={dark ? "Light mode" : "Dark mode"}
-      onClick={() => {
-        document.documentElement.classList.toggle("dark", !dark);
-        try {
-          localStorage.setItem("tokenly-theme", !dark ? "dark" : "light");
-        } catch {
-          /* theme still applies for this visit */
-        }
-        setDark(!dark);
-      }}
+      onClick={() => setDarkMode(!dark)}
     >
       {dark ? <Sun /> : <Moon />}
     </Button>
@@ -364,8 +372,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     to: lastDay,
   });
   const [topUpOpen, setTopUpOpen] = useState(false);
-  const [dismissed, setDismissed] = useState<string[]>([]);
-  const unread = alerts.filter((alert) => !alert.read && !dismissed.includes(alert.id));
   return (
     <RangeContext.Provider value={{ range, setRange }}>
       <SidebarProvider>
@@ -381,6 +387,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="truncate text-sm font-medium">{titles[path] || "Tokenly"}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
+              <CommandMenu onTopUp={() => setTopUpOpen(true)} />
               <div className="hidden sm:block">
                 <DatePicker />
               </div>
@@ -425,7 +432,13 @@ export function AppShell({ children }: { children: ReactNode }) {
           <main className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
             <div className="mx-auto max-w-6xl">
               <ViewAsBanner />
-              {children}
+              {/* Keyed by path so each page eases in on navigation (skipped for reduced motion). */}
+              <div
+                key={path}
+                className="animate-in fade-in-0 slide-in-from-bottom-1 duration-300 ease-out"
+              >
+                {children}
+              </div>
             </div>
           </main>
         </SidebarInset>

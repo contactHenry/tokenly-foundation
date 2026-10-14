@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
+  Gauge,
   KeyRound,
+  Settings2,
   SlidersHorizontal,
   TriangleAlert,
   UserPlus,
   Wallet,
-  Settings2,
   X,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -139,7 +140,7 @@ function Avatar({ id }: { id: string | null }) {
   return (
     <span
       className={cn(
-        "grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold",
+        "grid size-8 shrink-0 place-items-center rounded-md text-xs font-semibold",
         m ? "bg-accent text-primary" : "bg-muted text-muted-foreground",
       )}
       aria-hidden
@@ -289,6 +290,8 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
         </div>
       ) : (
         <EmptyState
+          icon={Gauge}
+          tone="rose"
           title={filtered ? "No events match these filters" : "No activity in this range"}
           description={
             filtered

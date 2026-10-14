@@ -6,10 +6,15 @@
 
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  /* One corner radius everywhere: every rounded-* step resolves to 4px. */
+  --radius-xs: var(--radius);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -49,13 +54,35 @@
   --color-warning-muted: var(--warning-muted);
   --color-critical: var(--critical);
   --color-critical-muted: var(--critical-muted);
+  /* Friendly accent tones for icon tiles (navigation, page headers, stat cards). */
+  --color-tone-indigo: var(--tone-indigo);
+  --color-tone-indigo-soft: var(--tone-indigo-soft);
+  --color-tone-sky: var(--tone-sky);
+  --color-tone-sky-soft: var(--tone-sky-soft);
+  --color-tone-violet: var(--tone-violet);
+  --color-tone-violet-soft: var(--tone-violet-soft);
+  --color-tone-amber: var(--tone-amber);
+  --color-tone-amber-soft: var(--tone-amber-soft);
+  --color-tone-emerald: var(--tone-emerald);
+  --color-tone-emerald-soft: var(--tone-emerald-soft);
+  --color-tone-rose: var(--tone-rose);
+  --color-tone-rose-soft: var(--tone-rose-soft);
+  --color-tone-slate: var(--tone-slate);
+  --color-tone-slate-soft: var(--tone-slate-soft);
+  --shadow-2xs: var(--shadow-surface);
+  --shadow-xs: var(--shadow-surface);
+  --shadow-sm: var(--shadow-surface);
+  --shadow: var(--shadow-surface);
+  --shadow-md: var(--shadow-raised);
+  --shadow-lg: var(--shadow-raised);
+  --shadow-xl: var(--shadow-raised);
 }
 /*
  * Palette: near-neutral surfaces, hairline borders, one restrained indigo accent.
  * Semantic colours (success / warning / critical) are reserved for meaning.
  */
 :root {
-  --radius: 0.5rem;
+  --radius: 4px;
   --background: oklch(0.985 0.001 270);
   --foreground: oklch(0.2 0.006 270);
   --card: oklch(1 0 0);
@@ -94,8 +121,23 @@
   --warning-muted: oklch(0.975 0.035 85);
   --critical: oklch(0.577 0.2 27);
   --critical-muted: oklch(0.97 0.025 20);
-  --shadow-surface: 0 1px 2px oklch(0.2 0.01 270 / 0.04), 0 0 0 0 transparent;
-  --shadow-raised: 0 8px 24px -8px oklch(0.2 0.01 270 / 0.12);
+  --shadow-surface: 0 1px 2px oklch(0.2 0.01 270 / 0.05);
+  --shadow-raised:
+    0 1px 2px oklch(0.2 0.01 270 / 0.06), 0 10px 28px -10px oklch(0.2 0.01 270 / 0.18);
+  --tone-indigo: oklch(0.52 0.2 276);
+  --tone-indigo-soft: oklch(0.955 0.03 276);
+  --tone-sky: oklch(0.55 0.13 235);
+  --tone-sky-soft: oklch(0.955 0.03 230);
+  --tone-violet: oklch(0.53 0.2 300);
+  --tone-violet-soft: oklch(0.955 0.035 300);
+  --tone-amber: oklch(0.6 0.14 65);
+  --tone-amber-soft: oklch(0.965 0.045 80);
+  --tone-emerald: oklch(0.53 0.12 160);
+  --tone-emerald-soft: oklch(0.96 0.035 160);
+  --tone-rose: oklch(0.57 0.19 15);
+  --tone-rose-soft: oklch(0.96 0.03 15);
+  --tone-slate: oklch(0.48 0.02 260);
+  --tone-slate-soft: oklch(0.95 0.006 260);
 }
 .dark {
   --background: oklch(0.145 0.003 270);
@@ -137,7 +179,21 @@
   --critical: oklch(0.74 0.15 22);
   --critical-muted: oklch(0.28 0.05 20);
   --shadow-surface: 0 0 0 0 transparent;
-  --shadow-raised: 0 12px 32px -8px oklch(0 0 0 / 0.5);
+  --shadow-raised: 0 0 0 1px oklch(1 0 0 / 0.04), 0 14px 36px -10px oklch(0 0 0 / 0.6);
+  --tone-indigo: oklch(0.76 0.12 276);
+  --tone-indigo-soft: oklch(0.28 0.06 276);
+  --tone-sky: oklch(0.78 0.1 230);
+  --tone-sky-soft: oklch(0.28 0.05 235);
+  --tone-violet: oklch(0.76 0.13 300);
+  --tone-violet-soft: oklch(0.28 0.06 300);
+  --tone-amber: oklch(0.82 0.12 75);
+  --tone-amber-soft: oklch(0.3 0.05 70);
+  --tone-emerald: oklch(0.78 0.12 160);
+  --tone-emerald-soft: oklch(0.28 0.045 160);
+  --tone-rose: oklch(0.76 0.13 15);
+  --tone-rose-soft: oklch(0.29 0.05 15);
+  --tone-slate: oklch(0.78 0.01 260);
+  --tone-slate-soft: oklch(0.27 0.006 260);
 }
 @layer base {
   * {
@@ -207,12 +263,12 @@
   box-shadow: var(--shadow-surface);
 }
 
-/* Buttons and form fields use a 2px corner radius everywhere */
+/* Buttons and form fields share the 4px corner radius */
 @layer components {
   button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]),
   input:not([type="checkbox"]):not([type="radio"]),
   select,
   textarea {
-    border-radius: 2px;
+    border-radius: var(--radius);
   }
 }

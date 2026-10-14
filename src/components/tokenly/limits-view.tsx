@@ -1,17 +1,20 @@
+import { IconTile } from "@/components/tokenly/primitives";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Bell,
+  BellRing,
+  CalendarClock,
   Check,
   CreditCard,
   KeyRound,
   Pencil,
   Plus,
-  TrendingUp,
   Trash2,
+  TrendingUp,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -108,9 +111,9 @@ function Meter({ value, thresholds }: { value: number; thresholds: number[] }) {
   const tone = value >= 100 ? "bg-critical" : value >= 80 ? "bg-warning" : "bg-success";
   return (
     <div>
-      <div className="relative h-2 rounded-full bg-muted">
+      <div className="relative h-2 rounded-md bg-muted">
         <div
-          className={cn("h-full rounded-full", tone)}
+          className={cn("h-full rounded-md", tone)}
           style={{ width: `${Math.min(100, value)}%` }}
         />
         {thresholds.map((t) => (
@@ -151,8 +154,11 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="font-semibold">Budgets</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="flex items-center gap-2.5 font-semibold">
+            <IconTile icon={Wallet} tone="amber" size="sm" />
+            Budgets
+          </h3>
+          <p className="pl-[38px] text-sm text-muted-foreground">
             Limits that stop overspend before it happens.
           </p>
         </div>
@@ -338,7 +344,7 @@ function BudgetDrawer({
               <li key={s} className="flex-1">
                 <button type="button" onClick={() => setStep(i)} className="w-full text-left">
                   <span
-                    className={cn("block h-1 rounded-full", i <= step ? "bg-primary" : "bg-muted")}
+                    className={cn("block h-1 rounded-md", i <= step ? "bg-primary" : "bg-muted")}
                   />
                   <span
                     className={cn(
@@ -555,11 +561,11 @@ function Choice<T extends string>({
         >
           <span
             className={cn(
-              "mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border",
+              "mt-0.5 grid size-4 shrink-0 place-items-center rounded-md border",
               value === v && "border-primary",
             )}
           >
-            {value === v && <span className="size-2 rounded-full bg-primary" />}
+            {value === v && <span className="size-2 rounded-md bg-primary" />}
           </span>
           <span>
             <span className="block text-sm font-medium">{label}</span>
@@ -623,8 +629,13 @@ export function AlertRulesSection() {
   return (
     <section className="space-y-4">
       <div>
-        <h3 className="font-semibold">Alert rules</h3>
-        <p className="text-sm text-muted-foreground">What we watch for, and who hears about it.</p>
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={BellRing} tone="violet" size="sm" />
+          Alert rules
+        </h3>
+        <p className="pl-[38px] text-sm text-muted-foreground">
+          What we watch for, and who hears about it.
+        </p>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         {rules.map((r) => {
@@ -681,7 +692,7 @@ export function AlertRulesSection() {
                         })
                       }
                       className={cn(
-                        "rounded-full border px-2.5 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60",
+                        "rounded-md border px-2.5 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-60",
                         on
                           ? "border-primary bg-accent text-accent-foreground"
                           : "text-muted-foreground hover:bg-muted",
@@ -712,7 +723,7 @@ export function AlertRulesSection() {
                         })
                       }
                       className={cn(
-                        "grid size-7 place-items-center rounded-full border text-[10px] font-semibold disabled:cursor-not-allowed disabled:opacity-60",
+                        "grid size-7 place-items-center rounded-md border text-[10px] font-semibold disabled:cursor-not-allowed disabled:opacity-60",
                         on
                           ? "border-primary bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted",
@@ -855,8 +866,11 @@ export function AlertHistorySection() {
   return (
     <section className="space-y-4">
       <div>
-        <h3 className="font-semibold">Alert history</h3>
-        <p className="text-sm text-muted-foreground">
+        <h3 className="flex items-center gap-2.5 font-semibold">
+          <IconTile icon={CalendarClock} tone="rose" size="sm" />
+          Alert history
+        </h3>
+        <p className="pl-[38px] text-sm text-muted-foreground">
           {alertHistory.filter((a) => statusOf(a.id) === "open").length} open
         </p>
       </div>
