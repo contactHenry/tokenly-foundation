@@ -1,3 +1,4 @@
+import { ConfirmDelete } from "@/components/tokenly/confirm-delete";
 import { IconTile } from "@/components/tokenly/primitives";
 import { toast } from "sonner";
 import { Gate } from "./role-gate";
@@ -481,6 +482,7 @@ export function PlanCard() {
 export function PaymentMethodsCard() {
   const canEdit = useRole().can("manageBilling");
   const { methods } = useBillingStore();
+  const [removing, setRemoving] = useState<(typeof methods)[number] | null>(null);
   const [adding, setAdding] = useState(false),
     [name, setName] = useState(""),
     [card, setCard] = useState(""),
@@ -573,16 +575,7 @@ export function PaymentMethodsCard() {
                 className="size-7"
                 aria-label={`Remove ${m.brand} ending ${m.last4}`}
                 disabled={!canEdit}
-                onClick={() => {
-                  if (
-                    !window.confirm(
-                      `Remove ${m.brand} ending ${m.last4}?${m.isDefault ? " It is your default card." : ""}`,
-                    )
-                  )
-                    return;
-                  billingActions.removeMethod(m.id);
-                  toast.success("Card removed");
-                }}
+                onClick={() => setRemoving(m)}
               >
                 <Trash2 className="size-3.5" />
               </Button>
@@ -592,6 +585,19 @@ export function PaymentMethodsCard() {
           <p className="text-sm text-muted-foreground">No payment methods saved.</p>
         )}
       </div>
+      <ConfirmDelete
+        open={!!removing}
+        onOpenChange={(o) => !o && setRemoving(null)}
+        title="Remove this card?"
+        confirmLabel="Remove"
+        description={removing ? `${removing.brand} ending ${removing.last4} will be removed.${removing.isDefault ? " It is your default card." : ""}` : undefined}
+        onConfirm={() => {
+          if (!removing) return;
+          billingActions.removeMethod(removing.id);
+          setRemoving(null);
+          toast.success("Card removed");
+        }}
+      />
       <Dialog open={adding} onOpenChange={setAdding}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>

@@ -154,6 +154,7 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
   const canEdit = useRole().can("manageLimits");
   const { budgets } = useLimitsStore();
   const [editing, setEditing] = useState<BudgetRule | "new" | null>(null);
+  const [deleting, setDeleting] = useState<BudgetRule | null>(null);
   useEffect(() => {
     if (focusProject) {
       const b = budgets.find((x) => x.scope === "project" && x.targetId === focusProject);

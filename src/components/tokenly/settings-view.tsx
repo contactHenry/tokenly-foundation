@@ -1,3 +1,4 @@
+import { ConfirmDelete } from "@/components/tokenly/confirm-delete";
 import { useEffect, useState } from "react";
 import {
   Bell,
@@ -158,6 +159,7 @@ function General() {
 function Team() {
   const { members, currentUserId } = useWorkspace();
   const { can } = useRole();
+  const [removing, setRemoving] = useState<{ id: string; name: string } | null>(null);
   const [inviting, setInviting] = useState(false),
     [email, setEmail] = useState(""),
     [role, setRole] = useState<Role>("Developer"),
@@ -280,11 +282,7 @@ function Team() {
                         size="icon"
                         className="size-8"
                         aria-label={`Remove ${m.name}`}
-                        onClick={() => {
-                          if (!window.confirm(`Remove ${m.name} from the workspace?`)) return;
-                          workspaceActions.remove(m.id);
-                          toast.success(`${m.name} removed`);
-                        }}
+                        onClick={() => setRemoving({ id: m.id, name: m.name })}
                       >
                         <Trash2 className="size-4" />
                       </Button>
