@@ -1,7 +1,6 @@
 import { useProjectsStore } from "@/components/tokenly/projects-store";
 import { useLimitsStore } from "@/components/tokenly/limits-store";
 import { NotificationCenter } from "@/components/tokenly/notification-center";
-import { Gate } from "@/components/tokenly/role-gate";
 import { ROLES, useRole, workspaceActions } from "@/components/tokenly/workspace-store";
 import { toast } from "sonner";
 import { TopUpDialog } from "@/components/tokenly/billing-view";
@@ -12,7 +11,6 @@ import {
   ChevronDown,
   CircleHelp,
   Moon,
-  Plus,
   Settings,
   Sun,
   Check,
@@ -352,41 +350,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
               <ThemeToggle />
               <NotificationCenter />
-              <Gate
-                perm="manageBilling"
-                disabled={
-                  <Button className="hidden h-8 text-[13px] shadow-none sm:inline-flex" disabled>
-                    <Plus />
-                    Top up credits
-                  </Button>
-                }
-              >
-                <Button
-                  className="hidden h-8 text-[13px] shadow-none sm:inline-flex"
-                  onClick={() => setTopUpOpen(true)}
-                >
-                  <Plus />
-                  Top up credits
-                </Button>
-              </Gate>
             </div>
           </header>
-          <div className="flex items-center justify-between border-b border-border/70 bg-background px-4 py-2 sm:hidden">
+          <div className="flex items-center justify-end border-b border-border/70 bg-background px-4 py-2 sm:hidden">
             <DatePicker />
-            <Gate
-              perm="manageBilling"
-              disabled={
-                <Button size="sm" className="shadow-none" disabled>
-                  <Plus />
-                  Top up
-                </Button>
-              }
-            >
-              <Button size="sm" className="shadow-none" onClick={() => setTopUpOpen(true)}>
-                <Plus />
-                Top up
-              </Button>
-            </Gate>
           </div>
           <main className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
             <div className="mx-auto max-w-6xl">
