@@ -101,10 +101,10 @@
   --tokenly-forest: var(--tokenly-black);
   --tokenly-accent: var(--tokenly-white);
   /* Shape and elevation */
-  --tokenly-radius-sm: 6px;
-  --tokenly-radius-md: 12px;
-  --tokenly-radius-lg: 16px;
-  --tokenly-radius-xl: 24px;
+  --tokenly-radius-sm: 4px;
+  --tokenly-radius-md: 4px;
+  --tokenly-radius-lg: 4px;
+  --tokenly-radius-xl: 4px;
   --tokenly-shadow-card: 0 1px 2px rgba(10, 10, 10, 0.04);
 
   --radius: var(--tokenly-radius-sm);
@@ -283,7 +283,7 @@
   box-shadow: var(--shadow-surface);
 }
 
-/* Buttons and form fields use the small brand radius (6px) */
+/* Buttons and form fields use the small brand radius (4px) */
 @layer components {
   button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]),
   input:not([type="checkbox"]):not([type="radio"]),
