@@ -71,6 +71,18 @@ const names = {
   user: "User",
   token: "Token type",
 };
+// Each model gets its own sharp, high-contrast colour so series stay distinguishable
+// (and readable for colour-blind users) in both light and dark mode.
+const MODEL_COLORS: Record<string, string> = {
+  "gpt-4o": "#2563eb",
+  "gpt-4o-mini": "#06b6d4",
+  "claude-sonnet": "#ea580c",
+  "llama-3": "#16a34a",
+  "gemini-flash": "#9333ea",
+  "text-embedding-3": "#e11d48",
+};
+const seriesColor = (group: Dimension, id: string, index: number) =>
+  group === "model" ? (MODEL_COLORS[id] ?? `var(--chart-${(index % 5) + 1})`) : `var(--chart-${(index % 5) + 1})`;
 const metrics = ["Cost", "Tokens", "Requests"] as const;
 // The "Last 7d" column holds a sparkline array; sort it by its total.
 const sortNumber = (value: unknown) =>
@@ -471,7 +483,8 @@ export function UsageView() {
                   }
                 >
                   <span
-                    className={`size-2 rounded-full ${["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-chart-4", "bg-chart-5"][i]}`}
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: seriesColor(group, row.id, i) }}
                   />
                   {row.name}
                 </Button>
@@ -514,7 +527,7 @@ export function UsageView() {
                         key={row.id}
                         dataKey={row.id}
                         stackId="a"
-                        fill={`var(--chart-${series.indexOf(row) + 1})`}
+                        fill={seriesColor(group, row.id, series.indexOf(row))}
                         isAnimationActive={false}
                       />
                     ))}
