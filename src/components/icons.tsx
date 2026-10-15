@@ -9,6 +9,7 @@
 import { forwardRef, type ComponentProps } from "react";
 import {
   ArrowCounterClockwise,
+  ArrowDown as PhArrowDown,
   ArrowDownLeft as PhArrowDownLeft,
   ArrowDownRight as PhArrowDownRight,
   ArrowLeft as PhArrowLeft,
@@ -144,6 +145,7 @@ export const ArrowRight = bold(PhArrowRight);
 export const ArrowLeft = bold(PhArrowLeft);
 export const ArrowUpRight = bold(PhArrowUpRight);
 export const ArrowDownRight = bold(PhArrowDownRight);
+export const ArrowDown = bold(PhArrowDown);
 export const ArrowDownLeft = bold(PhArrowDownLeft);
 export const ArrowUpDown = bold(ArrowsDownUp);
 export const MoreHorizontal = bold(DotsThree);
