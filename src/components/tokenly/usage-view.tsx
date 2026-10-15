@@ -89,6 +89,34 @@ const getStored = (): SavedView[] => {
     return [];
   }
 };
+function FilterChip({
+  label,
+  active,
+  dot,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  dot?: string | undefined;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-xs font-medium transition-colors ${
+        active
+          ? "border-foreground bg-foreground text-background"
+          : "border-border bg-background text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+      }`}
+    >
+      {dot && <span className="size-2 rounded-full" style={{ backgroundColor: dot }} />}
+      {label}
+    </button>
+  );
+}
+
 function downloadCsv(rows: GroupRow[], dimension: Dimension) {
   const content = [
     "name,requests,input_tokens,output_tokens,cost,percent,trend_percent",
