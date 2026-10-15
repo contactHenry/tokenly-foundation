@@ -51,7 +51,7 @@ import { Logo } from "@/components/tokenly/logo";
 import { organization, teamMembers } from "@/lib/mock";
 
 export type DateSelection = {
-  label: "Today" | "7d" | "30d" | "90d" | "Custom";
+  label: "7d" | "30d" | "12m" | "ytd" | "Custom";
   from: string;
   to: string;
 };
@@ -60,6 +60,20 @@ function dateDaysBack(days: number) {
   const date = new Date(`${lastDay}T00:00:00Z`);
   date.setUTCDate(date.getUTCDate() - days);
   return date.toISOString().slice(0, 10);
+}
+function dateMonthsBack(months: number) {
+  const [year, month, day] = lastDay.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1 - months, day)).toISOString().slice(0, 10);
+}
+export const RANGE_PRESETS = [
+  { label: "7d", text: "Last 7 days", from: dateDaysBack(6) },
+  { label: "30d", text: "Last 30 days", from: dateDaysBack(29) },
+  { label: "12m", text: "Last 12 months", from: dateMonthsBack(12) },
+  { label: "ytd", text: "Year to date", from: `${lastDay.slice(0, 4)}-01-01` },
+] as const;
+export function rangeText(range: DateSelection) {
+  if (range.label === "Custom") return `${range.from} – ${range.to}`;
+  return RANGE_PRESETS.find((preset) => preset.label === range.label)?.text ?? "Last 30 days";
 }
 const RangeContext = createContext<{
   range: DateSelection;
@@ -257,35 +271,27 @@ function DatePicker() {
         <Button
           variant="outline"
           className="h-8 gap-2 bg-card text-[13px] shadow-none"
-          aria-label={`Date range: ${range.label}`}
+          aria-label={`Date range: ${rangeText(range)}`}
         >
           <CalendarDays className="size-4 text-muted-foreground" />
-          <span>
-            {range.label === "Custom"
-              ? `${range.from} – ${range.to}`
-              : `Last ${range.label === "Today" ? "day" : range.label}`}
-          </span>
+          <span>{rangeText(range)}</span>
           <ChevronDown className="size-3 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-72 p-3">
         <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">Date range</p>
-        {(["Today", "7d", "30d", "90d"] as const).map((label) => (
+        {RANGE_PRESETS.map((preset) => (
           <Button
-            key={label}
+            key={preset.label}
             variant="ghost"
             className="h-9 w-full justify-between"
             onClick={() => {
-              setRange({
-                label,
-                from: dateDaysBack(label === "Today" ? 0 : Number(label.slice(0, -1)) - 1),
-                to: lastDay,
-              });
+              setRange({ label: preset.label, from: preset.from, to: lastDay });
               setOpen(false);
             }}
           >
-            {label === "Today" ? "Today" : `Last ${label}`}
-            {range.label === label && <span className="text-primary-ink">✓</span>}
+            {preset.text}
+            {range.label === preset.label && <span className="text-primary-ink">✓</span>}
           </Button>
         ))}
         <div className="mt-2 border-t pt-3">
