@@ -1,4 +1,12 @@
 import { IconTile } from "@/components/tokenly/primitives";
+import { ConfirmDelete } from "@/components/tokenly/confirm-delete";
+import { MoreHorizontal } from "@/components/icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -239,35 +247,54 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
                 </div>
               </div>
               <div className="flex gap-1 lg:col-span-1 lg:justify-end">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={`Edit budget for ${scopeName(b.scope, b.targetId)}`}
-                  disabled={!canEdit}
-                  onClick={() => setEditing(b)}
-                >
-                  <Pencil className="size-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={`Delete budget for ${scopeName(b.scope, b.targetId)}`}
-                  disabled={!canEdit}
-                  onClick={() => {
-                    limitActions.deleteBudget(b.id);
-                    toast("Budget deleted", {
-                      action: { label: "Undo", onClick: () => limitActions.saveBudget(b) },
-                    });
-                  }}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Actions for ${scopeName(b.scope, b.targetId)} budget`}
+                      disabled={!canEdit}
+                    >
+                      <MoreHorizontal className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setEditing(b)}>
+                      <Pencil className="size-4" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-critical focus:text-critical"
+                      onSelect={() => setDeleting(b)}
+                    >
+                      <Trash2 className="size-4" /> Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           );
         })}
       </div>
       <BudgetDrawer budget={editing} onClose={() => setEditing(null)} />
+      <ConfirmDelete
+        open={!!deleting}
+        onOpenChange={(o) => !o && setDeleting(null)}
+        title="Delete this budget?"
+        description={
+          deleting
+            ? `The ${scopeName(deleting.scope, deleting.targetId)} budget and its alerts will stop applying.`
+            : undefined
+        }
+        onConfirm={() => {
+          if (!deleting) return;
+          const b = deleting;
+          limitActions.deleteBudget(b.id);
+          setDeleting(null);
+          toast("Budget deleted", {
+            action: { label: "Undo", onClick: () => limitActions.saveBudget(b) },
+          });
+        }}
+      />
     </section>
   );
 }
