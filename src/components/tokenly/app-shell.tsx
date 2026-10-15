@@ -288,29 +288,35 @@ function DatePicker() {
           </Button>
         ))}
         <div className="mt-2 border-t pt-3">
-          <p className="px-2 text-xs font-medium text-muted-foreground">Custom range</p>
-          <div className="mt-2 flex items-center gap-2">
-            <Input
-              type="date"
-              aria-label="From date"
-              max={to}
-              value={from}
-              onChange={(event) => setFrom(event.target.value)}
-              className="h-9 min-w-0 text-xs"
-            />
-            <span className="text-muted-foreground">–</span>
-            <Input
-              type="date"
-              aria-label="To date"
-              min={from}
-              max={lastDay}
-              value={to}
-              onChange={(event) => setTo(event.target.value)}
-              className="h-9 min-w-0 text-xs"
-            />
+          <p className="text-center text-xs font-medium text-muted-foreground">Custom range</p>
+          <div className="mx-auto mt-3 flex max-w-56 flex-col items-stretch gap-2">
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium text-muted-foreground">From</span>
+              <Input
+                type="date"
+                aria-label="From date"
+                max={to}
+                value={from}
+                onChange={(event) => setFrom(event.target.value)}
+                className="h-9 w-full justify-center text-center text-xs"
+              />
+            </label>
+            <ArrowDown className="mx-auto size-3.5 text-muted-foreground" aria-hidden />
+            <label className="flex flex-col gap-1">
+              <span className="text-[11px] font-medium text-muted-foreground">To</span>
+              <Input
+                type="date"
+                aria-label="To date"
+                min={from}
+                max={lastDay}
+                value={to}
+                onChange={(event) => setTo(event.target.value)}
+                className="h-9 w-full justify-center text-center text-xs"
+              />
+            </label>
           </div>
           <Button
-            className="mt-3 w-full"
+            className="mx-auto mt-3 flex w-full max-w-56"
             size="sm"
             disabled={!from || !to || from > to}
             onClick={() => {
