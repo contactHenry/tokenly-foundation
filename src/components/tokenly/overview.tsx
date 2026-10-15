@@ -669,7 +669,10 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                   <span className="mt-2 flex items-center gap-2">
                     <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
                       <span
-                        className="block h-full rounded-full"
+                        className={cn(
+                          "block h-full rounded-full",
+                          kind !== "model" && "bg-chart-1",
+                        )}
                         style={{
                           width: `${row.percent}%`,
                           ...(kind === "model" ? { backgroundColor: MODEL_COLORS[row.id] } : {}),
