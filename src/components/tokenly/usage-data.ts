@@ -2,6 +2,17 @@ import { apiKeys, models, projects, teamMembers, usageEvents, type UsageEvent } 
 
 export const dimensions = { model: models, project: projects, key: apiKeys, user: teamMembers };
 export type Dimension = keyof typeof dimensions;
+// Shared per-model series colours so the Usage chart and every model breakdown
+// (Overview top consumers, etc.) show the same colour for the same model.
+// Sharp, high-contrast hues that stay distinguishable in light and dark mode.
+export const MODEL_COLORS: Record<string, string> = {
+  "gpt-4o": "#2563eb",
+  "gpt-4o-mini": "#06b6d4",
+  "claude-sonnet": "#ea580c",
+  "llama-3": "#16a34a",
+  "gemini-flash": "#9333ea",
+  "text-embedding-3": "#e11d48",
+};
 export type UsageFilters = {
   model?: string | undefined;
   project?: string | undefined;
