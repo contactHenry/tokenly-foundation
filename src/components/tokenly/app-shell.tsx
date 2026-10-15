@@ -85,20 +85,39 @@ const titles: Record<string, string> = {
 };
 function SideNavigation() {
   const path = useRouterState({ select: (state) => state.location.pathname });
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, state, toggleSidebar } = useSidebar();
+  const collapsed = state === "collapsed";
   const projectsState = useProjectsStore(),
     limitsState = useLimitsStore();
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border/60">
       <SidebarHeader className="p-3 pt-4 group-data-[collapsible=icon]:px-2">
-        <Link
-          to="/"
-          aria-label="Tokenly home"
-          className="flex items-center rounded-md px-1.5 py-1"
-          onClick={() => setOpenMobile(false)}
-        >
-          <Logo />
-        </Link>
+        <div className="flex items-center gap-1">
+          {collapsed ? (
+            <button
+              type="button"
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+              className="flex items-center rounded-md px-1.5 py-1"
+              onClick={() => toggleSidebar()}
+            >
+              <Logo />
+            </button>
+          ) : (
+            <Link
+              to="/"
+              aria-label="Tokenly home"
+              className="flex items-center rounded-md px-1.5 py-1"
+              onClick={() => setOpenMobile(false)}
+            >
+              <Logo />
+            </Link>
+          )}
+          <SidebarTrigger
+            className="ml-auto size-8 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden"
+            title="Collapse sidebar"
+          />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -337,10 +356,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <SidebarTrigger
-                className="size-8 shrink-0 text-muted-foreground"
+                className="size-8 shrink-0 text-muted-foreground md:hidden"
                 title="Toggle sidebar"
               />
-              <span className="h-4 w-px bg-border" aria-hidden />
+              <span className="h-4 w-px bg-border md:hidden" aria-hidden />
               <span className="truncate text-sm font-medium">{titles[path] || "Tokenly"}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
