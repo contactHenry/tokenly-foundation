@@ -45,7 +45,7 @@ import {
   type UsageEvent,
 } from "@/lib/mock";
 import { MODEL_COLORS } from "@/components/tokenly/usage-data";
-import type { DateSelection } from "@/components/tokenly/app-shell";
+import { rangeText, type DateSelection } from "@/components/tokenly/app-shell";
 
 /** Figures can arrive missing (empty range, half-loaded data); render a dash, never crash. */
 const money = (amount?: number | null) =>
@@ -60,6 +60,13 @@ const num = (value?: number | null) =>
   Number.isFinite(value as number) ? Math.round(value as number).toLocaleString("en-US") : "—";
 const shortDate = (date: string) =>
   new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const rangeCaption = (range: DateSelection) => {
+  const text =
+    range.label === "Custom"
+      ? `${shortDate(range.from)}–${shortDate(range.to)}`
+      : rangeText(range);
+  return text.charAt(0).toLowerCase() + text.slice(1);
+};
 const DAY = 86400000;
 const today = dailyUsage.at(-1)?.date ?? "2026-09-26";
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
@@ -500,11 +507,7 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
             Daily spend ·{" "}
-            {range.label === "Custom"
-              ? `${shortDate(range.from)}–${shortDate(range.to)}`
-              : range.label === "Today"
-                ? "Today"
-                : `last ${range.label}`}
+            {rangeCaption(range)}
           </p>
         </div>
         <span className="text-sm font-semibold">
