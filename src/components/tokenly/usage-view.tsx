@@ -270,83 +270,93 @@ export function UsageView() {
     });
   return (
     <div className="space-y-6">
-      <PageHeader title={pageMeta.usage.label} description={pageMeta.usage.description} />
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setDraft({
-              model: search.model,
-              project: search.project,
-              key: search.key,
-              user: search.user,
-              token: search.token,
-              from,
-              to,
-            });
-            setFilterOpen(true);
-          }}
-        >
-          <SlidersHorizontal className="size-4" />
-          Filters
-          {activeCount > 0 && (
-            <span className="ml-1 rounded-full bg-foreground px-1.5 text-[10px] font-semibold text-background">
-              {activeCount}
-            </span>
-          )}
-        </Button>
-        {saved.length > 0 && (
-          <Select
-            onValueChange={(name) => {
-              const view = saved.find((v) => v.name === name);
-              if (view)
-                update({
-                  model: undefined,
-                  project: undefined,
-                  key: undefined,
-                  user: undefined,
-                  token: undefined,
-                  ...view.filters,
+      <PageHeader
+        title={pageMeta.usage.label}
+        description={pageMeta.usage.description}
+        actions={
+          <>
+            {saved.length > 0 && (
+              <Select
+                onValueChange={(name) => {
+                  const view = saved.find((v) => v.name === name);
+                  if (view)
+                    update({
+                      model: undefined,
+                      project: undefined,
+                      key: undefined,
+                      user: undefined,
+                      token: undefined,
+                      ...view.filters,
+                    });
+                }}
+              >
+                <SelectTrigger
+                  className="h-9 w-auto gap-2 border-none bg-transparent text-xs shadow-none"
+                  aria-label="Saved views"
+                >
+                  <SelectValue placeholder="Saved views" />
+                </SelectTrigger>
+                <SelectContent>
+                  {saved.map((v) => (
+                    <SelectItem key={v.name} value={v.name}>
+                      {v.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setDraft({
+                  model: search.model,
+                  project: search.project,
+                  key: search.key,
+                  user: search.user,
+                  token: search.token,
+                  from,
+                  to,
                 });
-            }}
-          >
-            <SelectTrigger className="h-9 w-auto gap-2 border-none bg-transparent text-xs shadow-none" aria-label="Saved views">
-              <SelectValue placeholder="Saved views" />
-            </SelectTrigger>
-            <SelectContent>
-              {saved.map((v) => (
-                <SelectItem key={v.name} value={v.name}>
-                  {v.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-        {FILTERS.filter((kind) => search[kind]).map((kind) => (
-          <button
-            key={kind}
-            type="button"
-            className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
-            onClick={() => update({ [kind]: undefined })}
-          >
-            <span className="text-muted-foreground">{names[kind]}</span>
-            {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
-            <X className="size-3" />
-          </button>
-        ))}
-        {(search.from || search.to) && (
-          <button
-            type="button"
-            className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
-            onClick={() => update({ from: undefined, to: undefined })}
-          >
-            <span className="text-muted-foreground">Date</span>
-            {from} – {to}
-            <X className="size-3" />
-          </button>
-        )}
-        {activeCount > 0 && (
+                setFilterOpen(true);
+              }}
+            >
+              <SlidersHorizontal className="size-4" />
+              Filters
+              {activeCount > 0 && (
+                <span className="ml-1 rounded-full bg-foreground px-1.5 text-[10px] font-semibold text-background">
+                  {activeCount}
+                </span>
+              )}
+            </Button>
+          </>
+        }
+      />
+      {activeCount > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          {FILTERS.filter((kind) => search[kind]).map((kind) => (
+            <button
+              key={kind}
+              type="button"
+              className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
+              onClick={() => update({ [kind]: undefined })}
+            >
+              <span className="text-muted-foreground">{names[kind]}</span>
+              {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
+              <X className="size-3" />
+            </button>
+          ))}
+          {(search.from || search.to) && (
+            <button
+              type="button"
+              className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
+              onClick={() => update({ from: undefined, to: undefined })}
+            >
+              <span className="text-muted-foreground">Date</span>
+              {from} – {to}
+              <X className="size-3" />
+            </button>
+          )}
           <button
             type="button"
             className="text-xs text-muted-foreground hover:text-foreground"
@@ -354,8 +364,9 @@ export function UsageView() {
           >
             Clear all
           </button>
-        )}
-      </div>
+        </div>
+      )}
+
       <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
