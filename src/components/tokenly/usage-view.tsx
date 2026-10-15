@@ -72,16 +72,6 @@ const names = {
   user: "User",
   token: "Token type",
 };
-// Each model gets its own sharp, high-contrast colour so series stay distinguishable
-// (and readable for colour-blind users) in both light and dark mode.
-const MODEL_COLORS: Record<string, string> = {
-  "gpt-4o": "#2563eb",
-  "gpt-4o-mini": "#06b6d4",
-  "claude-sonnet": "#ea580c",
-  "llama-3": "#16a34a",
-  "gemini-flash": "#9333ea",
-  "text-embedding-3": "#e11d48",
-};
 const seriesColor = (group: Dimension, id: string, index: number) =>
   group === "model" ? (MODEL_COLORS[id] ?? `var(--chart-${(index % 5) + 1})`) : `var(--chart-${(index % 5) + 1})`;
 const metrics = ["Cost", "Tokens", "Requests"] as const;
