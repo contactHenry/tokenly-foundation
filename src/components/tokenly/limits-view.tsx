@@ -14,6 +14,8 @@ import {
   Trash2,
   TrendingUp,
   Wallet,
+  ArrowRight,
+  CheckCheck,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -158,7 +160,7 @@ export function BudgetsSection({ focusProject }: { focusProject?: string }) {
             <IconTile icon={Wallet} tone="amber" size="sm" />
             Budgets
           </h3>
-          <p className="pl-[38px] text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Limits that stop overspend before it happens.
           </p>
         </div>
@@ -523,7 +525,10 @@ function BudgetDrawer({
             {step ? "Back" : "Cancel"}
           </Button>
           {step < 4 ? (
-            <Button onClick={() => setStep(step + 1)}>Continue</Button>
+            <Button onClick={() => setStep(step + 1)}>
+              Continue
+              <ArrowRight />
+            </Button>
           ) : (
             <Button onClick={save}>
               <Check className="size-4" />
@@ -633,21 +638,15 @@ export function AlertRulesSection() {
           <IconTile icon={BellRing} tone="violet" size="sm" />
           Alert rules
         </h3>
-        <p className="pl-[38px] text-sm text-muted-foreground">
-          What we watch for, and who hears about it.
-        </p>
+        <p className="text-sm text-muted-foreground">What we watch for, and who hears about it.</p>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         {rules.map((r) => {
-          const m = ruleMeta[r.type],
-            Icon = m.icon;
+          const m = ruleMeta[r.type];
           return (
             <div key={r.type} className={cn("surface p-5", !r.enabled && "opacity-70")}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="grid size-8 place-items-center rounded-lg bg-muted">
-                    <Icon className="size-4 text-muted-foreground" />
-                  </span>
                   <p className="font-medium">{m.title}</p>
                 </div>
                 <Switch
@@ -846,6 +845,7 @@ export function AlertHistorySection() {
               toast.success("Alert acknowledged");
             }}
           >
+            <Check />
             Acknowledge
           </Button>
         ) : statusOf(r.id) === "acknowledged" ? (
@@ -858,6 +858,7 @@ export function AlertHistorySection() {
               toast.success("Alert resolved");
             }}
           >
+            <CheckCheck />
             Resolve
           </Button>
         ) : null,
@@ -870,7 +871,7 @@ export function AlertHistorySection() {
           <IconTile icon={CalendarClock} tone="rose" size="sm" />
           Alert history
         </h3>
-        <p className="pl-[38px] text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {alertHistory.filter((a) => statusOf(a.id) === "open").length} open
         </p>
       </div>

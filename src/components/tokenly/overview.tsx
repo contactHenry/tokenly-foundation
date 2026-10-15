@@ -20,8 +20,6 @@ import {
   CalendarClock,
   CreditCard,
   Gauge,
-  KeyRound,
-  SlidersHorizontal,
   Wallet,
   CircleCheck,
   TrendingUp,
@@ -196,17 +194,17 @@ function Metric({
     <div className="flex min-h-40 min-w-0 flex-col justify-between gap-4 surface p-5 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
         <p className="flex items-center gap-2.5 text-sm font-medium text-muted-foreground">
-          <IconTile icon={icon} tone={tone} size="sm" />
+          <IconTile icon={icon} plain size="sm" />
           {label}
         </p>
         <span
           className={cn(
             "size-2 shrink-0 rounded-full",
             status === "healthy"
-              ? "bg-success"
+              ? "bg-muted-foreground/40"
               : status === "warning"
-                ? "bg-warning"
-                : "bg-critical",
+                ? "bg-muted-foreground"
+                : "bg-foreground",
           )}
           aria-label={status}
         />
@@ -244,10 +242,10 @@ function Meter({
           className={cn(
             "h-full rounded-full",
             status === "healthy"
-              ? "bg-success"
+              ? "bg-muted-foreground/40"
               : status === "warning"
-                ? "bg-warning"
-                : "bg-critical",
+                ? "bg-muted-foreground"
+                : "bg-foreground",
           )}
           style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
         />
@@ -499,7 +497,7 @@ export function SpendTrend({ data, range }: { data: OverviewData; range: DateSel
             <IconTile icon={TrendingUp} tone="brand" size="sm" />
             Spend trend
           </h3>
-          <p className="pl-[38px] mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             Daily spend ·{" "}
             {range.label === "Custom"
               ? `${shortDate(range.from)}–${shortDate(range.to)}`
@@ -621,7 +619,7 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
           <IconTile icon={Users} tone="sky" size="sm" />
           Top consumers
         </h3>
-        <p className="pl-[38px] mt-1 text-sm text-muted-foreground">Where your spend goes</p>
+        <p className="mt-1 text-sm text-muted-foreground">Where your spend goes</p>
       </div>
       <Tabs value={kind} onValueChange={(value) => setKind(value as ConsumerKind)} className="mt-5">
         <TabsList className="grid h-9 w-full grid-cols-3">
@@ -691,9 +689,9 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                       {row.change === null ? (
                         <span className="text-muted-foreground">—</span>
                       ) : row.change > 0 ? (
-                        <ArrowUpRight className="size-4" />
+                        "↑"
                       ) : (
-                        <ArrowDownRight className="size-4" />
+                        "↓"
                       )}
                     </span>
                   </span>
@@ -706,12 +704,6 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
     </section>
   );
 }
-const activityIcons = {
-  "top-up": CreditCard,
-  limit: SlidersHorizontal,
-  key: KeyRound,
-  alert: Gauge,
-};
 export function RecentActivity({ range }: { range: DateSelection }) {
   const visible = activityEvents
     .filter((event) => event.date >= range.from && event.date <= range.to)
@@ -724,9 +716,7 @@ export function RecentActivity({ range }: { range: DateSelection }) {
             <IconTile icon={Gauge} tone="rose" size="sm" />
             Recent activity
           </h3>
-          <p className="pl-[38px] mt-1 text-xs text-muted-foreground">
-            Changes across your workspace
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Changes across your workspace</p>
         </div>
         <Button asChild variant="ghost" size="sm" className="shrink-0 text-primary-ink">
           <Link to="/activity">
@@ -739,15 +729,11 @@ export function RecentActivity({ range }: { range: DateSelection }) {
       ) : (
         <div className="grid grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0">
           {visible.map((event) => {
-            const Icon = activityIcons[event.type];
             return (
               <div
                 key={event.id}
                 className="flex items-start gap-3 border-b px-5 py-4 last:border-b-0 md:odd:border-r"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">
-                  <Icon className="size-4" />
-                </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium">{event.title}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{event.detail}</p>

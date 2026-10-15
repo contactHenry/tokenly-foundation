@@ -15,6 +15,8 @@ import {
   Plus,
   Settings,
   Sun,
+  Check,
+  X,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,11 +45,9 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { type Tone } from "@/components/tokenly/primitives";
 import { CommandMenu } from "@/components/tokenly/command-menu";
-import { navGroups, type Page } from "@/components/tokenly/nav";
+import { navGroups } from "@/components/tokenly/nav";
 import { setDarkMode, useIsDark } from "@/components/tokenly/theme";
-import { cn } from "@/lib/utils";
 import { Logo } from "@/components/tokenly/logo";
 import { organization, teamMembers } from "@/lib/mock";
 
@@ -69,33 +69,12 @@ const RangeContext = createContext<{
 export function useDateRange() {
   return useContext(RangeContext).range;
 }
-const toneText: Record<Tone, string> = {
-  brand:
-    "group-data-[active=true]/nav:bg-tone-brand-soft group-data-[active=true]/nav:text-tone-brand",
-  sky: "group-data-[active=true]/nav:bg-tone-sky-soft group-data-[active=true]/nav:text-tone-sky",
-  violet:
-    "group-data-[active=true]/nav:bg-tone-violet-soft group-data-[active=true]/nav:text-tone-violet",
-  amber:
-    "group-data-[active=true]/nav:bg-tone-amber-soft group-data-[active=true]/nav:text-tone-amber",
-  teal: "group-data-[active=true]/nav:bg-tone-teal-soft group-data-[active=true]/nav:text-tone-teal",
-  rose: "group-data-[active=true]/nav:bg-tone-rose-soft group-data-[active=true]/nav:text-tone-rose",
-  slate:
-    "group-data-[active=true]/nav:bg-tone-slate-soft group-data-[active=true]/nav:text-tone-slate",
-};
+/*
+ * Navigation: grey rail, quiet items. The selected item is solid ink (black in light mode,
+ * white in dark) with inverted text and a bare line icon: no tile, no tint.
+ */
 const navButton =
-  "group/nav h-9 gap-2.5 px-1.5 text-[13px] text-muted-foreground hover:text-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-foreground group-data-[collapsible=icon]:!p-0.5";
-function NavIcon({ icon: Icon, tone }: { icon: Page["icon"]; tone: Tone }) {
-  return (
-    <span
-      className={cn(
-        "grid size-7 shrink-0 place-items-center rounded-md transition-colors [&>svg]:size-[18px]",
-        toneText[tone],
-      )}
-    >
-      <Icon />
-    </span>
-  );
-}
+  "h-9 gap-2.5 px-2.5 text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground data-[active=true]:bg-sidebar-primary data-[active=true]:font-medium data-[active=true]:text-sidebar-primary-foreground data-[active=true]:hover:bg-sidebar-primary data-[active=true]:hover:text-sidebar-primary-foreground group-data-[collapsible=icon]:!p-2 [&>svg]:size-[18px]";
 const titles: Record<string, string> = {
   "/": "Overview",
   "/usage": "Usage",
@@ -164,7 +143,7 @@ function SideNavigation() {
                       className={navButton}
                     >
                       <Link to={item.to} onClick={() => setOpenMobile(false)}>
-                        <NavIcon icon={item.icon} tone={item.tone} />
+                        <item.icon />
                         <span>{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -322,6 +301,7 @@ function DatePicker() {
               setOpen(false);
             }}
           >
+            <Check />
             Apply range
           </Button>
         </div>
@@ -444,6 +424,7 @@ function ViewAsBanner() {
         className="h-7 bg-card"
         onClick={() => workspaceActions.setViewAs(null)}
       >
+        <X />
         Exit preview
       </Button>
     </div>

@@ -1,8 +1,7 @@
-import { Activity, CreditCard, ShieldAlert, Wallet } from "@/components/icons";
+import { Activity, CreditCard, ShieldAlert, Wallet, ArrowRight } from "@/components/icons";
 import { toast } from "sonner";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   AlertBanner,
@@ -196,6 +195,7 @@ function DesignSystem() {
             action={
               <Button variant="outline" size="sm">
                 Explore activity
+                <ArrowRight />
               </Button>
             }
           />

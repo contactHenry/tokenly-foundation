@@ -1,9 +1,10 @@
 /**
  * Tokenly's icon set. Every icon in the app comes from here so the look stays consistent.
  *
- * Icons are Phosphor: rounded, two-tone ("duotone") glyphs for content and navigation,
- * and the heavier "bold" weight for small UI glyphs (chevrons, close, check, plus) so
- * they stay crisp at 12–16px. Names mirror the lucide names the code already used.
+ * Icons are Phosphor line glyphs ("regular") in a single colour, with the heavier "bold" weight
+ * for small UI glyphs (chevrons, close, check, plus) so they stay crisp at 12–16px. Names mirror
+ * the lucide names the code already used. Icons belong in navigation, metric cards and buttons
+ * (add actions lead with Plus); content headers and list rows stay text-only.
  */
 import { forwardRef, type ComponentProps } from "react";
 import {
@@ -80,10 +81,10 @@ function make(Glyph: PhosphorIcon, weight: IconWeight) {
   Icon.displayName = Glyph.displayName;
   return Icon;
 }
-const duo = (g: PhosphorIcon) => make(g, "duotone");
+const duo = (g: PhosphorIcon) => make(g, "regular");
 const bold = (g: PhosphorIcon) => make(g, "bold");
 
-/* Navigation & content: two-tone */
+/* Navigation & content: single-weight line icons */
 export const LayoutDashboard = duo(SquaresFour);
 export const Activity = duo(ChartLineUp);
 export const KeyRound = duo(Key);

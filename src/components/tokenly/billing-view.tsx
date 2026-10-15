@@ -14,6 +14,8 @@ import {
   Trash2,
   Wallet,
   Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -198,7 +200,10 @@ export function TopUpDialog({
             </div>
             <p className="text-xs text-muted-foreground">Preview only — no payment was taken.</p>
             <DialogFooter>
-              <Button onClick={close}>Done</Button>
+              <Button onClick={close}>
+                <Check />
+                Done
+              </Button>
             </DialogFooter>
           </>
         ) : (
@@ -286,7 +291,6 @@ export function TopUpDialog({
                           checked={method?.id === m.id}
                           onChange={() => setMethodId(m.id)}
                         />
-                        <CreditCard className="size-4 text-muted-foreground" />
                         <span className="flex-1">
                           {m.brand} •••• {m.last4}
                         </span>
@@ -321,6 +325,7 @@ export function TopUpDialog({
                 Cancel
               </Button>
               <Button onClick={confirm} disabled={!base}>
+                <CreditCard />
                 Pay {base ? money(usd, usd % 1 ? 2 : 0) : ""}
               </Button>
             </DialogFooter>
@@ -527,7 +532,6 @@ export function PaymentMethodsCard() {
         {methods.length ? (
           methods.map((m) => (
             <div key={m.id} className="flex items-center gap-3 rounded-lg border p-3">
-              <CreditCard className="size-4 text-muted-foreground" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium">
                   {m.brand} •••• {m.last4}
@@ -547,6 +551,7 @@ export function PaymentMethodsCard() {
                     toast.success(`${m.brand} •••• ${m.last4} is now default`);
                   }}
                 >
+                  <Check />
                   Make default
                 </Button>
               )}
@@ -608,7 +613,10 @@ export function PaymentMethodsCard() {
             <Button variant="outline" onClick={() => setAdding(false)}>
               Cancel
             </Button>
-            <Button onClick={add}>Add card</Button>
+            <Button onClick={add}>
+              <Plus />
+              Add card
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -803,9 +811,7 @@ export function LedgerSection() {
           <IconTile icon={Wallet} tone="teal" size="sm" />
           Credit transactions
         </h3>
-        <p className="pl-[38px] text-sm text-muted-foreground">
-          Usage is rolled up daily. Last 30 days.
-        </p>
+        <p className="text-sm text-muted-foreground">Usage is rolled up daily. Last 30 days.</p>
       </div>
       <DataTable rows={rows.slice(page * size, page * size + size)} columns={columns} />
       <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -819,6 +825,7 @@ export function LedgerSection() {
             disabled={page === 0}
             onClick={() => setPage(page - 1)}
           >
+            <ChevronLeft />
             Previous
           </Button>
           <Button
@@ -828,6 +835,7 @@ export function LedgerSection() {
             onClick={() => setPage(page + 1)}
           >
             Next
+            <ChevronRight />
           </Button>
         </div>
       </div>

@@ -26,6 +26,8 @@ import {
   Settings2,
   TrendingUp,
   Users,
+  Save,
+  Trash2,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,7 +131,7 @@ export function ProjectsGrid() {
             <IconTile icon={LayoutDashboard} tone="violet" size="sm" />
             Projects
           </h3>
-          <p className="pl-[38px] text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {projects.length} projects in this workspace
           </p>
         </div>
@@ -173,8 +175,7 @@ export function ProjectsGrid() {
               <div className="mt-3">
                 <ThresholdProgress value={pct} />
               </div>
-              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-                <KeyRound className="size-3.5" />
+              <p className="mt-3 text-xs text-muted-foreground">
                 {count} active {count === 1 ? "key" : "keys"}
               </p>
             </Link>
@@ -271,7 +272,10 @@ function NewProjectDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={submit}>Create project</Button>
+          <Button onClick={submit}>
+            <Plus />
+            Create project
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -413,7 +417,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
             <IconTile icon={KeyRound} tone="brand" size="sm" />
             API keys
           </h3>
-          <p className="pl-[38px] text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {rows.filter((r) => r.status === "active").length} active ·{" "}
             {rows.filter((r) => r.status === "revoked").length} revoked
           </p>
@@ -443,6 +447,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
           description="Create a key to start sending requests from this project."
           action={
             <Button onClick={() => setCreating(true)} disabled={!canKeys}>
+              <Plus />
               Create key
             </Button>
           }
@@ -485,7 +490,10 @@ function SecretReveal({
         </p>
       </div>
       <DialogFooter>
-        <Button onClick={onDone}>I've saved my key</Button>
+        <Button onClick={onDone}>
+          <Check />
+          I've saved my key
+        </Button>
       </DialogFooter>
     </>
   );
@@ -607,7 +615,10 @@ function CreateKeyDialog({
               <Button variant="outline" onClick={close}>
                 Cancel
               </Button>
-              <Button onClick={submit}>Create key</Button>
+              <Button onClick={submit}>
+                <Plus />
+                Create key
+              </Button>
             </DialogFooter>
           </>
         )}
@@ -664,6 +675,7 @@ function RevokeDialog({ keyItem, onClose }: { keyItem: ManagedKey | null; onClos
                   close();
                 }}
               >
+                <Trash2 />
                 Revoke key
               </Button>
             </DialogFooter>
@@ -792,7 +804,7 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
               <IconTile icon={TrendingUp} tone="sky" size="sm" />
               Daily spend
             </h3>
-            <p className="pl-[38px] text-sm text-muted-foreground">Last 30 days</p>
+            <p className="text-sm text-muted-foreground">Last 30 days</p>
             <div className="mt-4 h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chart}>
@@ -839,7 +851,6 @@ export function ProjectDetail({ project }: { project: ManagedProject }) {
         <TabsContent value="members" className="mt-6">
           <div className="surface">
             <div className="flex items-center gap-2 border-b p-5">
-              <Users className="size-4 text-muted-foreground" />
               <h3 className="flex items-center gap-2.5 font-semibold">
                 <IconTile icon={Users} tone="teal" size="sm" />
                 Members
@@ -913,6 +924,7 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
         </Field>
         <div className="flex items-center gap-3">
           <Button onClick={save} disabled={!canEdit}>
+            <Save />
             Save changes
           </Button>
           {msg && <span className="text-sm text-muted-foreground">{msg}</span>}

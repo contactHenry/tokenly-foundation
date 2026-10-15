@@ -9,12 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import {
-  Info,
-  Circle,
-  CircleCheck,
-  OctagonAlert,
   RotateCcw,
-  TriangleAlert,
   ArrowDownRight,
   ArrowUpRight,
   ArrowUpDown,
@@ -44,41 +39,35 @@ import type { IconComponent } from "@/components/icons";
 import type { Severity } from "@/lib/mock";
 
 export type Tone = "brand" | "sky" | "violet" | "amber" | "teal" | "rose" | "slate";
-const toneClass: Record<Tone, string> = {
-  brand: "bg-tone-brand-soft text-tone-brand",
-  sky: "bg-tone-sky-soft text-tone-sky",
-  violet: "bg-tone-violet-soft text-tone-violet",
-  amber: "bg-tone-amber-soft text-tone-amber",
-  teal: "bg-tone-teal-soft text-tone-teal",
-  rose: "bg-tone-rose-soft text-tone-rose",
-  slate: "bg-tone-slate-soft text-tone-slate",
-};
-/** A soft, tinted square holding a two-tone icon. The friendly anchor for headers and cards. */
+/**
+ * Icon slot for headers, rows and empty states. The monochrome system keeps icons to navigation
+ * and metric cards, so by default this renders nothing; pass `plain` (metric cards, command menu)
+ * to show a bare line icon in the muted ink. `tone` is accepted for compatibility and ignored.
+ */
 export function IconTile({
   icon: Icon,
-  tone = "brand",
+  plain = false,
   size = "md",
   className,
 }: {
   icon: IconComponent;
   tone?: Tone | undefined;
+  plain?: boolean;
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
+  if (!plain) return null;
   return (
-    <span
+    <Icon
       aria-hidden
       className={cn(
-        "grid shrink-0 place-items-center rounded-md",
-        toneClass[tone],
-        size === "sm" && "size-7 [&>svg]:size-4",
-        size === "md" && "size-9 [&>svg]:size-5",
-        size === "lg" && "size-12 rounded-xl [&>svg]:size-6",
+        "shrink-0 text-muted-foreground",
+        size === "sm" && "size-4",
+        size === "md" && "size-5",
+        size === "lg" && "size-6",
         className,
       )}
-    >
-      <Icon />
-    </span>
+    />
   );
 }
 /** Page title row: title, one-line description, and optional actions on the right. */
@@ -128,6 +117,10 @@ export function SectionHeader({
     </div>
   );
 }
+/**
+ * Status without hue: healthy is a quiet grey chip, warning a darker grey chip, critical solid
+ * ink. Neutral is an outlined chip.
+ */
 export function StatusBadge({
   status,
   children,
@@ -135,28 +128,16 @@ export function StatusBadge({
   status: Severity | "neutral";
   children: ReactNode;
 }) {
-  const Icon =
-    status === "healthy"
-      ? CircleCheck
-      : status === "warning"
-        ? TriangleAlert
-        : status === "critical"
-          ? OctagonAlert
-          : Circle;
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-current/15",
-        status === "healthy" && "bg-success-muted text-success",
-        status === "warning" && "bg-warning-muted text-warning",
-        status === "critical" && "bg-critical-muted text-critical",
-        status === "neutral" && "bg-muted text-muted-foreground",
+        "inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-medium",
+        status === "healthy" && "bg-muted text-foreground",
+        status === "warning" && "bg-foreground/12 text-foreground",
+        status === "critical" && "bg-foreground text-background",
+        status === "neutral" && "text-muted-foreground ring-1 ring-inset ring-border",
       )}
     >
-      <Icon
-        className={cn("size-3 shrink-0", status === "neutral" && "size-2 fill-current")}
-        aria-hidden
-      />
       {children}
     </span>
   );
@@ -209,11 +190,8 @@ export function ErrorState({
   return (
     <div
       role="alert"
-      className="flex min-h-52 flex-col items-center justify-center rounded-xl border border-critical/30 bg-card px-6 py-8 text-center"
+      className="flex min-h-52 flex-col items-center justify-center rounded-xl border bg-card px-6 py-8 text-center"
     >
-      <div className="mb-4 grid size-10 place-items-center rounded-lg bg-critical-muted text-critical">
-        <OctagonAlert className="size-5" aria-hidden />
-      </div>
       <h3 className="text-sm font-semibold">{title}</h3>
       <p className="mt-1 max-w-xs text-sm text-muted-foreground">{description}</p>
       <Button variant="outline" className="mt-4" onClick={onRetry}>
@@ -232,7 +210,7 @@ export function Sparkline({ data }: { data: number[] }) {
             type="monotone"
             dataKey="value"
             stroke="var(--chart-1)"
-            fill="var(--accent)"
+            fill="var(--chart-fill)"
             strokeWidth={2}
             isAnimationActive={false}
           />
@@ -264,7 +242,7 @@ export function StatCard({
     <div className="surface flex min-h-40 flex-col justify-between gap-4 p-5">
       <div className="flex items-center justify-between gap-3">
         <span className="flex items-center gap-2.5 text-sm font-medium text-muted-foreground">
-          {icon && <IconTile icon={icon} tone={tone} size="sm" />}
+          {icon && <IconTile icon={icon} plain size="sm" />}
           {label}
         </span>
         {status && (
@@ -559,18 +537,11 @@ export function AlertBanner({
       role="status"
       className={cn(
         "flex gap-3 rounded-xl border p-4",
-        tone === "info" && "border-primary/20 bg-accent/50",
-        tone === "warning" && "border-warning/25 bg-warning-muted",
-        tone === "critical" && "border-critical/25 bg-critical-muted",
+        tone === "info" && "bg-muted/60",
+        tone === "warning" && "border-foreground/25 bg-muted",
+        tone === "critical" && "border-foreground bg-card",
       )}
     >
-      {tone === "info" ? (
-        <Info className="mt-0.5 size-4 shrink-0 text-primary-ink" aria-hidden />
-      ) : tone === "warning" ? (
-        <TriangleAlert className="mt-0.5 size-4 shrink-0 text-warning" aria-hidden />
-      ) : (
-        <OctagonAlert className="mt-0.5 size-4 shrink-0 text-critical" aria-hidden />
-      )}
       <div className="flex-1">
         <p className="text-sm font-semibold">{title}</p>
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>

@@ -9,6 +9,7 @@ import {
   UserPlus,
   Wallet,
   X,
+  ArrowRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -248,8 +249,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
               </h3>
               <ol className="space-y-1">
                 {items.map((a) => {
-                  const m = member(a.actorId),
-                    I = typeMeta[a.type].icon;
+                  const m = member(a.actorId);
                   return (
                     <li key={a.id}>
                       <button
@@ -266,8 +266,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
                               <span className="font-medium">{a.target}</span>
                             </span>
                             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
-                              <span className="flex items-center gap-1 font-medium text-primary-ink">
-                                <I className="size-3" aria-hidden />
+                              <span className="flex items-center gap-1 font-medium text-foreground">
                                 {typeMeta[a.type].label}
                               </span>
                               <span className="text-muted-foreground">· {a.detail}</span>
@@ -302,6 +301,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
             ? {
                 action: (
                   <Button variant="outline" onClick={clear}>
+                    <X />
                     Clear filters
                   </Button>
                 ),
@@ -347,6 +347,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
               <Button asChild variant="outline" className="w-full">
                 <Link to="/projects" search={{ project: open.projectId }}>
                   Open project
+                  <ArrowRight />
                 </Link>
               </Button>
             )}

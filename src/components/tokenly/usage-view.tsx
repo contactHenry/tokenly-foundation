@@ -18,15 +18,15 @@ import {
 } from "recharts";
 import {
   Activity,
-  ArrowDownRight,
   ArrowRight,
   ArrowUpDown,
-  ArrowUpRight,
   Download,
   Save,
   Search,
   TrendingUp,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -254,10 +254,7 @@ export function UsageView() {
     });
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={pageMeta.usage.label}
-        description={pageMeta.usage.description}
-      />
+      <PageHeader title={pageMeta.usage.label} description={pageMeta.usage.description} />
       <div className="sticky top-14 z-20 -mx-4 border-y bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
         <div className="flex flex-wrap items-center gap-2">
           {FILTERS.map((kind) => (
@@ -406,6 +403,7 @@ export function UsageView() {
           description="Try another range or remove a filter."
           action={
             <Button variant="outline" onClick={clear}>
+              <X />
               Clear filters
             </Button>
           }
@@ -419,7 +417,7 @@ export function UsageView() {
                   <IconTile icon={TrendingUp} tone="sky" size="sm" />
                   Usage over time
                 </h3>
-                <p className="pl-[38px] mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Grouped by {group === "key" ? "API key" : group}
                 </p>
               </div>
@@ -531,7 +529,7 @@ export function UsageView() {
                   <IconTile icon={Activity} tone="brand" size="sm" />
                   Usage by {group === "key" ? "API key" : group}
                 </h3>
-                <p className="pl-[38px] mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {rows.length} groups · click a row for details
                 </p>
               </div>
@@ -601,13 +599,11 @@ export function UsageView() {
                       <td className="px-4 py-3">
                         {row.trend > 0 ? (
                           <span className="inline-flex items-center text-critical">
-                            <ArrowUpRight className="size-4" />
-                            {row.trend.toFixed(0)}%
+                            ↑ {row.trend.toFixed(0)}%
                           </span>
                         ) : (
                           <span className="inline-flex items-center text-success">
-                            <ArrowDownRight className="size-4" />
-                            {Math.abs(row.trend).toFixed(0)}%
+                            ↓ {Math.abs(row.trend).toFixed(0)}%
                           </span>
                         )}
                       </td>
@@ -627,6 +623,7 @@ export function UsageView() {
                   disabled={page <= 1}
                   onClick={() => setPage(page - 1)}
                 >
+                  <ChevronLeft />
                   Previous
                 </Button>
                 <Button
@@ -636,6 +633,7 @@ export function UsageView() {
                   onClick={() => setPage(page + 1)}
                 >
                   Next
+                  <ChevronRight />
                 </Button>
               </div>
             </div>
@@ -680,7 +678,7 @@ export function UsageView() {
                         type="monotone"
                         dataKey="value"
                         stroke="var(--chart-1)"
-                        fill="var(--accent)"
+                        fill="var(--chart-fill)"
                         isAnimationActive={false}
                       />
                       <Tooltip formatter={(value) => money(Number(value))} />
@@ -777,6 +775,7 @@ export function UsageView() {
             }}
           />
           <Button disabled={!viewName.trim()} onClick={save}>
+            <Save />
             Save view
           </Button>
         </DialogContent>

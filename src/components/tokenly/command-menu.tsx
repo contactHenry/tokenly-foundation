@@ -50,7 +50,7 @@ export function CommandMenu({ onTopUp }: { onTopUp: () => void }) {
                   onSelect={() => run(() => void navigate({ to: page.to }))}
                   className="gap-3"
                 >
-                  <IconTile icon={page.icon} tone={page.tone} size="sm" />
+                  <IconTile icon={page.icon} plain size="sm" />
                   <span className="min-w-0">
                     <span className="block font-medium">{page.label}</span>
                     <span className="block truncate text-xs text-muted-foreground">
