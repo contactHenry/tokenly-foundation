@@ -180,6 +180,19 @@ function Team() {
   const manage = can("manageTeam");
   return (
     <div className="space-y-8">
+      <ConfirmDelete
+        open={!!removing}
+        onOpenChange={(o) => !o && setRemoving(null)}
+        title="Remove team member?"
+        confirmLabel="Remove"
+        description={removing ? `${removing.name} will lose access to this workspace.` : undefined}
+        onConfirm={() => {
+          if (!removing) return;
+          workspaceActions.remove(removing.id);
+          toast.success(`${removing.name} removed`);
+          setRemoving(null);
+        }}
+      />
       <section className="surface">
         <div className="flex items-center justify-between gap-3 border-b p-5">
           <div>
