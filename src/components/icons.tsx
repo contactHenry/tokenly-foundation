@@ -1,9 +1,10 @@
 /**
  * Tokenly's icon set. Every icon in the app comes from here so the look stays consistent.
  *
- * Icons are Phosphor: rounded, two-tone ("duotone") glyphs for content and navigation,
- * and the heavier "bold" weight for small UI glyphs (chevrons, close, check, plus) so
- * they stay crisp at 12–16px. Names mirror the lucide names the code already used.
+ * Icons are Phosphor line glyphs ("regular") in a single colour, with the heavier "bold" weight
+ * for small UI glyphs (chevrons, close, check, plus) so they stay crisp at 12–16px. Names mirror
+ * the lucide names the code already used. Icons belong in navigation, metric cards and icon-only
+ * controls; buttons with a text label drop their icons (see Button).
  */
 import { forwardRef, type ComponentProps } from "react";
 import {
@@ -73,17 +74,24 @@ import {
 export type IconProps = Omit<ComponentProps<PhosphorIcon>, "ref">;
 export type IconComponent = ReturnType<typeof make>;
 
+const iconTypes = new WeakSet<object>();
+/** True when a React element type is one of the icons exported from this module. */
+export function isIconType(type: unknown): boolean {
+  return typeof type === "object" && type !== null && iconTypes.has(type);
+}
+
 function make(Glyph: PhosphorIcon, weight: IconWeight) {
   const Icon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
     <Glyph ref={ref} weight={weight} aria-hidden {...props} />
   ));
   Icon.displayName = Glyph.displayName;
+  iconTypes.add(Icon);
   return Icon;
 }
-const duo = (g: PhosphorIcon) => make(g, "duotone");
+const duo = (g: PhosphorIcon) => make(g, "regular");
 const bold = (g: PhosphorIcon) => make(g, "bold");
 
-/* Navigation & content: two-tone */
+/* Navigation & content: single-weight line icons */
 export const LayoutDashboard = duo(SquaresFour);
 export const Activity = duo(ChartLineUp);
 export const KeyRound = duo(Key);

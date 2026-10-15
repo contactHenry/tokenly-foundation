@@ -60,7 +60,7 @@
   --color-warning-muted: var(--warning-muted);
   --color-critical: var(--critical);
   --color-critical-muted: var(--critical-muted);
-  /* Friendly accent tones for icon tiles (navigation, page headers, stat cards). */
+  /* Legacy tone tokens; all resolve to ink on no fill in the monochrome palette. */
   --color-tone-brand: var(--tone-brand);
   --color-tone-brand-soft: var(--tone-brand-soft);
   --color-tone-sky: var(--tone-sky);
@@ -84,155 +84,131 @@
   --shadow-xl: var(--shadow-raised);
 }
 /*
- * Tokenly brand palette. Raw brand values live in --tokenly-*; the semantic tokens below
- * (background, primary, muted, ...) are what components use, so light and dark stay in step.
+ * Tokenly palette: monochrome. Black, white and a neutral grey ramp only, so the product reads
+ * as one calm, professional surface. Raw values live in --tokenly-*; components use the semantic
+ * tokens below (background, primary, muted, ...), so light and dark stay in step.
  *
- * Contrast rule: brand green (#22C55E) is a fill colour. Text on it is forest (#0F2D1F, 7.4:1).
- * Green text on light surfaces uses --primary-ink (#166534, 7.1:1), never the fill green.
+ * Rules: the page is white; the sidebar is a light grey; the selected navigation item is black
+ * with white text and white line icons. Status is carried by weight and fill (grey, mid-grey,
+ * solid black), never by hue.
  */
 :root {
   /* Brand */
-  --tokenly-primary: #22c55e;
-  --tokenly-accent: #a3e635;
-  --tokenly-forest: #0f2d1f;
-  --tokenly-background: #f5f7eb;
-  /* Extended palette */
+  --tokenly-black: #0a0a0a;
   --tokenly-white: #ffffff;
-  --tokenly-soft-green: #dcfce7;
-  --tokenly-muted-green: #166534;
-  /* Text */
-  --tokenly-text-primary: #14251b;
-  --tokenly-text-secondary: #647067;
-  /* Surfaces */
-  --tokenly-surface: #ffffff;
-  --tokenly-surface-subtle: #f5f7eb;
-  --tokenly-border: #e5e7de;
-  /* Semantic */
-  --tokenly-success: #16a34a;
-  --tokenly-warning: #d97706;
-  --tokenly-error: #dc2626;
+  /* Logo: black tile, white bars (inverted in dark mode) */
+  --tokenly-forest: var(--tokenly-black);
+  --tokenly-accent: var(--tokenly-white);
   /* Shape and elevation */
   --tokenly-radius-sm: 6px;
   --tokenly-radius-md: 12px;
   --tokenly-radius-lg: 16px;
   --tokenly-radius-xl: 24px;
-  --tokenly-shadow-card: 0 4px 16px rgba(15, 45, 31, 0.06);
+  --tokenly-shadow-card: 0 1px 2px rgba(10, 10, 10, 0.04);
 
   --radius: var(--tokenly-radius-sm);
-  --background: var(--tokenly-background);
-  --foreground: var(--tokenly-text-primary);
-  --card: var(--tokenly-surface);
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
   --card-foreground: var(--foreground);
-  --popover: var(--tokenly-surface);
+  --popover: #ffffff;
   --popover-foreground: var(--foreground);
-  --primary: var(--tokenly-primary);
-  --primary-foreground: var(--tokenly-forest);
-  --primary-ink: var(--tokenly-muted-green);
-  --secondary: #eef1e3;
+  --primary: #0a0a0a;
+  --primary-foreground: #ffffff;
+  --primary-ink: #0a0a0a;
+  --secondary: #f4f4f4;
   --secondary-foreground: var(--foreground);
-  --muted: #eef1e3;
-  --muted-foreground: var(--tokenly-text-secondary);
-  --accent: var(--tokenly-soft-green);
-  --accent-foreground: var(--tokenly-muted-green);
-  --destructive: var(--tokenly-error);
+  --muted: #f4f4f4;
+  --muted-foreground: #666666;
+  --accent: #f0f0f0;
+  --accent-foreground: #0a0a0a;
+  --destructive: #0a0a0a;
   --destructive-foreground: #ffffff;
-  --border: var(--tokenly-border);
-  --input: #d8dccd;
-  --ring: rgba(34, 197, 94, 0.55);
-  --chart-1: #22c55e;
-  --chart-2: #a3e635;
-  --chart-3: #166534;
-  --chart-4: #86efac;
-  --chart-5: #647067;
-  --sidebar: var(--background);
+  --border: #e6e6e6;
+  --input: #d6d6d6;
+  --ring: rgba(10, 10, 10, 0.35);
+  --chart-1: #0a0a0a;
+  --chart-2: #5c5c5c;
+  --chart-3: #9a9a9a;
+  --chart-4: #c8c8c8;
+  --chart-5: #7a7a7a;
+  --sidebar: #f6f6f6;
   --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: rgba(15, 45, 31, 0.06);
+  --sidebar-primary: #0a0a0a;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ebebeb;
   --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: var(--border);
+  --sidebar-border: #e6e6e6;
   --sidebar-ring: var(--ring);
-  --success: var(--tokenly-success);
-  --success-muted: var(--tokenly-soft-green);
-  --warning: #b45309;
-  --warning-muted: #fef3c7;
-  --critical: var(--tokenly-error);
-  --critical-muted: #fee2e2;
+  /* Status: text colours stay black; badges differ by fill (see StatusBadge). */
+  --success: #0a0a0a;
+  --success-muted: #f4f4f4;
+  --warning: #0a0a0a;
+  --warning-muted: #e6e6e6;
+  --critical: #0a0a0a;
+  --critical-muted: #e6e6e6;
   --shadow-surface: var(--tokenly-shadow-card);
-  --shadow-raised: 0 1px 2px rgba(15, 45, 31, 0.06), 0 16px 40px -12px rgba(15, 45, 31, 0.22);
-  /* Icon-tile tones: soft fill + legible ink, tuned to sit beside the green brand. */
-  --tone-brand: #166534;
-  --tone-brand-soft: #dcfce7;
-  --tone-sky: #0369a1;
-  --tone-sky-soft: #e0f2fe;
-  --tone-violet: #6d28d9;
-  --tone-violet-soft: #ede9fe;
-  --tone-amber: #b45309;
-  --tone-amber-soft: #fef3c7;
-  --tone-teal: #0f766e;
-  --tone-teal-soft: #ccfbf1;
-  --tone-rose: #be123c;
-  --tone-rose-soft: #ffe4e6;
-  --tone-slate: #475249;
-  --tone-slate-soft: #eceee6;
+  --shadow-raised: 0 1px 2px rgba(10, 10, 10, 0.06), 0 16px 40px -12px rgba(10, 10, 10, 0.18);
+  /* Former accent tones collapse to ink on no fill. */
+  --tone-brand: var(--foreground);
+  --tone-brand-soft: transparent;
+  --tone-sky: var(--foreground);
+  --tone-sky-soft: transparent;
+  --tone-violet: var(--foreground);
+  --tone-violet-soft: transparent;
+  --tone-amber: var(--foreground);
+  --tone-amber-soft: transparent;
+  --tone-teal: var(--foreground);
+  --tone-teal-soft: transparent;
+  --tone-rose: var(--foreground);
+  --tone-rose-soft: transparent;
+  --tone-slate: var(--foreground);
+  --tone-slate-soft: transparent;
 }
 .dark {
-  /* Dark mode keeps the forest family instead of neutral grey, so the brand carries through. */
-  --background: #08130d;
-  --foreground: #eaf1e4;
-  --card: #0f1f16;
+  --tokenly-forest: #fafafa;
+  --tokenly-accent: #0a0a0a;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #0f0f0f;
   --card-foreground: var(--foreground);
-  --popover: #12251a;
+  --popover: #141414;
   --popover-foreground: var(--foreground);
-  --primary: var(--tokenly-primary);
-  --primary-foreground: var(--tokenly-forest);
-  --primary-ink: #4ade80;
-  --secondary: #16291e;
+  --primary: #fafafa;
+  --primary-foreground: #0a0a0a;
+  --primary-ink: #fafafa;
+  --secondary: #1a1a1a;
   --secondary-foreground: var(--foreground);
-  --muted: #16291e;
-  --muted-foreground: #98a69b;
-  --accent: #173823;
-  --accent-foreground: #bef264;
-  --destructive: #f87171;
-  --destructive-foreground: #1c0a0a;
-  --border: #1e3527;
-  --input: #2a4535;
-  --ring: rgba(74, 222, 128, 0.55);
-  --chart-1: #22c55e;
-  --chart-2: #a3e635;
-  --chart-3: #86efac;
-  --chart-4: #3f7d5a;
-  --chart-5: #8a968d;
-  --sidebar: var(--background);
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+  --accent: #1f1f1f;
+  --accent-foreground: #fafafa;
+  --destructive: #fafafa;
+  --destructive-foreground: #0a0a0a;
+  --border: #262626;
+  --input: #333333;
+  --ring: rgba(250, 250, 250, 0.4);
+  --chart-1: #fafafa;
+  --chart-2: #a3a3a3;
+  --chart-3: #6b6b6b;
+  --chart-4: #3d3d3d;
+  --chart-5: #858585;
+  --sidebar: #111111;
   --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: rgba(163, 230, 53, 0.08);
+  --sidebar-primary: #fafafa;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1f1f1f;
   --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: var(--border);
+  --sidebar-border: #222222;
   --sidebar-ring: var(--ring);
-  --success: #4ade80;
-  --success-muted: #143322;
-  --warning: #fbbf24;
-  --warning-muted: #33270c;
-  --critical: #f87171;
-  --critical-muted: #3a1515;
+  --success: #fafafa;
+  --success-muted: #1a1a1a;
+  --warning: #fafafa;
+  --warning-muted: #2a2a2a;
+  --critical: #fafafa;
+  --critical-muted: #2a2a2a;
   --shadow-surface: 0 0 0 0 transparent;
-  --shadow-raised: 0 0 0 1px rgba(163, 230, 53, 0.05), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
-  --tone-brand: #4ade80;
-  --tone-brand-soft: #143322;
-  --tone-sky: #7dd3fc;
-  --tone-sky-soft: #0c2a3a;
-  --tone-violet: #c4b5fd;
-  --tone-violet-soft: #241d3d;
-  --tone-amber: #fcd34d;
-  --tone-amber-soft: #33270c;
-  --tone-teal: #5eead4;
-  --tone-teal-soft: #0d2f2b;
-  --tone-rose: #fda4af;
-  --tone-rose-soft: #3a1520;
-  --tone-slate: #b4bfb6;
-  --tone-slate-soft: #1b2a21;
+  --shadow-raised: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
 }
 @layer base {
   * {
@@ -262,8 +238,10 @@
     text-wrap: balance;
   }
   ::selection {
-    background: rgba(163, 230, 53, 0.45);
-    color: var(--tokenly-forest);
+    background: rgba(10, 10, 10, 0.14);
+  }
+  html.dark ::selection {
+    background: rgba(250, 250, 250, 0.22);
   }
   button {
     cursor: pointer;

@@ -174,7 +174,7 @@ function Team() {
               <IconTile icon={Users} tone="teal" size="sm" />
               Members
             </h3>
-            <p className="pl-[38px] text-sm text-muted-foreground">{members.length} people</p>
+            <p className="text-sm text-muted-foreground">{members.length} people</p>
           </div>
           <Gate
             perm="manageTeam"
@@ -291,9 +291,7 @@ function Team() {
             <IconTile icon={ShieldAlert} tone="violet" size="sm" />
             Roles & permissions
           </h3>
-          <p className="pl-[38px] text-sm text-muted-foreground">
-            What each role can do in this workspace.
-          </p>
+          <p className="text-sm text-muted-foreground">What each role can do in this workspace.</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
@@ -408,7 +406,7 @@ function Notifications() {
           <IconTile icon={Bell} tone="amber" size="sm" />
           Your notification preferences
         </h3>
-        <p className="pl-[38px] text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Only affects what you receive.
           {!slack.connected && " Connect Slack under Integrations to use it."}
         </p>
