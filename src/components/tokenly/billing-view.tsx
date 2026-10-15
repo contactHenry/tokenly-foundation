@@ -510,8 +510,10 @@ export function PaymentMethodsCard() {
       last4: digits.slice(-4),
       expiry: exp,
     });
+    setName("");
     setCard("");
     setExp("");
+    setCvv("");
     setErr("");
     setAdding(false);
     toast.success("Card added");
@@ -600,22 +602,46 @@ export function PaymentMethodsCard() {
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Cardholder name</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value.slice(0, 70))}
+                placeholder="Name on card"
+                autoComplete="cc-name"
+              />
+            </div>
+            <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">Card number</Label>
               <Input
                 inputMode="numeric"
                 value={card}
-                onChange={(e) => setCard(e.target.value.slice(0, 23))}
+                onChange={(e) => setCard(formatCard(e.target.value))}
                 placeholder="4242 4242 4242 4242"
-                autoComplete="off"
+                autoComplete="cc-number"
               />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Expiry</Label>
-              <Input
-                value={exp}
-                onChange={(e) => setExp(e.target.value.slice(0, 5))}
-                placeholder="MM/YY"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Expiry</Label>
+                <Input
+                  inputMode="numeric"
+                  value={exp}
+                  onChange={(e) => setExp(formatExp(e.target.value))}
+                  placeholder="MM/YY"
+                  autoComplete="cc-exp"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">CVV</Label>
+                <Input
+                  inputMode="numeric"
+                  type="password"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="123"
+                  autoComplete="cc-csc"
+                />
+              </div>
             </div>
             {err && <p className="text-sm text-critical">{err}</p>}
           </div>
