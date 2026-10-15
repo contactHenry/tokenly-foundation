@@ -482,13 +482,23 @@ export function PaymentMethodsCard() {
   const canEdit = useRole().can("manageBilling");
   const { methods } = useBillingStore();
   const [adding, setAdding] = useState(false),
+    [name, setName] = useState(""),
     [card, setCard] = useState(""),
     [exp, setExp] = useState(""),
+    [cvv, setCvv] = useState(""),
     [err, setErr] = useState("");
+  const formatCard = (v: string) =>
+    v.replace(/\D/g, "").slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
+  const formatExp = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 4);
+    return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+  };
   const add = () => {
     const digits = card.replace(/\s/g, "");
+    if (!name.trim()) return setErr("Enter the cardholder name.");
     if (!/^\d{12,19}$/.test(digits)) return setErr("Enter a valid card number.");
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)) return setErr("Use MM/YY for expiry.");
+    if (!/^\d{3,4}$/.test(cvv)) return setErr("Enter the 3–4 digit security code (CVV).");
     billingActions.addMethod({
       brand: digits.startsWith("4")
         ? "Visa"
