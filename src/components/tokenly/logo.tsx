@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /*
- * The Tokenly mark: five lime bars on a forest tile, drawn on the brand's 720-unit grid.
+ * The Tokenly mark: five bars on a rounded tile, drawn on the brand's 720-unit grid.
+ * Same concept as the original lime-on-forest mark, recoloured white-on-black.
  * Kept as inline SVG so it stays sharp at every size and picks up the brand tokens.
  */
 const bars = [

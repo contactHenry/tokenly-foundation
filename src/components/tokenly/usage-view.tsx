@@ -25,6 +25,8 @@ import {
   Search,
   TrendingUp,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -401,6 +403,7 @@ export function UsageView() {
           description="Try another range or remove a filter."
           action={
             <Button variant="outline" onClick={clear}>
+              <X />
               Clear filters
             </Button>
           }
@@ -620,6 +623,7 @@ export function UsageView() {
                   disabled={page <= 1}
                   onClick={() => setPage(page - 1)}
                 >
+                  <ChevronLeft />
                   Previous
                 </Button>
                 <Button
@@ -629,6 +633,7 @@ export function UsageView() {
                   onClick={() => setPage(page + 1)}
                 >
                   Next
+                  <ChevronRight />
                 </Button>
               </div>
             </div>
@@ -673,7 +678,7 @@ export function UsageView() {
                         type="monotone"
                         dataKey="value"
                         stroke="var(--chart-1)"
-                        fill="var(--accent)"
+                        fill="var(--chart-fill)"
                         isAnimationActive={false}
                       />
                       <Tooltip formatter={(value) => money(Number(value))} />
@@ -770,6 +775,7 @@ export function UsageView() {
             }}
           />
           <Button disabled={!viewName.trim()} onClick={save}>
+            <Save />
             Save view
           </Button>
         </DialogContent>

@@ -3,7 +3,6 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { isIconType } from "@/components/icons";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-[color,background-color,border-color,box-shadow,transform] duration-150 active:translate-y-px focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -37,37 +36,11 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-/*
- * Icons live in navigation, metric cards and icon-only controls. A button that has a text
- * label renders the label alone, so call sites can keep their icons for icon-only layouts.
- */
-function isLabel(child: React.ReactNode): boolean {
-  if (typeof child === "string") return child.trim() !== "";
-  if (typeof child === "number") return true;
-  if (!React.isValidElement<{ className?: string }>(child) || isIconType(child.type)) return false;
-  return !/\bsr-only\b/.test(child.props.className ?? "");
-}
-function textOnly(children: React.ReactNode): React.ReactNode {
-  const list = React.Children.toArray(children);
-  if (!list.some(isLabel)) return children;
-  return list.filter((child) => !(React.isValidElement(child) && isIconType(child.type)));
-}
-
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    let content = children;
-    if (size === "icon") {
-      // icon-only control: keep the glyph
-    } else if (asChild && React.isValidElement<{ children?: React.ReactNode }>(children)) {
-      content = React.cloneElement(children, undefined, textOnly(children.props.children));
-    } else if (!asChild) {
-      content = textOnly(children);
-    }
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {content}
-      </Comp>
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
     );
   },
 );

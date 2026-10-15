@@ -26,6 +26,8 @@ import {
   Settings2,
   TrendingUp,
   Users,
+  Save,
+  Trash2,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -270,7 +272,10 @@ function NewProjectDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={submit}>Create project</Button>
+          <Button onClick={submit}>
+            <Plus />
+            Create project
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -442,6 +447,7 @@ export function KeysTable({ projectId }: { projectId?: string }) {
           description="Create a key to start sending requests from this project."
           action={
             <Button onClick={() => setCreating(true)} disabled={!canKeys}>
+              <Plus />
               Create key
             </Button>
           }
@@ -484,7 +490,10 @@ function SecretReveal({
         </p>
       </div>
       <DialogFooter>
-        <Button onClick={onDone}>I've saved my key</Button>
+        <Button onClick={onDone}>
+          <Check />
+          I've saved my key
+        </Button>
       </DialogFooter>
     </>
   );
@@ -606,7 +615,10 @@ function CreateKeyDialog({
               <Button variant="outline" onClick={close}>
                 Cancel
               </Button>
-              <Button onClick={submit}>Create key</Button>
+              <Button onClick={submit}>
+                <Plus />
+                Create key
+              </Button>
             </DialogFooter>
           </>
         )}
@@ -663,6 +675,7 @@ function RevokeDialog({ keyItem, onClose }: { keyItem: ManagedKey | null; onClos
                   close();
                 }}
               >
+                <Trash2 />
                 Revoke key
               </Button>
             </DialogFooter>
@@ -911,6 +924,7 @@ function ProjectSettings({ project }: { project: ManagedProject }) {
         </Field>
         <div className="flex items-center gap-3">
           <Button onClick={save} disabled={!canEdit}>
+            <Save />
             Save changes
           </Button>
           {msg && <span className="text-sm text-muted-foreground">{msg}</span>}

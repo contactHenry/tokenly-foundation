@@ -1,4 +1,4 @@
-import { Search } from "@/components/icons";
+import { Search, ArrowLeft } from "@/components/icons";
 import { PageHeader } from "@/components/tokenly/primitives";
 import { pages } from "@/components/tokenly/nav";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -41,6 +41,7 @@ function Page() {
         action={
           <Button asChild variant="outline">
             <Link to="/projects" search={{}}>
+              <ArrowLeft />
               Back to projects
             </Link>
           </Button>
@@ -50,10 +51,7 @@ function Page() {
   }
   return (
     <div className="space-y-10">
-      <PageHeader
-        title={pages.projects.label}
-        description={pages.projects.description}
-      />
+      <PageHeader title={pages.projects.label} description={pages.projects.description} />
       <ProjectsGrid />
       <KeysTable />
     </div>

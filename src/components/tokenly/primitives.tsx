@@ -210,7 +210,7 @@ export function Sparkline({ data }: { data: number[] }) {
             type="monotone"
             dataKey="value"
             stroke="var(--chart-1)"
-            fill="var(--accent)"
+            fill="var(--chart-fill)"
             strokeWidth={2}
             isAnimationActive={false}
           />

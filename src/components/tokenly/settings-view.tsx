@@ -10,6 +10,8 @@ import {
   UserPlus,
   Users,
   Webhook,
+  Plus,
+  Save,
 } from "@/components/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -134,8 +136,17 @@ function General() {
         <Button variant="outline" disabled={!dirty} onClick={() => setForm(general)}>
           Discard
         </Button>
-        <Gate perm="manageWorkspace" disabled={<Button disabled>Save changes</Button>}>
+        <Gate
+          perm="manageWorkspace"
+          disabled={
+            <Button disabled>
+              <Save />
+              Save changes
+            </Button>
+          }
+        >
           <Button disabled={!dirty} onClick={save}>
+            <Save />
             Save changes
           </Button>
         </Gate>
@@ -384,7 +395,10 @@ function Team() {
             <Button variant="outline" onClick={() => setInviting(false)}>
               Cancel
             </Button>
-            <Button onClick={invite}>Send invite</Button>
+            <Button onClick={invite}>
+              <UserPlus />
+              Send invite
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -514,17 +528,27 @@ function Integrations() {
                   toast.success(`Alerts will post to ${channel}`);
                 }}
               >
+                <Save />
                 Save
               </Button>
             </>
           ) : (
-            <Gate perm="manageWorkspace" disabled={<Button disabled>Connect Slack</Button>}>
+            <Gate
+              perm="manageWorkspace"
+              disabled={
+                <Button disabled>
+                  <Plus />
+                  Connect Slack
+                </Button>
+              }
+            >
               <Button
                 onClick={() => {
                   workspaceActions.setSlack({ connected: true, channel });
                   toast.success("Slack connected (preview)");
                 }}
               >
+                <Plus />
                 Connect Slack
               </Button>
             </Gate>
@@ -595,6 +619,7 @@ function Integrations() {
             Send test
           </Button>
           <Button onClick={saveHook} disabled={!canEdit}>
+            <Save />
             Save
           </Button>
         </div>

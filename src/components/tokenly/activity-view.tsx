@@ -9,6 +9,7 @@ import {
   UserPlus,
   Wallet,
   X,
+  ArrowRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -300,6 +301,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
             ? {
                 action: (
                   <Button variant="outline" onClick={clear}>
+                    <X />
                     Clear filters
                   </Button>
                 ),
@@ -345,6 +347,7 @@ export function ActivityView({ from, to }: { from: string; to: string }) {
               <Button asChild variant="outline" className="w-full">
                 <Link to="/projects" search={{ project: open.projectId }}>
                   Open project
+                  <ArrowRight />
                 </Link>
               </Button>
             )}

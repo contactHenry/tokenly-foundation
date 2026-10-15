@@ -15,6 +15,8 @@ import {
   Plus,
   Settings,
   Sun,
+  Check,
+  X,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -299,6 +301,7 @@ function DatePicker() {
               setOpen(false);
             }}
           >
+            <Check />
             Apply range
           </Button>
         </div>
@@ -421,6 +424,7 @@ function ViewAsBanner() {
         className="h-7 bg-card"
         onClick={() => workspaceActions.setViewAs(null)}
       >
+        <X />
         Exit preview
       </Button>
     </div>

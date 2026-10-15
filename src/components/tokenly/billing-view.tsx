@@ -14,6 +14,8 @@ import {
   Trash2,
   Wallet,
   Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -198,7 +200,10 @@ export function TopUpDialog({
             </div>
             <p className="text-xs text-muted-foreground">Preview only — no payment was taken.</p>
             <DialogFooter>
-              <Button onClick={close}>Done</Button>
+              <Button onClick={close}>
+                <Check />
+                Done
+              </Button>
             </DialogFooter>
           </>
         ) : (
@@ -320,6 +325,7 @@ export function TopUpDialog({
                 Cancel
               </Button>
               <Button onClick={confirm} disabled={!base}>
+                <CreditCard />
                 Pay {base ? money(usd, usd % 1 ? 2 : 0) : ""}
               </Button>
             </DialogFooter>
@@ -545,6 +551,7 @@ export function PaymentMethodsCard() {
                     toast.success(`${m.brand} •••• ${m.last4} is now default`);
                   }}
                 >
+                  <Check />
                   Make default
                 </Button>
               )}
@@ -606,7 +613,10 @@ export function PaymentMethodsCard() {
             <Button variant="outline" onClick={() => setAdding(false)}>
               Cancel
             </Button>
-            <Button onClick={add}>Add card</Button>
+            <Button onClick={add}>
+              <Plus />
+              Add card
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -815,6 +825,7 @@ export function LedgerSection() {
             disabled={page === 0}
             onClick={() => setPage(page - 1)}
           >
+            <ChevronLeft />
             Previous
           </Button>
           <Button
@@ -824,6 +835,7 @@ export function LedgerSection() {
             onClick={() => setPage(page + 1)}
           >
             Next
+            <ChevronRight />
           </Button>
         </div>
       </div>

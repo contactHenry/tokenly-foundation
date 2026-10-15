@@ -14,6 +14,8 @@ import {
   Trash2,
   TrendingUp,
   Wallet,
+  ArrowRight,
+  CheckCheck,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -523,7 +525,10 @@ function BudgetDrawer({
             {step ? "Back" : "Cancel"}
           </Button>
           {step < 4 ? (
-            <Button onClick={() => setStep(step + 1)}>Continue</Button>
+            <Button onClick={() => setStep(step + 1)}>
+              Continue
+              <ArrowRight />
+            </Button>
           ) : (
             <Button onClick={save}>
               <Check className="size-4" />
@@ -840,6 +845,7 @@ export function AlertHistorySection() {
               toast.success("Alert acknowledged");
             }}
           >
+            <Check />
             Acknowledge
           </Button>
         ) : statusOf(r.id) === "acknowledged" ? (
@@ -852,6 +858,7 @@ export function AlertHistorySection() {
               toast.success("Alert resolved");
             }}
           >
+            <CheckCheck />
             Resolve
           </Button>
         ) : null,

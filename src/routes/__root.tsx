@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { ArrowLeft, RotateCcw } from "@/components/icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -27,7 +28,10 @@ function NotFoundComponent() {
         </p>
         <div className="mt-6">
           <Button asChild>
-            <Link to="/">Go home</Link>
+            <Link to="/">
+              <ArrowLeft />
+              Go home
+            </Link>
           </Button>
         </div>
       </div>
@@ -58,10 +62,14 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
               reset();
             }}
           >
+            <RotateCcw />
             Try again
           </Button>
           <Button asChild variant="outline">
-            <Link to="/">Go home</Link>
+            <Link to="/">
+              <ArrowLeft />
+              Go home
+            </Link>
           </Button>
         </div>
       </div>

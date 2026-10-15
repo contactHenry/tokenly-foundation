@@ -9,6 +9,7 @@ import {
   OctagonAlert,
   SlidersHorizontal,
   Wallet,
+  ArrowRight,
 } from "@/components/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -197,6 +198,7 @@ export function NotificationCenter() {
           <Button asChild variant="ghost" size="sm" className="w-full text-xs">
             <Link to="/activity" onClick={() => setOpen(false)}>
               View all activity
+              <ArrowRight />
             </Link>
           </Button>
         </div>
