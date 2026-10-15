@@ -359,8 +359,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                 className="size-8 shrink-0 text-muted-foreground md:hidden"
                 title="Toggle sidebar"
               />
-              <span className="h-4 w-px bg-border md:hidden" aria-hidden />
-              <span className="truncate text-sm font-medium">{titles[path] || "Tokenly"}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
               <CommandMenu onTopUp={() => setTopUpOpen(true)} />
