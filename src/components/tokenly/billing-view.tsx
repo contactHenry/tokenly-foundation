@@ -482,13 +482,23 @@ export function PaymentMethodsCard() {
   const canEdit = useRole().can("manageBilling");
   const { methods } = useBillingStore();
   const [adding, setAdding] = useState(false),
+    [name, setName] = useState(""),
     [card, setCard] = useState(""),
     [exp, setExp] = useState(""),
+    [cvv, setCvv] = useState(""),
     [err, setErr] = useState("");
+  const formatCard = (v: string) =>
+    v.replace(/\D/g, "").slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
+  const formatExp = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 4);
+    return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+  };
   const add = () => {
     const digits = card.replace(/\s/g, "");
+    if (!name.trim()) return setErr("Enter the cardholder name.");
     if (!/^\d{12,19}$/.test(digits)) return setErr("Enter a valid card number.");
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)) return setErr("Use MM/YY for expiry.");
+    if (!/^\d{3,4}$/.test(cvv)) return setErr("Enter the 3–4 digit security code (CVV).");
     billingActions.addMethod({
       brand: digits.startsWith("4")
         ? "Visa"
@@ -500,8 +510,10 @@ export function PaymentMethodsCard() {
       last4: digits.slice(-4),
       expiry: exp,
     });
+    setName("");
     setCard("");
     setExp("");
+    setCvv("");
     setErr("");
     setAdding(false);
     toast.success("Card added");
@@ -590,22 +602,46 @@ export function PaymentMethodsCard() {
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Cardholder name</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value.slice(0, 70))}
+                placeholder="Name on card"
+                autoComplete="cc-name"
+              />
+            </div>
+            <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">Card number</Label>
               <Input
                 inputMode="numeric"
                 value={card}
-                onChange={(e) => setCard(e.target.value.slice(0, 23))}
+                onChange={(e) => setCard(formatCard(e.target.value))}
                 placeholder="4242 4242 4242 4242"
-                autoComplete="off"
+                autoComplete="cc-number"
               />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Expiry</Label>
-              <Input
-                value={exp}
-                onChange={(e) => setExp(e.target.value.slice(0, 5))}
-                placeholder="MM/YY"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">Expiry</Label>
+                <Input
+                  inputMode="numeric"
+                  value={exp}
+                  onChange={(e) => setExp(formatExp(e.target.value))}
+                  placeholder="MM/YY"
+                  autoComplete="cc-exp"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground">CVV</Label>
+                <Input
+                  inputMode="numeric"
+                  type="password"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="123"
+                  autoComplete="cc-csc"
+                />
+              </div>
             </div>
             {err && <p className="text-sm text-critical">{err}</p>}
           </div>
