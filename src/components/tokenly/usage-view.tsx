@@ -23,6 +23,7 @@ import {
   Download,
   Save,
   Search,
+  SlidersHorizontal,
   TrendingUp,
   X,
   ChevronLeft,
@@ -137,6 +138,18 @@ export function UsageView() {
   const [selected, setSelected] = useState<GroupRow | null>(null);
   const [saveOpen, setSaveOpen] = useState(false);
   const [viewName, setViewName] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [draft, setDraft] = useState<{
+    model?: string | undefined;
+    project?: string | undefined;
+    key?: string | undefined;
+    user?: string | undefined;
+    token?: string | undefined;
+    from?: string | undefined;
+    to?: string | undefined;
+  }>({});
+  const activeCount =
+    FILTERS.filter((k) => search[k]).length + (search.from || search.to ? 1 : 0);
   const [saved, setSaved] = useState<SavedView[]>([]);
   useEffect(() => {
     setSaved(getStored());
@@ -258,122 +271,188 @@ export function UsageView() {
   return (
     <div className="space-y-6">
       <PageHeader title={pageMeta.usage.label} description={pageMeta.usage.description} />
-      <div className="sticky top-14 z-20 -mx-4 border-y bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">
-        <div className="flex flex-wrap items-center gap-2">
-          {FILTERS.map((kind) => (
-            <Select
-              key={kind}
-              value={search[kind] ?? "all"}
-              onValueChange={(value) => update({ [kind]: value === "all" ? undefined : value })}
-            >
-              <SelectTrigger
-                className="h-9 w-auto min-w-28 max-w-44 bg-card text-xs"
-                aria-label={`Filter by ${names[kind]}`}
-              >
-                <SelectValue placeholder={names[kind]} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>
-                {kind === "token" ? (
-                  <>
-                    <SelectItem value="input">Input</SelectItem>
-                    <SelectItem value="output">Output</SelectItem>
-                  </>
-                ) : (
-                  dimensions[kind].map((entity) => (
-                    <SelectItem key={entity.id} value={entity.id}>
-                      {entity.name}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
-          ))}
-          <div className="flex items-center gap-1">
-            <Input
-              aria-label="From date"
-              type="date"
-              value={from}
-              max={to}
-              onChange={(e) => update({ from: e.target.value })}
-              className="h-9 w-32 bg-card text-xs"
-            />
-            <span className="text-xs text-muted-foreground">–</span>
-            <Input
-              aria-label="To date"
-              type="date"
-              value={to}
-              min={from}
-              max="2026-09-26"
-              onChange={(e) => update({ to: e.target.value })}
-              className="h-9 w-32 bg-card text-xs"
-            />
-          </div>
-          <div className="ml-auto flex gap-2">
-            <Select
-              onValueChange={(name) => {
-                const view = saved.find((v) => v.name === name);
-                // Reset every filter first so a view saved with "All" clears filters set now.
-                if (view)
-                  update({
-                    model: undefined,
-                    project: undefined,
-                    key: undefined,
-                    user: undefined,
-                    token: undefined,
-                    ...view.filters,
-                  });
-              }}
-            >
-              <SelectTrigger className="h-9 w-36 bg-card text-xs" aria-label="My saved views">
-                <SelectValue placeholder="My saved views" />
-              </SelectTrigger>
-              <SelectContent>
-                {saved.length ? (
-                  saved.map((v) => (
-                    <SelectItem key={v.name} value={v.name}>
-                      {v.name}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem disabled value="none">
-                    No saved views
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="sm" onClick={() => setSaveOpen(true)}>
-              <Save className="size-4" />
-              Save view
-            </Button>
-          </div>
-        </div>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {FILTERS.filter((kind) => search[kind]).map((kind) => (
-            <Button
-              key={kind}
-              size="sm"
-              variant="secondary"
-              className="h-7 rounded-md text-xs"
-              onClick={() => update({ [kind]: undefined })}
-            >
-              {names[kind]}: {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
-              <X className="size-3" />
-            </Button>
-          ))}
-          {(search.from || search.to) && (
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-7 rounded-md text-xs"
-              onClick={() => update({ from: undefined, to: undefined })}
-            >
-              Date: {from} – {to}
-              <X className="size-3" />
-            </Button>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setDraft({
+              model: search.model,
+              project: search.project,
+              key: search.key,
+              user: search.user,
+              token: search.token,
+              from,
+              to,
+            });
+            setFilterOpen(true);
+          }}
+        >
+          <SlidersHorizontal className="size-4" />
+          Filters
+          {activeCount > 0 && (
+            <span className="ml-1 rounded-full bg-foreground px-1.5 text-[10px] font-semibold text-background">
+              {activeCount}
+            </span>
           )}
-        </div>
+        </Button>
+        {saved.length > 0 && (
+          <Select
+            onValueChange={(name) => {
+              const view = saved.find((v) => v.name === name);
+              if (view)
+                update({
+                  model: undefined,
+                  project: undefined,
+                  key: undefined,
+                  user: undefined,
+                  token: undefined,
+                  ...view.filters,
+                });
+            }}
+          >
+            <SelectTrigger className="h-9 w-auto gap-2 border-none bg-transparent text-xs shadow-none" aria-label="Saved views">
+              <SelectValue placeholder="Saved views" />
+            </SelectTrigger>
+            <SelectContent>
+              {saved.map((v) => (
+                <SelectItem key={v.name} value={v.name}>
+                  {v.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {FILTERS.filter((kind) => search[kind]).map((kind) => (
+          <button
+            key={kind}
+            type="button"
+            className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
+            onClick={() => update({ [kind]: undefined })}
+          >
+            <span className="text-muted-foreground">{names[kind]}</span>
+            {kind === "token" ? search.token : labelFor(kind, search[kind] ?? "")}
+            <X className="size-3" />
+          </button>
+        ))}
+        {(search.from || search.to) && (
+          <button
+            type="button"
+            className="inline-flex h-7 items-center gap-1.5 bg-muted px-2.5 text-xs hover:bg-accent"
+            onClick={() => update({ from: undefined, to: undefined })}
+          >
+            <span className="text-muted-foreground">Date</span>
+            {from} – {to}
+            <X className="size-3" />
+          </button>
+        )}
+        {activeCount > 0 && (
+          <button
+            type="button"
+            className="text-xs text-muted-foreground hover:text-foreground"
+            onClick={clear}
+          >
+            Clear all
+          </button>
+        )}
       </div>
+      <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Filters</DialogTitle>
+            <DialogDescription>Narrow down usage, then apply or save as a view.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {FILTERS.map((kind) => (
+              <div key={kind} className="grid gap-1.5">
+                <label className="text-xs font-medium text-muted-foreground">{names[kind]}</label>
+                <Select
+                  value={draft[kind] ?? "all"}
+                  onValueChange={(value) =>
+                    setDraft((d) => ({ ...d, [kind]: value === "all" ? undefined : value }))
+                  }
+                >
+                  <SelectTrigger className="h-9 w-full text-sm" aria-label={`Filter by ${names[kind]}`}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>
+                    {kind === "token" ? (
+                      <>
+                        <SelectItem value="input">Input</SelectItem>
+                        <SelectItem value="output">Output</SelectItem>
+                      </>
+                    ) : (
+                      dimensions[kind].map((entity) => (
+                        <SelectItem key={entity.id} value={entity.id}>
+                          {entity.name}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+            <div className="grid gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">Date range</label>
+              <div className="flex items-center gap-2">
+                <Input
+                  aria-label="From date"
+                  type="date"
+                  value={draft.from ?? ""}
+                  max={draft.to}
+                  onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
+                  className="h-9 text-sm"
+                />
+                <span className="text-xs text-muted-foreground">–</span>
+                <Input
+                  aria-label="To date"
+                  type="date"
+                  value={draft.to ?? ""}
+                  min={draft.from}
+                  max="2026-09-26"
+                  onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
+                  className="h-9 text-sm"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-2 pt-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                setDraft({ model: undefined, project: undefined, key: undefined, user: undefined, token: undefined, from: undefined, to: undefined })
+              }
+            >
+              Reset
+            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  update({ ...draft });
+                  setFilterOpen(false);
+                  setSaveOpen(true);
+                }}
+              >
+                <Save className="size-4" />
+                Save as view
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  update({ ...draft });
+                  setFilterOpen(false);
+                }}
+              >
+                Apply
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         {[
           ["Total cost", money(cost)],
