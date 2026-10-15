@@ -356,10 +356,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border/70 bg-background/80 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <SidebarTrigger
-                className="size-8 shrink-0 text-muted-foreground"
+                className="size-8 shrink-0 text-muted-foreground md:hidden"
                 title="Toggle sidebar"
               />
-              <span className="h-4 w-px bg-border" aria-hidden />
+              <span className="h-4 w-px bg-border md:hidden" aria-hidden />
               <span className="truncate text-sm font-medium">{titles[path] || "Tokenly"}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
