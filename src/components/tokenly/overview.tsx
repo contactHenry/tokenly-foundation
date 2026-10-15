@@ -44,6 +44,7 @@ import {
   type Severity,
   type UsageEvent,
 } from "@/lib/mock";
+import { MODEL_COLORS } from "@/components/tokenly/usage-data";
 import type { DateSelection } from "@/components/tokenly/app-shell";
 
 /** Figures can arrive missing (empty range, half-loaded data); render a dash, never crash. */
@@ -668,8 +669,12 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                   <span className="mt-2 flex items-center gap-2">
                     <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
                       <span
-                        className="block h-full rounded-full bg-chart-1"
-                        style={{ width: `${row.percent}%` }}
+                        className="block h-full rounded-full"
+                        style={
+                          kind === "model"
+                            ? { backgroundColor: MODEL_COLORS[row.id] }
+                            : undefined
+                        }
                       />
                     </span>
                     <span className="w-9 text-right text-xs text-muted-foreground">
