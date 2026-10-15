@@ -373,59 +373,147 @@ export function UsageView() {
             <DialogTitle>Filters</DialogTitle>
             <DialogDescription>Narrow down usage, then apply or save as a view.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            {FILTERS.map((kind) => (
-              <div key={kind} className="grid gap-1.5">
-                <label className="text-xs font-medium text-muted-foreground">{names[kind]}</label>
-                <Select
-                  value={draft[kind] ?? "all"}
-                  onValueChange={(value) =>
-                    setDraft((d) => ({ ...d, [kind]: value === "all" ? undefined : value }))
-                  }
-                >
-                  <SelectTrigger className="h-9 w-full text-sm" aria-label={`Filter by ${names[kind]}`}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>
-                    {kind === "token" ? (
-                      <>
-                        <SelectItem value="input">Input</SelectItem>
-                        <SelectItem value="output">Output</SelectItem>
-                      </>
-                    ) : (
-                      dimensions[kind].map((entity) => (
+          <div className="space-y-5">
+            <div className="grid gap-2">
+              <label className="text-xs font-medium text-muted-foreground">Token type</label>
+              <div className="flex gap-1 rounded-md bg-muted p-1">
+                {([["all", "All"], ["input", "Input"], ["output", "Output"]] as const).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={(draft.token ?? "all") === value}
+                    onClick={() =>
+                      setDraft((d) => ({ ...d, token: value === "all" ? undefined : value }))
+                    }
+                    className={`h-7 flex-1 rounded-sm text-xs font-medium transition-colors ${
+                      (draft.token ?? "all") === value
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <label className="text-xs font-medium text-muted-foreground">Model</label>
+              <div className="flex flex-wrap gap-1.5">
+                <FilterChip
+                  label="All models"
+                  active={!draft.model}
+                  onClick={() => setDraft((d) => ({ ...d, model: undefined }))}
+                />
+                {dimensions.model.map((entity) => (
+                  <FilterChip
+                    key={entity.id}
+                    label={entity.name}
+                    active={draft.model === entity.id}
+                    dot={MODEL_COLORS[entity.id]}
+                    onClick={() =>
+                      setDraft((d) => ({ ...d, model: d.model === entity.id ? undefined : entity.id }))
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <label className="text-xs font-medium text-muted-foreground">Project</label>
+              <div className="flex flex-wrap gap-1.5">
+                <FilterChip
+                  label="All projects"
+                  active={!draft.project}
+                  onClick={() => setDraft((d) => ({ ...d, project: undefined }))}
+                />
+                {dimensions.project.map((entity) => (
+                  <FilterChip
+                    key={entity.id}
+                    label={entity.name}
+                    active={draft.project === entity.id}
+                    onClick={() =>
+                      setDraft((d) => ({ ...d, project: d.project === entity.id ? undefined : entity.id }))
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {(["key", "user"] as const).map((kind) => (
+                <div key={kind} className="grid gap-2">
+                  <label className="text-xs font-medium text-muted-foreground">{names[kind]}</label>
+                  <Select
+                    value={draft[kind] ?? "all"}
+                    onValueChange={(value) =>
+                      setDraft((d) => ({ ...d, [kind]: value === "all" ? undefined : value }))
+                    }
+                  >
+                    <SelectTrigger className="h-9 w-full text-sm" aria-label={`Filter by ${names[kind]}`}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All {names[kind].toLowerCase()}s</SelectItem>
+                      {dimensions[kind].map((entity) => (
                         <SelectItem key={entity.id} value={entity.id}>
                           {entity.name}
                         </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
-            <div className="grid gap-1.5">
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-2">
               <label className="text-xs font-medium text-muted-foreground">Date range</label>
-              <div className="flex items-center gap-2">
-                <Input
-                  aria-label="From date"
-                  type="date"
-                  value={draft.from ?? ""}
-                  max={draft.to}
-                  onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
-                  className="h-9 text-sm"
-                />
-                <span className="text-xs text-muted-foreground">–</span>
-                <Input
-                  aria-label="To date"
-                  type="date"
-                  value={draft.to ?? ""}
-                  min={draft.from}
-                  max="2026-09-26"
-                  onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
-                  className="h-9 text-sm"
+              <div className="flex flex-wrap gap-1.5">
+                {([7, 30, 90] as const).map((days) => {
+                  const from = shiftDate("2026-09-26", -(days - 1));
+                  const active = draft.from === from && draft.to === "2026-09-26";
+                  return (
+                    <FilterChip
+                      key={days}
+                      label={`Last ${days} days`}
+                      active={active}
+                      onClick={() =>
+                        setDraft((d) => ({ ...d, from, to: "2026-09-26" }))
+                      }
+                    />
+                  );
+                })}
+                <FilterChip
+                  label="Custom"
+                  active={
+                    !!draft.from &&
+                    ![7, 30, 90].some(
+                      (days) => draft.from === shiftDate("2026-09-26", -(days - 1)) && draft.to === "2026-09-26",
+                    )
+                  }
+                  onClick={() =>
+                    setDraft((d) => ({ ...d, from: d.from ?? "2026-09-01", to: d.to ?? "2026-09-26" }))
+                  }
                 />
               </div>
+              {draft.from && (
+                <div className="flex items-center gap-2">
+                  <Input
+                    aria-label="From date"
+                    type="date"
+                    value={draft.from}
+                    max={draft.to}
+                    onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
+                    className="h-9 text-sm"
+                  />
+                  <span className="text-xs text-muted-foreground">–</span>
+                  <Input
+                    aria-label="To date"
+                    type="date"
+                    value={draft.to ?? ""}
+                    min={draft.from}
+                    max="2026-09-26"
+                    onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
+                    className="h-9 text-sm"
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div className="flex items-center justify-between gap-2 pt-2">
