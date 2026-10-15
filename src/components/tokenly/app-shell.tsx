@@ -62,7 +62,9 @@ function dateDaysBack(days: number) {
   return date.toISOString().slice(0, 10);
 }
 function dateMonthsBack(months: number) {
-  const [year, month, day] = lastDay.split("-").map(Number);
+  const year = Number(lastDay.slice(0, 4));
+  const month = Number(lastDay.slice(5, 7));
+  const day = Number(lastDay.slice(8, 10));
   return new Date(Date.UTC(year, month - 1 - months, day)).toISOString().slice(0, 10);
 }
 export const RANGE_PRESETS = [
