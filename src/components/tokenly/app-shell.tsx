@@ -1,7 +1,6 @@
 import { useProjectsStore } from "@/components/tokenly/projects-store";
 import { useLimitsStore } from "@/components/tokenly/limits-store";
 import { NotificationCenter } from "@/components/tokenly/notification-center";
-import { Gate } from "@/components/tokenly/role-gate";
 import { ROLES, useRole, workspaceActions } from "@/components/tokenly/workspace-store";
 import { toast } from "sonner";
 import { TopUpDialog } from "@/components/tokenly/billing-view";
