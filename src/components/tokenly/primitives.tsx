@@ -132,9 +132,9 @@ export function StatusBadge({
     <span
       className={cn(
         "inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-medium",
-        status === "healthy" && "bg-muted text-foreground",
+        status === "healthy" && "bg-success-muted text-success",
         status === "warning" && "bg-foreground/12 text-foreground",
-        status === "critical" && "bg-foreground text-background",
+        status === "critical" && "bg-critical-muted text-critical",
         status === "neutral" && "text-muted-foreground ring-1 ring-inset ring-border",
       )}
     >

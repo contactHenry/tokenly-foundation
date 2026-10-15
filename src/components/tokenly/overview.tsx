@@ -300,7 +300,7 @@ export function StatusRow({ data }: { data: OverviewData }) {
         <p
           className={cn(
             "mt-4 inline-flex items-center gap-1 text-xs font-medium",
-            delta === null ? "text-muted-foreground" : delta > 0 ? "text-critical" : "text-success",
+            delta === null ? "text-muted-foreground" : delta > 0 ? "text-success" : "text-critical",
           )}
         >
           {delta === null ? (
@@ -685,7 +685,7 @@ export function TopConsumers({ data, range }: { data: OverviewData; range: DateS
                     <span
                       className={cn(
                         "flex w-5 justify-end",
-                        row.change !== null && row.change > 0 ? "text-critical" : "text-success",
+                        row.change !== null && row.change > 0 ? "text-success" : "text-critical",
                       )}
                       title={
                         row.change === null

@@ -144,12 +144,12 @@
   --sidebar-border: #e6e6e6;
   --sidebar-ring: var(--ring);
   /* Status: text colours stay black; badges differ by fill (see StatusBadge). */
-  --success: #0a0a0a;
-  --success-muted: #f4f4f4;
+  --success: #15803d;
+  --success-muted: #dcfce7;
   --warning: #0a0a0a;
   --warning-muted: #e6e6e6;
-  --critical: #0a0a0a;
-  --critical-muted: #e6e6e6;
+  --critical: #dc2626;
+  --critical-muted: #fee2e2;
   --shadow-surface: var(--tokenly-shadow-card);
   --shadow-raised: 0 1px 2px rgba(10, 10, 10, 0.06), 0 16px 40px -12px rgba(10, 10, 10, 0.18);
   /* Former accent tones collapse to ink on no fill. */
@@ -203,12 +203,12 @@
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: #222222;
   --sidebar-ring: var(--ring);
-  --success: #fafafa;
-  --success-muted: #1a1a1a;
+  --success: #4ade80;
+  --success-muted: #052e16;
   --warning: #fafafa;
   --warning-muted: #2a2a2a;
-  --critical: #fafafa;
-  --critical-muted: #2a2a2a;
+  --critical: #f87171;
+  --critical-muted: #450a0a;
   --shadow-surface: 0 0 0 0 transparent;
   --shadow-raised: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
 }
