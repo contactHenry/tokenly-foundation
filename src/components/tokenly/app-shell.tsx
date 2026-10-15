@@ -11,7 +11,6 @@ import {
   ChevronDown,
   CircleHelp,
   Moon,
-  Plus,
   Settings,
   Sun,
   Check,
