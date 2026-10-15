@@ -54,6 +54,7 @@ import {
   groupEvents,
   labelFor,
   measure,
+  MODEL_COLORS,
   money,
   shiftDate,
   type Dimension,
