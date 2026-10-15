@@ -2,7 +2,7 @@ import { ConfirmDelete } from "@/components/tokenly/confirm-delete";
 import { IconTile } from "@/components/tokenly/primitives";
 import { toast } from "sonner";
 import { Gate } from "./role-gate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -33,7 +33,8 @@ import {
 import { AlertBanner, DataTable, StatusBadge, type Column } from "@/components/tokenly/primitives";
 import { invoices, models } from "@/lib/mock";
 import { cn } from "@/lib/utils";
-import { useRole } from "@/components/tokenly/workspace-store";
+import { useRole, useWorkspace } from "@/components/tokenly/workspace-store";
+import { downloadInvoice } from "./invoice-pdf";
 import {
   BONUS_TIERS,
   PLAN,
@@ -667,41 +668,25 @@ export function PaymentMethodsCard() {
 }
 
 /* ---------- Invoices ---------- */
-function downloadPdf(number: string, date: string, amount: number, status: string) {
-  const lines = [
-    "Tokenly - Acme Studio",
-    `Invoice ${number}`,
-    `Date: ${fmtDate(date)}`,
-    `Amount: ${money(amount, 2)}`,
-    `Status: ${status}`,
-    "Sample invoice generated in preview.",
-  ];
-  const stream = `BT /F1 14 Tf 72 740 Td 20 TL ${lines.map((l) => `(${l.replace(/[()\\]/g, "")}) Tj T*`).join(" ")} ET`;
-  const objs = [
-    "<< /Type /Catalog /Pages 2 0 R >>",
-    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
-    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-  ];
-  let pdf = "%PDF-1.4\n";
-  const offsets: number[] = [];
-  objs.forEach((o, i) => {
-    offsets.push(pdf.length);
-    pdf += `${i + 1} 0 obj\n${o}\nendobj\n`;
-  });
-  const xref = pdf.length;
-  pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  const url = URL.createObjectURL(new Blob([pdf], { type: "application/pdf" })),
-    a = document.createElement("a");
-  a.href = url;
-  a.download = `${number}.pdf`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 export function InvoicesSection() {
   const canPay = useRole().can("manageBilling");
   const { invoiceStatus } = useBillingStore();
+  const { general } = useWorkspace();
+  const [pdfs, setPdfs] = useState<Record<string, Blob>>({});
+  const [pdfError, setPdfError] = useState(false);
+  const [pdfAttempt, setPdfAttempt] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setPdfs({});
+    setPdfError(false);
+    import("./invoice-pdf").then(async ({ createInvoicePdf }) => {
+      const results = await Promise.all(invoices.map(async (invoice) => [invoice.id,
+        await createInvoicePdf({ ...invoice, workspace: general.name, status: invoiceStatus[invoice.id] ?? "paid" }),
+      ] as const));
+      if (active) setPdfs(Object.fromEntries(results));
+    }).catch(() => { if (active) setPdfError(true); });
+    return () => { active = false; };
+  }, [invoiceStatus, general.name, pdfAttempt]);
   const [retrying, setRetrying] = useState(false);
   const rows = invoices.map((i) => ({
     ...i,
@@ -744,7 +729,13 @@ export function InvoicesSection() {
           size="icon"
           className="size-8"
           aria-label={`Download ${r.number} PDF`}
-          onClick={() => downloadPdf(r.number, r.date, r.amount, r.st)}
+          disabled={!pdfs[r.id] && !pdfError}
+          title={pdfError ? "Retry preparing invoice" : pdfs[r.id] ? "Download invoice" : "Preparing invoice…"}
+          onClick={() => {
+            const blob = pdfs[r.id];
+            if (!blob) { setPdfAttempt((attempt) => attempt + 1); return; }
+            void downloadInvoice(blob, `${r.number}.pdf`).catch(() => toast.error("Invoice could not be downloaded. Please try again."));
+          }}
         >
           <Download className="size-4" />
         </Button>
@@ -786,6 +777,7 @@ export function InvoicesSection() {
         />
       )}
       <DataTable rows={rows} columns={columns} />
+      {pdfError && <p role="alert" className="text-sm text-critical">Invoices could not be prepared. Select a download icon to retry.</p>}
     </section>
   );
 }

@@ -15,6 +15,7 @@
 - Projects & Keys changes (new projects, keys, revocations) are saved on the current device only; why: the preview has no accounts yet.
 - Limits & Alerts budgets, rule settings and alert statuses are saved on the current device only; why: the preview has no accounts yet.
 - Billing (balance, top-ups, auto-recharge, cards, invoice status) and workspace settings/team/role preview live in device-only stores (tokenly-billing-v1, tokenly-workspace-v1); why: no accounts or payment provider yet.
+- Invoice PDFs are prepared client-side from current invoice and workspace data before download; why: preserve accurate statuses and synchronous mobile download activation without inventing legal or tax details.
 - Permissions come from ROLE_PERMS in workspace-store; gate actions with <Gate perm> so denied actions render disabled with a tooltip; why: one source of truth for role-aware UI.
 - Icons come from src/components/icons.tsx (Phosphor regular/bold line icons behind lucide-style names), never directly from an icon package. Icons appear in navigation, metric cards and buttons (add/create actions lead with Plus); section headers and list rows stay text-only, and IconTile renders nothing unless `plain`; why: a quiet, professional monochrome UI.
 - Corner radii follow the brand scale in src/styles.css (rounded-sm/md 6px controls, lg/xl 12px cards and popovers, 2xl 16px dialogs, 3xl 24px hero); dots, avatars, toggles and progress bars stay rounded-full; page headers use <PageHeader>; why: one consistent shape and page identity.
