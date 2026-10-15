@@ -85,20 +85,39 @@ const titles: Record<string, string> = {
 };
 function SideNavigation() {
   const path = useRouterState({ select: (state) => state.location.pathname });
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, state, toggleSidebar } = useSidebar();
+  const collapsed = state === "collapsed";
   const projectsState = useProjectsStore(),
     limitsState = useLimitsStore();
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border/60">
       <SidebarHeader className="p-3 pt-4 group-data-[collapsible=icon]:px-2">
-        <Link
-          to="/"
-          aria-label="Tokenly home"
-          className="flex items-center rounded-md px-1.5 py-1"
-          onClick={() => setOpenMobile(false)}
-        >
-          <Logo />
-        </Link>
+        <div className="flex items-center gap-1">
+          {collapsed ? (
+            <button
+              type="button"
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+              className="flex items-center rounded-md px-1.5 py-1"
+              onClick={() => toggleSidebar()}
+            >
+              <Logo />
+            </button>
+          ) : (
+            <Link
+              to="/"
+              aria-label="Tokenly home"
+              className="flex items-center rounded-md px-1.5 py-1"
+              onClick={() => setOpenMobile(false)}
+            >
+              <Logo />
+            </Link>
+          )}
+          <SidebarTrigger
+            className="ml-auto size-8 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden"
+            title="Collapse sidebar"
+          />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
