@@ -520,7 +520,10 @@ export function UsageView() {
                   }
                 />
               </div>
-              {draft.from && (
+              {draft.from &&
+                ![7, 30, 90].some(
+                  (days) => draft.from === shiftDate("2026-09-26", -(days - 1)) && draft.to === "2026-09-26",
+                ) && (
                 <div className="flex items-center gap-2">
                   <Input
                     aria-label="From date"
