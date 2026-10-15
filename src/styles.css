@@ -283,7 +283,7 @@
   box-shadow: var(--shadow-surface);
 }
 
-/* Buttons and form fields use the small brand radius (6px) */
+/* Buttons and form fields use the small brand radius (4px) */
 @layer components {
   button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]):not([role="tab"]),
   input:not([type="checkbox"]):not([type="radio"]),
