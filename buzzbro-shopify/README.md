@@ -45,7 +45,8 @@ so it doesn't slow first paint. Free Spline plans show a small "Built with Splin
 
 ## 3. Store setup that matches the design
 
-**Products**
+**Products** — `products.csv` (Products → Import) creates all seven as drafts: the kit, the blade refill, the four attachments and the face sponge. Then add each product's image from `product-images/`, create a smart collection “Blades” with *tag equals blades*, and set the products to Active.
+
 - *BuzzBro SmoothShave Kit 2.0*: price $39.99, compare-at $124.88 (the "Save 60 %" badge is calculated automatically). Image: `product-images/smoothshave-kit-2.png`.
 - Blades / attachments (facial brush, sideburn trimmer, guard combs, nose & ear trimmer), with images from `product-images/`.
 - Optional subtitle under each card title: create a product metafield `custom.subtitle` (single-line text).
