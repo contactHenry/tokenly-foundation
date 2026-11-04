@@ -5,7 +5,7 @@
     "header": {
       "type": "header",
       "settings": {
-        "menu": "main-menu",
+        "menu": "buzzbro-main-menu",
         "transparent_on_home": true,
         "show_country_selector": true
       }

@@ -77,7 +77,7 @@ The FAQ, shipping, warranty and contact copy from Figma is already in the templa
 the pages need no body text.
 
 **Menus** (Online Store → Navigation):
-- `main-menu`: Home, Blades, Our Story
+- `buzzbro-main-menu`: Home, Blades, Our Story (separate from `main-menu` so the previous theme keeps its navigation)
 - `footer-shop`: Home, Blades, SmoothShave 2.0
 - `footer-help`: FAQs and Help Center, Shipping & Returns Policy, Product Warranty, Contact Us
 - `footer-company`: Our Story, Reviews, Career, Blog
