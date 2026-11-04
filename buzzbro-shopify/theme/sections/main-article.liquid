@@ -1,0 +1,12 @@
+<article class="page-width page-head policy" style="max-width: 900px">
+  <p class="card__subtitle">{{ article.published_at | date: format: 'date' }}</p>
+  <h1 class="page-title" style="margin-top: 8px">{{ article.title | escape }}</h1>
+  {%- if article.image -%}
+    <div style="margin-top: 32px">{{ article.image | image_url: width: 1800 | image_tag: loading: 'eager', widths: '800, 1200, 1800', sizes: '(max-width: 900px) 100vw, 900px', alt: article.title }}</div>
+  {%- endif -%}
+  <div class="rte" style="margin-top: 32px">{{ article.content }}</div>
+</article>
+
+{% schema %}
+{ "name": "Blog post" }
+{% endschema %}

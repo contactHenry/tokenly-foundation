@@ -1,0 +1,219 @@
+{%- comment -%}
+  "Frequently ask Questions | Review" tabs under the product (Figma 157:2744, 166:3528, 170:4235).
+  - FAQ blocks render as an accordion.
+  - Review blocks render the built-in review list. If you install a reviews app, add its
+    app block here and it replaces the built-in list.
+  - "Write A Review" opens a form that emails the review to the store (Shopify contact form)
+    so you can approve it before publishing.
+{%- endcomment -%}
+{%- liquid
+  assign faq_blocks = section.blocks | where: 'type', 'faq'
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign app_blocks = section.blocks | where: 'type', '@app'
+
+  assign review_total = review_blocks.size
+  assign c5 = 0
+  assign c4 = 0
+  assign c3 = 0
+  assign c2 = 0
+  assign c1 = 0
+  assign sum = 0
+  for r in review_blocks
+    assign sum = sum | plus: r.settings.rating
+    case r.settings.rating
+      when 5
+        assign c5 = c5 | plus: 1
+      when 4
+        assign c4 = c4 | plus: 1
+      when 3
+        assign c3 = c3 | plus: 1
+      when 2
+        assign c2 = c2 | plus: 1
+      else
+        assign c1 = c1 | plus: 1
+    endcase
+  endfor
+
+  assign avg = 0
+  if review_total > 0
+    assign avg = sum | times: 1.0 | divided_by: review_total | round: 2
+  endif
+  if section.settings.summary_rating != blank
+    assign avg = section.settings.summary_rating
+  endif
+  assign shown_total = section.settings.summary_count | default: review_total
+
+  assign max_count = c5
+  if c4 > max_count
+    assign max_count = c4
+  endif
+  if c3 > max_count
+    assign max_count = c3
+  endif
+  if c2 > max_count
+    assign max_count = c2
+  endif
+  if c1 > max_count
+    assign max_count = c1
+  endif
+  if max_count == 0
+    assign max_count = 1
+  endif
+  assign counts = c5 | append: ',' | append: c4 | append: ',' | append: c3 | append: ',' | append: c2 | append: ',' | append: c1 | split: ','
+
+  assign start_tab = section.settings.default_tab
+  assign review_form_id = 'ReviewForm-' | append: section.id
+-%}
+
+<section class="page-width product-tabs" id="reviews" data-tabs>
+  <div class="tabs__list" role="tablist">
+    <button class="tabs__tab" role="tab" type="button" id="tab-faq-{{ section.id }}" aria-controls="panel-faq-{{ section.id }}" aria-selected="{% if start_tab == 'faq' %}true{% else %}false{% endif %}" data-tab>
+      {{ section.settings.faq_label | escape }}
+    </button>
+    <button class="tabs__tab" role="tab" type="button" id="tab-reviews-{{ section.id }}" aria-controls="panel-reviews-{{ section.id }}" aria-selected="{% if start_tab == 'reviews' %}true{% else %}false{% endif %}" data-tab>
+      {{ section.settings.reviews_label | escape }}
+    </button>
+  </div>
+
+  <div class="tabs__panel" role="tabpanel" id="panel-faq-{{ section.id }}" aria-labelledby="tab-faq-{{ section.id }}"{% unless start_tab == 'faq' %} hidden{% endunless %}>
+    <div class="accordion">
+      {%- for block in faq_blocks -%}
+        <details {{ block.shopify_attributes }}{% if forloop.first %} open{% endif %}>
+          <summary>{{ block.settings.question | escape }}{% render 'icon', name: 'chevron-down' %}</summary>
+          <div class="accordion__body rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="tabs__panel" role="tabpanel" id="panel-reviews-{{ section.id }}" aria-labelledby="tab-reviews-{{ section.id }}"{% unless start_tab == 'reviews' %} hidden{% endunless %}>
+    {%- if app_blocks.size > 0 -%}
+      {%- for block in app_blocks -%}{% render block %}{%- endfor -%}
+    {%- else -%}
+      <div class="reviews">
+        <div>
+          <h2 class="reviews__summary-title">{{ 'reviews.customer_reviews' | t }}</h2>
+          <div class="reviews__score">
+            <span class="reviews__avg">{{ avg }}</span>
+            <div>
+              {% render 'stars', rating: avg, size: 'lg' %}
+              <p class="reviews__based">{{ 'reviews.based_on' | t: count: shown_total }}</p>
+            </div>
+          </div>
+          <ul class="reviews__bars" role="list">
+            {%- for count in counts -%}
+              {%- assign stars_n = 6 | minus: forloop.index -%}
+              {%- assign pct = count | times: 100.0 | divided_by: max_count -%}
+              <li>
+                {% render 'stars', rating: stars_n %}
+                <span class="reviews__bar"><span style="width: {{ pct }}%"></span></span>
+                <span>{{ count }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+          <button class="reviews__write" type="button" data-review-open aria-controls="{{ review_form_id }}" aria-expanded="false">{{ 'reviews.write' | t }}</button>
+        </div>
+
+        <div>
+          {%- form 'contact', id: review_form_id, class: 'review-form', data-review-form: '' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="form-message" role="status" data-review-posted>{{ 'reviews.thanks' | t }}</p>
+            {%- endif -%}
+            {%- if form.errors -%}
+              <p class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</p>
+            {%- endif -%}
+            <div class="review-form" data-review-fields{% unless form.errors %} hidden{% endunless %}>
+              <h3>{{ 'reviews.write_heading' | t }}</h3>
+              <input type="hidden" name="contact[subject]" value="Product review: {{ product.title | escape }}">
+              <input type="hidden" name="contact[product]" value="{{ product.title | escape }} ({{ shop.url }}{{ product.url }})">
+              <fieldset class="field field--sm" style="border:0;padding:0;margin:0">
+                <legend class="field__label">{{ 'reviews.rating' | t }}</legend>
+                <div class="star-input">
+                  {%- for i in (1..5) reversed -%}
+                    <input type="radio" id="rv-{{ section.id }}-{{ i }}" name="contact[rating]" value="{{ i }}"{% if i == 5 %} checked{% endif %}>
+                    <label for="rv-{{ section.id }}-{{ i }}"><span class="visually-hidden">{{ i }}</span>{% render 'icon', name: 'star' %}</label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+              <div class="field field--sm">
+                <label for="rv-title-{{ section.id }}">{{ 'reviews.title' | t }}</label>
+                <input id="rv-title-{{ section.id }}" type="text" name="contact[review_title]" required placeholder="{{ 'reviews.title_placeholder' | t }}">
+              </div>
+              <div class="field field--sm">
+                <label for="rv-body-{{ section.id }}">{{ 'reviews.body' | t }}</label>
+                <textarea id="rv-body-{{ section.id }}" name="contact[body]" required placeholder="{{ 'reviews.body_placeholder' | t }}"></textarea>
+              </div>
+              <div class="field field--sm">
+                <label for="rv-name-{{ section.id }}">{{ 'reviews.name' | t }}</label>
+                <input id="rv-name-{{ section.id }}" type="text" name="contact[name]" required autocomplete="name" placeholder="{{ 'reviews.name_placeholder' | t }}">
+              </div>
+              <div class="field field--sm">
+                <label for="rv-email-{{ section.id }}">{{ 'reviews.email' | t }}</label>
+                <input id="rv-email-{{ section.id }}" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'reviews.email_placeholder' | t }}">
+              </div>
+              <div class="review-form__actions">
+                <button class="btn btn--ghost" type="button" data-review-cancel>{{ 'reviews.cancel' | t }}</button>
+                <button class="btn btn--primary" type="submit">{{ 'reviews.submit' | t }}</button>
+              </div>
+            </div>
+          {%- endform -%}
+
+          <div data-review-list>
+            {%- for block in review_blocks -%}
+              <article class="review" {{ block.shopify_attributes }}{% if forloop.index > section.settings.per_page %} hidden data-review-more{% endif %}>
+                <div class="review__head">
+                  {% render 'stars', rating: block.settings.rating %}
+                  <h3 class="review__title">{{ block.settings.title | escape }}</h3>
+                  <span class="review__date">{{ block.settings.date | escape }}</span>
+                </div>
+                <div class="review__body">{{ block.settings.body }}</div>
+                <p class="review__author"><span class="review__avatar" aria-hidden="true">{% render 'icon', name: 'avatar' %}</span>{{ block.settings.author | escape }}</p>
+              </article>
+            {%- endfor -%}
+          </div>
+          {%- if review_blocks.size > section.settings.per_page -%}
+            <div class="reviews__more"><button type="button" data-review-load-more>{{ 'general.load_more' | t }}</button></div>
+          {%- endif -%}
+        </div>
+      </div>
+
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ & reviews tabs",
+  "settings": [
+    { "type": "text", "id": "faq_label", "label": "FAQ tab label", "default": "Frequently ask Questions" },
+    { "type": "text", "id": "reviews_label", "label": "Reviews tab label", "default": "Review" },
+    { "type": "select", "id": "default_tab", "label": "Open tab", "default": "reviews", "options": [{ "value": "faq", "label": "FAQ" }, { "value": "reviews", "label": "Reviews" }] },
+    { "type": "range", "id": "per_page", "label": "Reviews shown before “Load More”", "min": 1, "max": 10, "step": 1, "default": 2 },
+    { "type": "text", "id": "summary_rating", "label": "Average rating override", "info": "Leave empty to calculate it from the reviews below." },
+    { "type": "number", "id": "summary_count", "label": "Review count override" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Does it provide a razor-smooth shave?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes! Our electric rotary shaver is specifically designed to deliver a close and smooth shave.</p>" }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "title", "label": "Title", "default": "Best Head Shave Ever!" },
+        { "type": "text", "id": "date", "label": "Date", "default": "07/07/2024" },
+        { "type": "richtext", "id": "body", "label": "Review", "default": "<p>I’ve tried countless razors, but SmoothShave 2.0 is a game-changer.</p>" },
+        { "type": "text", "id": "author", "label": "Name", "default": "James D." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "FAQ & reviews tabs" }]
+}
+{% endschema %}

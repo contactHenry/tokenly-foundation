@@ -1,0 +1,21 @@
+<section class="page-width account account--wide">
+  <h1 class="page-title">{{ 'customer.account' | t }}</h1>
+  <p style="margin-top:12px"><a class="link-underline" href="{{ routes.account_logout_url }}">{{ 'customer.logout' | t }}</a></p>
+  <h2 style="margin-top:40px;font-size:24px">{{ 'customer.orders' | t }}</h2>
+  {%- paginate customer.orders by 20 -%}
+    {%- if customer.orders.size > 0 -%}
+      <table>
+        <thead><tr><th>{{ 'customer.order' | t }}</th><th>{{ 'customer.date' | t }}</th><th>{{ 'customer.status' | t }}</th><th>{{ 'customer.total' | t }}</th></tr></thead>
+        <tbody>
+          {%- for order in customer.orders -%}
+            <tr><td><a class="link-underline" href="{{ order.customer_url }}">{{ order.name }}</a></td><td>{{ order.created_at | date: format: 'date' }}</td><td>{{ order.fulfillment_status_label }}</td><td>{{ order.total_price | money }}</td></tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- else -%}
+      <p style="margin-top:12px">{{ 'customer.no_orders' | t }}</p>
+    {%- endif -%}
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+  <p style="margin-top:32px"><a class="link-underline" href="{{ routes.account_addresses_url }}">{{ 'customer.addresses' | t }} ({{ customer.addresses_count }})</a></p>
+</section>

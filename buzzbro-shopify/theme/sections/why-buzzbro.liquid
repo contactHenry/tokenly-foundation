@@ -1,0 +1,84 @@
+{%- comment -%} "Why use BuzzBro" — video card + benefits list (Figma node 145:1973). {%- endcomment -%}
+{%- liquid
+  assign video = section.settings.video
+  assign ext_video = section.settings.video_url
+  assign has_video = false
+  if video != blank or ext_video != blank
+    assign has_video = true
+  endif
+-%}
+<section class="page-width why">
+  <h2 class="why__heading">{{ section.settings.heading | escape }}</h2>
+  <div class="why__grid">
+    <div class="why__media" data-video-card>
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '600, 900, 1200', sizes: '(max-width: 900px) 100vw, 564px', alt: section.settings.image.alt | default: '' }}
+      {%- elsif video != blank and video.preview_image -%}
+        {{ video.preview_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: '' }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+
+      <template data-video-template>
+        {%- if video != blank -%}
+          {{ video | video_tag: autoplay: true, controls: true, playsinline: true, image_size: '1200x' }}
+        {%- elsif ext_video != blank -%}
+          {%- if ext_video.type == 'youtube' -%}
+            <iframe src="https://www.youtube.com/embed/{{ ext_video.id }}?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="{{ section.settings.caption | escape }}"></iframe>
+          {%- else -%}
+            <iframe src="https://player.vimeo.com/video/{{ ext_video.id }}?autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="{{ section.settings.caption | escape }}"></iframe>
+          {%- endif -%}
+        {%- endif -%}
+      </template>
+
+      <span class="why__overlay" aria-hidden="true"></span>
+      {%- if has_video or request.design_mode -%}
+        <button class="why__play" type="button" data-video-play aria-label="{{ 'accessibility.play_video' | t }}"{% unless has_video %} disabled{% endunless %}>
+          {% render 'icon', name: 'play' %}
+        </button>
+      {%- endif -%}
+      <p class="why__caption">{{ section.settings.caption | escape }}</p>
+    </div>
+
+    <div>
+      <h3 class="why__list-title">{{ section.settings.list_title | escape }}</h3>
+      <div class="why__rule" aria-hidden="true"></div>
+      <ul class="why__list" role="list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Why BuzzBro",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why use BuzzBro" },
+    { "type": "image_picker", "id": "image", "label": "Cover image", "info": "Portrait, 564 × 800 or larger." },
+    { "type": "video", "id": "video", "label": "Video (uploaded)" },
+    { "type": "video_url", "id": "video_url", "label": "Or YouTube / Vimeo URL", "accept": ["youtube", "vimeo"] },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Shave in 90 Seconds" },
+    { "type": "text", "id": "list_title", "label": "List title", "default": "Shave in 90 Seconds" }
+  ],
+  "blocks": [
+    { "type": "benefit", "name": "Benefit", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Razor Close Smooth" }] }
+  ],
+  "presets": [
+    {
+      "name": "Why BuzzBro",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Razor Close Smooth" } },
+        { "type": "benefit", "settings": { "text": "Zero Nicks or Cuts" } },
+        { "type": "benefit", "settings": { "text": "No Irritation" } },
+        { "type": "benefit", "settings": { "text": "Wet or Dry Shaving" } },
+        { "type": "benefit", "settings": { "text": "Ergonomic Handheld" } },
+        { "type": "benefit", "settings": { "text": "Used on any body area" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

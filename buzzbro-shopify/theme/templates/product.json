@@ -1,0 +1,101 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title" },
+        "description": { "type": "description" },
+        "price": { "type": "price" },
+        "rating": { "type": "rating" },
+        "perks": {
+          "type": "perks",
+          "settings": {
+            "heading": "Free Shipping & Lifetime Warranty!",
+            "bullets": "Change or cancel anytime\nBlade Refills for $24.95 every 2 months\nBlades deliver up to 50 smooth shaves each"
+          }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "subscribe_label": "Subscribe Now",
+            "buy_label": "Add to cart",
+            "show_dynamic_checkout": false,
+            "show_delivery": true,
+            "delivery_days": 3,
+            "cutoff_hour": 17
+          }
+        },
+        "trust": {
+          "type": "trust",
+          "settings": {
+            "text_1": "Free Shipping and Easy Returns 30-Day Trial & Guarantee Product Benefits",
+            "text_2": "Free Shipping and Easy Returns 30-Day Trial & Guarantee Product Benefits"
+          }
+        }
+      },
+      "block_order": ["title", "description", "price", "rating", "perks", "buy", "trust"],
+      "settings": { "default_to_subscription": true }
+    },
+    "tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "faq1": {
+          "type": "faq",
+          "settings": {
+            "question": "Does it provide a razor-smooth shave?",
+            "answer": "<p>Yes! Our electric rotary shaver is specifically designed to deliver a close and smooth shave. With multiple rotary blades moving in a circular motion, it cuts hair as close to the skin as possible. The pivoting head adapts to the contours of your scalp, ensuring a comfortable and effortless shaving experience. With proper technique, you can achieve a clean, polished look with ease.</p>"
+          }
+        },
+        "faq2": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to shave my head?",
+            "answer": "<p>Our shaver is built for speed and efficiency. Equipped with multiple rotary blades and a powerful motor, it allows you to shave your head in as little as 90 seconds. The advanced design ensures a smooth, consistent shave in minimal time.</p>"
+          }
+        },
+        "faq3": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use it to shave my face, beard, or body?",
+            "answer": "<p>While primarily designed for head shaving, our shaver is versatile enough for other areas, including the face, chest, back, arms, legs, and more. It’s also safe for below-the-waist grooming, making it a convenient all-in-one grooming tool.</p>"
+          }
+        },
+        "faq4": {
+          "type": "faq",
+          "settings": {
+            "question": "Does it work on coarse or curly hair?",
+            "answer": "<p>Absolutely! Our electric rotary shaver is engineered to handle all hair types, including coarse and curly hair. The combination of powerful rotary blades and a flexible pivoting head ensures an even and comfortable shave, even in tricky areas. Whether you have fine, straight hair or thick, curly hair, you can count on our shaver for a clean, smooth finish.</p>"
+          }
+        },
+        "r1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Best Head Shave Ever!",
+            "date": "07/07/2024",
+            "body": "<p>I’ve tried countless razors, but SmoothShave 2.0 is a game-changer. It glides effortlessly, gives an ultra-close shave, and doesn’t irritate my skin. My head has never felt smoother</p>",
+            "author": "James D."
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Quick & Easy Shave",
+            "date": "07/07/2024",
+            "body": "<p>This kit has cut my shaving time in half! No more struggling with multiple passes—one smooth motion, and I’m done. Highly recommend it to anyone looking for a hassle-free shave!</p>",
+            "author": "Mark R."
+          }
+        }
+      },
+      "block_order": ["faq1", "faq2", "faq3", "faq4", "r1", "r2"],
+      "settings": {
+        "faq_label": "Frequently ask Questions",
+        "reviews_label": "Review",
+        "default_tab": "reviews",
+        "per_page": 2
+      }
+    }
+  },
+  "order": ["main", "tabs"]
+}

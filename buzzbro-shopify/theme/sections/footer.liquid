@@ -1,0 +1,92 @@
+<footer class="site-footer">
+  <div class="page-width">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <div>
+          {%- form 'customer', class: 'newsletter', id: 'FooterNewsletter' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label class="footer-heading" for="FooterEmail">{{ section.settings.newsletter_heading | escape }}</label>
+            {%- if form.posted_successfully? -%}
+              <p class="newsletter__msg" role="status">{{ 'newsletter.success' | t }}</p>
+            {%- endif -%}
+            {%- if form.errors -%}
+              <p class="newsletter__msg" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+            {%- endif -%}
+            <div class="newsletter__field">
+              <input id="FooterEmail" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'newsletter.placeholder' | t }}">
+              <button type="submit" aria-label="{{ 'newsletter.submit' | t }}">{% render 'icon', name: 'arrow-right' %}</button>
+            </div>
+          {%- endform -%}
+
+          <ul class="social" role="list">
+            {%- assign networks = 'facebook,instagram,x,youtube' | split: ',' -%}
+            {%- assign links = settings.social_facebook_link | append: '|' | append: settings.social_instagram_link | append: '|' | append: settings.social_twitter_link | append: '|' | append: settings.social_youtube_link | split: '|' -%}
+            {%- assign labels = 'Facebook,Instagram,X,YouTube' | split: ',' -%}
+            {%- for network in networks -%}
+              {%- assign href = links[forloop.index0] -%}
+              {%- if href != blank or request.design_mode -%}
+                <li>
+                  <a href="{% if href != blank %}{{ href }}{% else %}#{% endif %}"{% if href != blank %} target="_blank" rel="noopener"{% endif %} aria-label="{{ 'accessibility.social' | t: network: labels[forloop.index0] }}">
+                    {% render 'icon', name: network %}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+
+        <a class="site-footer__logo" href="{{ routes.root_url }}">{% render 'logo', variant: 'inverse', loading: 'lazy' %}</a>
+      </div>
+
+      <div class="site-footer__cols">
+        {%- for block in section.blocks -%}
+          {%- assign col_menu = linklists[block.settings.menu] -%}
+          <div class="footer-col" {{ block.shopify_attributes }}>
+            <h2 class="footer-heading">{{ block.settings.heading | escape }}</h2>
+            <ul role="list">
+              {%- for link in col_menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <ul class="site-footer__legal" role="list">
+        {%- assign legal = linklists[section.settings.legal_menu] -%}
+        {%- if legal.links.size > 0 -%}
+          {%- for link in legal.links -%}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{%- endfor -%}
+        {%- else -%}
+          {%- if shop.privacy_policy -%}<li><a href="{{ shop.privacy_policy.url }}">Privacy Policy</a></li>{%- endif -%}
+          {%- if shop.terms_of_service -%}<li><a href="{{ shop.terms_of_service.url }}">Terms &amp; Conditions</a></li>{%- endif -%}
+        {%- endif -%}
+      </ul>
+      <p>&copy; {{ shop.name | upcase }} {{ 'now' | date: '%Y' }}</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "enabled_on": { "groups": ["footer"] },
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "News Letter Sign Up" },
+    { "type": "link_list", "id": "legal_menu", "label": "Legal menu", "info": "Defaults to your Privacy and Terms policies." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "SHOP" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Footer" }]
+}
+{% endschema %}

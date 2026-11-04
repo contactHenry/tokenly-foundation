@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "contact-page",
+      "settings": {
+        "heading": "Contact Us"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

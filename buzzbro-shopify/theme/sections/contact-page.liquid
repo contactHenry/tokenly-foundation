@@ -1,0 +1,52 @@
+{%- comment -%} Contact Us page (Figma node 125:8282). {%- endcomment -%}
+<section class="page-width page-head contact">
+  <h1 class="page-title">{{ section.settings.heading | default: page.title | escape }}</h1>
+  {%- if section.settings.intro != blank -%}<div class="page-intro">{{ section.settings.intro }}</div>{%- endif -%}
+
+  <div class="contact__grid">
+    {%- form 'contact', class: 'contact__form', id: 'ContactForm' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-message" role="status">{{ 'contact.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <p class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+      <div class="field">
+        <label for="ContactName">{{ 'contact.name' | t }}</label>
+        <input id="ContactName" type="text" name="contact[name]" autocomplete="name" required placeholder="{{ 'contact.name_placeholder' | t }}" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+      </div>
+      <div class="field">
+        <label for="ContactEmail">{{ 'contact.email' | t }}</label>
+        <input id="ContactEmail" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'contact.email_placeholder' | t }}" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+      </div>
+      <div class="field">
+        <label for="ContactBody">{{ 'contact.message' | t }}</label>
+        <textarea id="ContactBody" name="contact[body]" required placeholder="{{ 'contact.message_placeholder' | t }}">{{ form.body }}</textarea>
+      </div>
+      <div>
+        <button class="btn btn--send" type="submit">{{ 'contact.send' | t }}</button>
+        {%- if section.settings.legal != blank -%}<div class="contact__legal">{{ section.settings.legal }}</div>{%- endif -%}
+      </div>
+    {%- endform -%}
+
+    <div class="contact__image">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1300 | image_tag: loading: 'lazy', widths: '640, 960, 1300', sizes: '(max-width: 900px) 100vw, 638px', alt: section.settings.image.alt | default: '' }}
+      {%- else -%}
+        <img src="{{ 'contact-support.png' | asset_url }}" alt="" width="638" height="584" loading="lazy">
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact page",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Contact Us" },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>Shop stress-free this holiday season! Enjoy our 30-day money-back guarantee on all holiday purchases. Buy now, gift later, and if it’s not the perfect fit, returns are easy and hassle-free.</p>" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "richtext", "id": "legal", "label": "Small print", "default": "<p>This site is protected by reCAPTCHA Enterprise and the Google Privacy Policy and Terms of Service apply.</p>" }
+  ],
+  "presets": [{ "name": "Contact page" }]
+}
+{% endschema %}

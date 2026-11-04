@@ -1,0 +1,17 @@
+{%- comment -%}
+  Renders 5 stars for a rating value (0–5). Usage: {% render 'stars', rating: 4.5, size: 'lg' %}
+{%- endcomment -%}
+{%- assign r = rating | default: 0 | times: 1.0 -%}
+<span class="stars{% if size == 'lg' %} stars--lg{% endif %}" role="img" aria-label="{{ 'accessibility.rating' | t: rating: r }}">
+  {%- for i in (1..5) -%}
+    {%- assign full_at = i | times: 1.0 -%}
+    {%- assign half_at = i | minus: 0.5 -%}
+    {%- if r >= full_at -%}
+      {% render 'icon', name: 'star' %}
+    {%- elsif r >= half_at -%}
+      {% render 'icon', name: 'star-half' %}
+    {%- else -%}
+      {% render 'icon', name: 'star-outline' %}
+    {%- endif -%}
+  {%- endfor -%}
+</span>

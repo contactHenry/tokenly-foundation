@@ -1,0 +1,56 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "BuzzBro",
+    "theme_version": "1.0.0",
+    "theme_author": "BuzzBro",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      { "type": "image_picker", "id": "logo", "label": "Logo (dark, for light backgrounds)", "info": "Leave empty to use the BuzzBro logo bundled with the theme." },
+      { "type": "image_picker", "id": "logo_inverse", "label": "Logo (light, for the footer)" },
+      { "type": "range", "id": "logo_width", "label": "Header logo width", "min": 100, "max": 320, "step": 5, "unit": "px", "default": 225 },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_navy", "label": "Primary (buttons, prices, footer)", "default": "#14103B" },
+      { "type": "color", "id": "color_ink", "label": "Body text", "default": "#333333" },
+      { "type": "color", "id": "color_badge", "label": "Sale badge", "default": "#7279FF" },
+      { "type": "color", "id": "color_lime", "label": "Accent lime", "default": "#C9EC56" },
+      { "type": "color", "id": "color_mint", "label": "Mint (hero gradient, testimonial bar)", "default": "#D5FFCC" },
+      { "type": "color", "id": "color_sky", "label": "Sky (hero gradient)", "default": "#D6E9FF" },
+      { "type": "color", "id": "color_ice", "label": "Ice blue (call-to-action band)", "default": "#EBF4FF" },
+      { "type": "color", "id": "color_alert", "label": "Contact form button", "default": "#F41E1E" },
+      { "type": "color", "id": "color_star", "label": "Rating stars", "default": "#FFC700" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "type_body_font", "label": "Font", "default": "inter_n4", "info": "The design uses Inter. Medium, semibold, bold and extra-bold italic weights load automatically." }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      { "type": "checkbox", "id": "show_sale_badge", "label": "Show “Save %” badge on discounted products", "default": true },
+      { "type": "text", "id": "sale_badge_text", "label": "Badge text", "default": "Save [percent] %", "info": "[percent] is replaced with the discount." },
+      { "type": "checkbox", "id": "show_ratings", "label": "Show star ratings", "default": true, "info": "Reads the standard reviews.rating and reviews.rating_count product metafields that review apps (Judge.me, Shopify Product Reviews, Okendo…) fill in." }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_facebook_link", "label": "Facebook", "placeholder": "https://facebook.com/buzzbro" },
+      { "type": "text", "id": "social_instagram_link", "label": "Instagram", "placeholder": "https://instagram.com/buzzbro" },
+      { "type": "text", "id": "social_twitter_link", "label": "X (Twitter)", "placeholder": "https://x.com/buzzbro" },
+      { "type": "text", "id": "social_youtube_link", "label": "YouTube", "placeholder": "https://youtube.com/@buzzbro" }
+    ]
+  }
+]

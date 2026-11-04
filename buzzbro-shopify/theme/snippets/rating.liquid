@@ -1,0 +1,20 @@
+{%- comment -%}
+  Product rating row ("4.5 ★★★★★   126 REVIEWS") read from the standard
+  reviews.rating / reviews.rating_count metafields that review apps populate.
+  Falls back to the optional section-supplied values for a product without metafields.
+{%- endcomment -%}
+{%- liquid
+  assign rating_value = product.metafields.reviews.rating.value.rating | default: fallback_rating
+  assign rating_count = product.metafields.reviews.rating_count.value | default: fallback_count
+-%}
+{%- if settings.show_ratings and rating_value != blank -%}
+  <div class="rating{% if class %} {{ class }}{% endif %}">
+    <span class="rating__score">
+      {{ rating_value | round: 1 }}
+      {% render 'stars', rating: rating_value %}
+    </span>
+    {%- if rating_count != blank -%}
+      <a class="rating__count link-underline" href="{{ product.url }}#reviews">{{ 'products.reviews_count' | t: count: rating_count }}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

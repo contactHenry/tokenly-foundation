@@ -1,0 +1,21 @@
+{%- comment -%}
+  Brand logo. variant: 'inverse' for dark backgrounds. Falls back to the bundled Figma logo.
+{%- endcomment -%}
+{%- liquid
+  if variant == 'inverse'
+    assign logo_img = settings.logo_inverse
+    assign fallback = 'buzzbro-logo-white.png'
+    assign w = 359
+    assign h = 88
+  else
+    assign logo_img = settings.logo
+    assign fallback = 'buzzbro-logo.png'
+    assign w = 226
+    assign h = 56
+  endif
+-%}
+{%- if logo_img != blank -%}
+  {{ logo_img | image_url: width: 720 | image_tag: alt: shop.name, loading: loading, widths: '240, 360, 480, 720', sizes: '(max-width: 900px) 150px, 360px' }}
+{%- else -%}
+  <img src="{{ fallback | asset_url }}" alt="{{ shop.name | escape }}" width="{{ w }}" height="{{ h }}" loading="{{ loading | default: 'eager' }}">
+{%- endif -%}

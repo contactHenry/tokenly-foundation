@@ -1,0 +1,127 @@
+{%- comment -%}
+  Home hero (Figma node 145:1785). The product in the centre is rendered by a Spline scene
+  through the <spline-viewer> web component. The product photo stays underneath as the
+  poster: it shows while the scene loads, if no scene URL is set, if WebGL is unavailable,
+  and for visitors who prefer reduced motion (when "Respect reduced motion" is on).
+{%- endcomment -%}
+{%- liquid
+  assign cta_product = section.settings.product
+  assign cta_link = section.settings.button_link
+  if cta_link == blank and cta_product != blank
+    assign cta_link = cta_product.url
+  endif
+  if cta_link == blank
+    assign cta_link = routes.all_products_collection_url
+  endif
+  assign spline_url = section.settings.spline_url | strip
+-%}
+<section
+  class="hero"
+  id="hero-{{ section.id }}"
+  data-hero
+  {% if spline_url != blank %}data-spline-url="{{ spline_url | escape }}"{% endif %}
+  data-spline-reduced-motion="{{ section.settings.respect_reduced_motion }}"
+  style="--spline-width: {{ section.settings.spline_width }}px; --spline-height: {{ section.settings.spline_height }}%; --spline-top: {{ section.settings.spline_top }}%;"
+>
+  <div class="hero__stage">
+    <h1 class="hero__wordmark" aria-label="{{ section.settings.wordmark | escape }}">{{ section.settings.wordmark | escape }}</h1>
+
+    <div class="hero__media{% if spline_url == blank and section.settings.fallback_motion %} hero__media--float{% endif %}"{% if spline_url == blank and section.settings.fallback_motion %} data-tilt{% endif %}>
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '400, 600, 800, 1200', sizes: '(max-width: 900px) 240px, 391px', alt: section.settings.image.alt | default: section.settings.wordmark }}
+      {%- else -%}
+        <img src="{{ 'hero-smoothshave.png' | asset_url }}" alt="BuzzBro SmoothShave 2.0" width="391" height="520" fetchpriority="high">
+      {%- endif -%}
+    </div>
+
+    {%- if spline_url != blank -%}
+      <div class="hero__spline" data-spline-mount aria-hidden="true"></div>
+    {%- endif -%}
+
+    {%- if section.settings.tagline_left != blank -%}
+      <p class="hero__tagline hero__tagline--left">{{ section.settings.tagline_left | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.tagline_right != blank -%}
+      <p class="hero__tagline hero__tagline--right">{{ section.settings.tagline_right | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="hero__cta">
+        <a class="btn btn--hero" href="{{ cta_link }}">{{ section.settings.button_label | escape }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if spline_url != blank -%}
+  <script type="module">
+    (() => {
+      const hero = document.getElementById('hero-{{ section.id }}');
+      if (!hero) return;
+      const url = hero.dataset.splineUrl;
+      const reduce = hero.dataset.splineReducedMotion === 'true' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvas = document.createElement('canvas');
+      const webgl = !!(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+      if (!url || reduce || !webgl) return;
+
+      const mount = hero.querySelector('[data-spline-mount]');
+      const start = () => {
+        import('https://unpkg.com/@splinetool/viewer@2.0.82/build/spline-viewer.js')
+          .then(() => {
+            const viewer = document.createElement('spline-viewer');
+            viewer.setAttribute('url', url);
+            viewer.setAttribute('loading', 'eager');
+            {%- if section.settings.show_hint %}
+            viewer.setAttribute('hint', '');
+            {%- endif %}
+            viewer.addEventListener('load-complete', () => hero.classList.add('is-spline-ready'), { once: true });
+            mount.appendChild(viewer);
+          })
+          .catch(() => { /* keep the poster image */ });
+      };
+
+      // Load the 3D runtime once the hero is near the viewport so it never blocks first paint.
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) { io.disconnect(); start(); }
+        }, { rootMargin: '200px' });
+        io.observe(hero);
+      } else {
+        start();
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Hero (Spline 3D)",
+  "tag": "div",
+  "settings": [
+    { "type": "header", "content": "Spline 3D scene" },
+    {
+      "type": "text",
+      "id": "spline_url",
+      "label": "Spline scene URL",
+      "placeholder": "https://prod.spline.design/XXXXXXXX/scene.splinecode",
+      "info": "In Spline: Export → Spline Viewer → Update → copy the .splinecode URL. Give the scene a transparent background so the BUZZBRO wordmark shows behind it."
+    },
+    { "type": "range", "id": "spline_width", "label": "Scene width", "min": 300, "max": 1200, "step": 20, "unit": "px", "default": 640 },
+    { "type": "range", "id": "spline_height", "label": "Scene height", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 72 },
+    { "type": "range", "id": "spline_top", "label": "Scene top offset", "min": 0, "max": 30, "step": 1, "unit": "%", "default": 4 },
+    { "type": "checkbox", "id": "show_hint", "label": "Show “drag to rotate” hint", "default": false },
+    { "type": "checkbox", "id": "respect_reduced_motion", "label": "Respect reduced motion", "default": true, "info": "Visitors who turned off animations see the still product image." },
+    { "type": "header", "content": "Poster / fallback image" },
+    { "type": "image_picker", "id": "image", "label": "Product image", "info": "Transparent PNG. Shown until the 3D scene has loaded. Defaults to the SmoothShave 2.0 photo from the design." },
+    { "type": "checkbox", "id": "fallback_motion", "label": "Float and tilt the image when no Spline scene is set", "default": true },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "BUZZBRO" },
+    { "type": "text", "id": "tagline_left", "label": "Left tagline", "default": "The Closest Shave, The Softest Touch." },
+    { "type": "text", "id": "tagline_right", "label": "Right tagline", "default": "Leaves no Nicks, Cuts after Shave." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Get the SmoothShave 2.0" },
+    { "type": "product", "id": "product", "label": "Button product" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Overrides the product link." }
+  ],
+  "presets": [{ "name": "Hero (Spline 3D)" }]
+}
+{% endschema %}

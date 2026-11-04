@@ -1,0 +1,81 @@
+{%- liquid
+  assign overlay = false
+  if section.settings.transparent_on_home and template.name == 'index'
+    assign overlay = true
+  endif
+  assign menu = linklists[section.settings.menu]
+-%}
+<header class="site-header{% if overlay %} site-header--overlay{% endif %}" style="--logo-width: {{ settings.logo_width }}px;">
+  <div class="site-header__inner page-width">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="SiteNav" data-menu-toggle>
+      <span class="visually-hidden">{{ 'general.menu' | t }}</span>
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    <a class="site-header__logo" href="{{ routes.root_url }}">
+      {% render 'logo', loading: 'eager' %}
+    </a>
+
+    <nav class="site-header__nav" aria-label="Main">
+      <ul class="site-nav" id="SiteNav">
+        {%- if menu.links.size > 0 -%}
+          {%- for link in menu.links -%}
+            <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="{{ routes.root_url }}"{% if template.name == 'index' %} aria-current="page"{% endif %}>Home</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}">Blades</a></li>
+          <li><a href="{{ routes.root_url }}pages/our-story">Our Story</a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {%- if section.settings.show_country_selector and localization.available_countries.size > 1 -%}
+        {%- form 'localization', class: 'country-selector', data-country-selector: '' -%}
+          <button class="country-selector__toggle" type="button" aria-expanded="false" aria-controls="CountryList" data-country-toggle>
+            <span class="visually-hidden">{{ 'accessibility.country_selector' | t }}: {{ localization.country.name }}</span>
+            {%- if localization.country.iso_code == 'US' -%}
+              <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="50" height="50">
+            {%- else -%}
+              <span class="country-selector__code" aria-hidden="true">{{ localization.country.iso_code }}</span>
+            {%- endif -%}
+            {% render 'icon', name: 'chevron-down' %}
+          </button>
+          <ul class="country-selector__list" id="CountryList" role="list" hidden>
+            {%- for country in localization.available_countries -%}
+              <li>
+                <button type="submit" name="country_code" value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %}>
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endform -%}
+      {%- elsif section.settings.show_country_selector -%}
+        <span class="country-selector__toggle" aria-hidden="true">
+          <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="50" height="50">
+        </span>
+      {%- endif -%}
+
+      <a class="cart-link" href="{{ routes.cart_url }}">
+        <span class="visually-hidden">{{ 'accessibility.cart_count' | t: count: cart.item_count }}</span>
+        {% render 'icon', name: 'bag' %}
+        <span class="cart-link__count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %} aria-hidden="true">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Design uses: Home, Blades, Our Story." },
+    { "type": "checkbox", "id": "transparent_on_home", "label": "Float over the hero on the home page", "default": true },
+    { "type": "checkbox", "id": "show_country_selector", "label": "Show country / currency selector", "default": true, "info": "Add markets in Settings → Markets to let shoppers switch country." }
+  ]
+}
+{% endschema %}

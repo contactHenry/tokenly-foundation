@@ -1,0 +1,10 @@
+<section class="page-width page-head policy">
+  <h1 class="page-title">{{ page.title | escape }}</h1>
+  {%- if page.content != blank -%}
+    <div class="rte" style="margin-top: 32px">{{ page.content }}</div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{ "name": "Page content", "tag": "div" }
+{% endschema %}

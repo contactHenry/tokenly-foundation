@@ -1,0 +1,24 @@
+{%- comment -%}
+  Price row: current price, struck-through compare-at price, and "Save %" badge.
+  Usage: {% render 'price', product: product, variant: variant %}
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign on_sale = false
+  if target.compare_at_price > target.price
+    assign on_sale = true
+    assign saving = target.compare_at_price | minus: target.price | times: 100.0 | divided_by: target.compare_at_price | round
+  endif
+-%}
+<div class="price-row" data-price-row>
+  <div class="price">
+    <span class="visually-hidden">{% if on_sale %}{{ 'products.sale_price' | t }}{% else %}{{ 'products.regular_price' | t }}{% endif %}</span>
+    <span class="price__current" data-price>{{ target.price | money }}</span>
+    {%- if on_sale -%}
+      <s class="price__compare" data-compare-price>{{ target.compare_at_price | money }}</s>
+    {%- endif -%}
+  </div>
+  {%- if on_sale and settings.show_sale_badge -%}
+    <span class="badge-sale" data-sale-badge>{{ settings.sale_badge_text | replace: '[percent]', saving }}</span>
+  {%- endif -%}
+</div>

@@ -1,0 +1,19 @@
+<section class="page-width account account--wide">
+  <p><a class="link-underline" href="{{ routes.account_url }}">← {{ 'customer.account' | t }}</a></p>
+  <h1 class="page-title" style="margin-top:16px">{{ 'customer.order' | t }} {{ order.name }}</h1>
+  <p style="margin-top:8px">{{ order.created_at | date: format: 'date_at_time' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+  <table>
+    <thead><tr><th>Product</th><th>{{ 'products.quantity' | t }}</th><th>{{ 'customer.total' | t }}</th></tr></thead>
+    <tbody>
+      {%- for line in order.line_items -%}
+        <tr><td>{{ line.title | escape }}</td><td>{{ line.quantity }}</td><td>{{ line.final_line_price | money }}</td></tr>
+      {%- endfor -%}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="2">{{ 'cart.subtotal' | t }}</td><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+      {%- for s in order.shipping_methods -%}<tr><td colspan="2">{{ s.title | escape }}</td><td>{{ s.price | money }}</td></tr>{%- endfor -%}
+      <tr><td colspan="2"><strong>{{ 'customer.total' | t }}</strong></td><td><strong>{{ order.total_price | money_with_currency }}</strong></td></tr>
+    </tfoot>
+  </table>
+  {%- if order.shipping_address -%}<div style="margin-top:32px">{{ order.shipping_address | format_address }}</div>{%- endif -%}
+</section>

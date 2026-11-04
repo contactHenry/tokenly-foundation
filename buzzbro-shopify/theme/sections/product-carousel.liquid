@@ -1,0 +1,43 @@
+{%- comment -%} "Gear up with BuzzBro Full on Pack" product carousel (Figma nodes 154:2417, 154:2644). {%- endcomment -%}
+{%- assign coll = section.settings.collection -%}
+<section class="page-width section-pad" data-carousel>
+  <div class="gear-up">
+    <div class="gear-up__row">
+      <h2 class="gear-up__big">{{ section.settings.heading | escape }}</h2>
+      <span class="gear-up__small">{{ section.settings.heading_suffix | escape }}</span>
+    </div>
+    <p class="gear-up__sub">{{ section.settings.subheading | escape }}</p>
+  </div>
+
+  <div class="carousel">
+    <ul class="carousel__track" role="list" data-carousel-track tabindex="0" aria-label="{{ section.settings.heading | escape }}">
+      {%- if coll != blank and coll.products_count > 0 -%}
+        {%- for p in coll.products limit: section.settings.limit -%}
+          <li>{% render 'product-card', card_product: p %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        <li>{% render 'product-card-placeholder', image: 'card-brush.png', title: 'Smooth Shave 2.0 Blade' %}</li>
+        <li>{% render 'product-card-placeholder', image: 'card-trimmer.png', title: 'Smooth Shave 2.0 Blade' %}</li>
+        <li>{% render 'product-card-placeholder', image: 'card-guards.png', title: 'Smooth Shave 2.0 Blade' %}</li>
+      {%- endif -%}
+    </ul>
+    <div class="carousel__controls">
+      <button class="icon-btn icon-btn--grey" type="button" data-carousel-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'arrow-up' %}</button>
+      <button class="icon-btn" type="button" data-carousel-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'arrow-up' %}</button>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product carousel",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Gear up" },
+    { "type": "text", "id": "heading_suffix", "label": "Heading suffix", "default": "with" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "BuzzBro Full on Pack" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "E.g. a “Blades & Attachments” collection." },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 3, "max": 12, "step": 1, "default": 6 }
+  ],
+  "presets": [{ "name": "Product carousel" }]
+}
+{% endschema %}

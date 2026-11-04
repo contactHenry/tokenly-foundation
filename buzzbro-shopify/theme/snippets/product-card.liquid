@@ -1,0 +1,39 @@
+{%- comment -%}
+  Product card from the "Gear up" carousel: bordered image tile with a round "+" quick-add,
+  price + compare + Save badge, title, subtitle and rating.
+  Subtitle comes from the custom.subtitle product metafield (e.g. "SmoothShave 2.0 Attachment").
+{%- endcomment -%}
+{%- liquid
+  assign variant = card_product.selected_or_first_available_variant
+  assign subtitle = card_product.metafields.custom.subtitle.value
+-%}
+<article class="card">
+  <div class="card__media">
+    <a href="{{ card_product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if card_product.featured_media -%}
+        {{ card_product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(max-width: 640px) 86vw, (max-width: 1024px) 50vw, 407px', alt: card_product.featured_media.alt | default: card_product.title }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </a>
+    {%- if variant.available -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="card__quick-add" data-quick-add>
+        <input type="hidden" name="id" value="{{ variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="icon-btn icon-btn--card" aria-label="{{ 'products.quick_add' | t: title: card_product.title | escape }}">
+          {% render 'icon', name: 'plus' %}
+        </button>
+      </form>
+    {%- endif -%}
+  </div>
+  <div class="card__info">
+    {% render 'price', product: card_product, variant: variant %}
+    <div class="card__titles">
+      <h3 class="product-title-lg card__title"><a href="{{ card_product.url }}">{{ card_product.title | escape }}</a></h3>
+      {%- if subtitle != blank -%}
+        <p class="card__subtitle">{{ subtitle | escape }}</p>
+      {%- endif -%}
+    </div>
+    {% render 'rating', product: card_product %}
+  </div>
+</article>

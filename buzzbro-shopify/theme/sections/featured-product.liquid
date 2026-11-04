@@ -1,0 +1,83 @@
+{%- comment -%} "See What's New" featured product (Figma node 154:2415). {%- endcomment -%}
+{%- liquid
+  assign fp = section.settings.product
+  assign shop_all = section.settings.shop_all_link | default: routes.all_products_collection_url
+-%}
+<section class="page-width section-pad">
+  <div class="section-bar">
+    <h2>{{ section.settings.bar_title | escape }}</h2>
+    <a href="{{ shop_all }}">{{ section.settings.shop_all_label | escape }}</a>
+  </div>
+
+  <div class="whats-new">
+    <div class="whats-new__card">
+      {%- if section.settings.show_new_pill -%}
+        <span class="pill-new">{{ 'products.new' | t }}</span>
+      {%- endif -%}
+      <a class="feature-media" href="{% if fp %}{{ fp.url }}{% else %}{{ shop_all }}{% endif %}">
+        {%- if fp and fp.featured_media -%}
+          {{ fp.featured_media | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '500, 750, 1000', sizes: '(max-width: 900px) 100vw, 490px', alt: fp.featured_media.alt | default: fp.title }}
+        {%- else -%}
+          <img src="{{ 'kit-smoothshave.png' | asset_url }}" alt="BuzzBro SmoothShave Kit 2.0" width="490" height="490" loading="lazy">
+        {%- endif -%}
+      </a>
+
+      <div class="feature-info">
+        {%- if fp -%}
+          {% render 'price', product: fp %}
+          <h3 class="product-title-lg">{{ fp.title | escape }}</h3>
+          {%- assign v = fp.selected_or_first_available_variant -%}
+          <div class="actions-row">
+            <a class="btn btn--primary btn--small" href="{{ fp.url }}">{{ 'products.buy_now' | t }}</a>
+            {%- if v.available -%}
+              <form method="post" action="{{ routes.cart_add_url }}" data-quick-add>
+                <input type="hidden" name="id" value="{{ v.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button class="icon-btn" type="submit" aria-label="{{ 'products.quick_add' | t: title: fp.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+              </form>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div class="price-row">
+            <div class="price"><span class="price__current">$39.99</span><s class="price__compare">$124.88</s></div>
+            <span class="badge-sale">Save 60 %</span>
+          </div>
+          <h3 class="product-title-lg">BuzzBro SmoothShave Kit 2.0</h3>
+          <div class="actions-row">
+            <a class="btn btn--primary btn--small" href="{{ shop_all }}">{{ 'products.buy_now' | t }}</a>
+            <span class="icon-btn" aria-hidden="true">{% render 'icon', name: 'plus' %}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="whats-new__copy">
+      <p class="whats-new__lead">{{ section.settings.lead | escape }}</p>
+      <p class="whats-new__body">{{ section.settings.body | escape }}</p>
+    </div>
+
+    <div class="whats-new__display">
+      <a href="{{ shop_all }}">
+        <p class="whats-new__display-title">{{ section.settings.display_title | escape | newline_to_br }}</p>
+        <span class="whats-new__arrow" aria-hidden="true">{% render 'icon', name: 'arrow-big-right' %}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product", "info": "The design features the SmoothShave Kit 2.0." },
+    { "type": "text", "id": "bar_title", "label": "Section label", "default": "See Whats New" },
+    { "type": "text", "id": "shop_all_label", "label": "Link label", "default": "Shop All" },
+    { "type": "url", "id": "shop_all_link", "label": "Link" },
+    { "type": "checkbox", "id": "show_new_pill", "label": "Show “New” pill", "default": true },
+    { "type": "textarea", "id": "lead", "label": "Lead text", "default": "Experience the ultimate head shave with the SmoothShave Pro 2.0 Kit." },
+    { "type": "textarea", "id": "body", "label": "Body text", "default": "Engineered with precision and enhanced performance, this kit delivers a smooth, effortless head shave every time. It provides a closer shave, superior comfort, and long-lasting results." },
+    { "type": "textarea", "id": "display_title", "label": "Display heading", "default": "See\nWhat’s\nNew" }
+  ],
+  "presets": [{ "name": "Featured product" }]
+}
+{% endschema %}

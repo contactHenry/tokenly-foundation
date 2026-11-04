@@ -1,0 +1,26 @@
+{%- comment -%}
+  Shown in the editor before a collection is chosen, so the carousel previews like the Figma design.
+{%- endcomment -%}
+<article class="card">
+  <div class="card__media">
+    <img src="{{ image | asset_url }}" alt="" width="406" height="443" loading="lazy">
+    <span class="card__quick-add"><span class="icon-btn icon-btn--card">{% render 'icon', name: 'plus' %}</span></span>
+  </div>
+  <div class="card__info">
+    <div class="price-row">
+      <div class="price">
+        <span class="price__current">$24.95</span>
+        <s class="price__compare">$39.90</s>
+      </div>
+      <span class="badge-sale">Save 60 %</span>
+    </div>
+    <div class="card__titles">
+      <h3 class="product-title-lg">{{ title }}</h3>
+      <p class="card__subtitle">SmoothShave 2.0 Attachment</p>
+    </div>
+    <div class="rating">
+      <span class="rating__score">4.5 {% render 'stars', rating: 4.5 %}</span>
+      <span class="rating__count">126 Reviews</span>
+    </div>
+  </div>
+</article>

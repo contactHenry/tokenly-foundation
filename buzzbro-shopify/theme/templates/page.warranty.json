@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "main": {
+      "type": "policy-page",
+      "blocks": {
+        "b0": {
+          "type": "text",
+          "settings": {
+            "title": "Limited Warranty",
+            "text": "<p>We guarantee that the products listed below are free from defects in materials and workmanship for their respective warranty periods, provided the following conditions are met:</p>"
+          }
+        },
+        "b1": {
+          "type": "text",
+          "settings": {
+            "title": "Eligibility Requirements",
+            "text": "<p>To approve your warranty claim, the following conditions must be satisfied:</p><ul><li>The product must have been purchased from our official website or an authorized Buzzbro dealer.</li><li>You must provide proof of purchase.</li><li>If requested, you must return the product to Buzzbro.</li><li>The product must have been used only as intended and according to its instructions.</li></ul><p>If a defect occurs under these conditions during the Warranty Period, we will, at our discretion, repair or replace the defective product or part.</p>"
+          }
+        },
+        "b2": {
+          "type": "text",
+          "settings": {
+            "title": "Warranty Exclusions",
+            "text": "<ul><li>Modifications, repairs, or replacement parts not provided by Buzzbro.</li><li>Normal wear and tear is not covered.</li><li>If a limited edition or discontinued product is unavailable, we will provide an equivalent replacement.</li><li>Replacement products may have design updates that differ from the original.</li></ul>"
+          }
+        },
+        "b3": {
+          "type": "text",
+          "settings": {
+            "title": "Warranty Periods",
+            "text": "<ul><li><strong>1-Year Warranty:</strong> All customers who purchase a SmoothShave 2.0 are automatically enrolled in a standard 1-year warranty.</li><li><strong>Lifetime Warranty:</strong> Customers with an Active Blade Subscription are upgraded to a lifetime warranty. To maintain eligibility, a replenishment box must be received within 90 days of submitting a warranty claim. A maximum of two warranty claims is allowed per 12-month period.</li><li><strong>Subscription Termination:</strong> If the Active Blade Subscription is canceled, the warranty reverts to the standard 1-year warranty, which expires one year from the original purchase date.</li></ul>"
+          }
+        },
+        "b4": {
+          "type": "text",
+          "settings": {
+            "title": "Warranty Claim Process",
+            "text": "<ul><li><strong>Contact Us</strong> – Reach out through our <a href=\"/pages/contact\">contact page</a> with your purchase details and claim request.</li><li><strong>Return the Product (If Required)</strong> – If a return is needed, we’ll provide a prepaid shipping label.</li><li><strong>Processing</strong> – Once we receive your item, we’ll notify you and process your request.</li><li><strong>Decision</strong> – Warranty claims are typically reviewed within 5-7 business days after receiving your product.</li></ul>"
+          }
+        },
+        "b5": {
+          "type": "text",
+          "settings": {
+            "title": "Warranty Disclaimer",
+            "text": "<p>This Limited Warranty is the only express warranty provided. Implied warranties, including merchantability or fitness for a specific purpose, are limited to the duration of this warranty. Some states do not allow limitations on implied warranties or exclusions of incidental damages, so these exclusions may not apply to you.</p><p>This warranty provides specific legal rights, and additional rights may vary by state. Available only in the USA—resellers, agents, or employees cannot modify or extend this warranty. If you purchased your product from an unauthorized retailer, this warranty does not apply.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {
+        "heading": "Limited Warranty",
+        "show_page_content": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
