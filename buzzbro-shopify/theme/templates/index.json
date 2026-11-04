@@ -13,17 +13,40 @@
         "wordmark": "BUZZBRO",
         "tagline_left": "The Closest Shave, The Softest Touch.",
         "tagline_right": "Leaves no Nicks, Cuts after Shave.",
-        "button_label": "Get the SmoothShave 2.0"
+        "button_label": "Get the SmoothShave 2.0",
+        "product": "buzzbro-smoothshave-kit-2-0"
       }
     },
     "companion": {
       "type": "shave-companion",
       "blocks": {
-        "c1": { "type": "callout", "settings": { "title": "Stout Build", "text": "Full hand grip for comfortably and ease, locks firm to hold" } },
-        "c2": { "type": "callout", "settings": { "title": "Smooth Blades", "text": "Zero Nicks or Cuts resulting in an evenly smooth shave" } },
-        "c3": { "type": "callout", "settings": { "title": "Balanced Base", "text": "Flat bottom, sits comfortably on every counter and shelf" } }
+        "c1": {
+          "type": "callout",
+          "settings": {
+            "title": "Stout Build",
+            "text": "Full hand grip for comfortably and ease, locks firm to hold"
+          }
+        },
+        "c2": {
+          "type": "callout",
+          "settings": {
+            "title": "Smooth Blades",
+            "text": "Zero Nicks or Cuts resulting in an evenly smooth shave"
+          }
+        },
+        "c3": {
+          "type": "callout",
+          "settings": {
+            "title": "Balanced Base",
+            "text": "Flat bottom, sits comfortably on every counter and shelf"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
       "settings": {
         "eyebrow": "The SmoothShave",
         "title": "The Ultimate\nShave Companion"
@@ -37,7 +60,8 @@
         "show_new_pill": true,
         "lead": "Experience the ultimate head shave with the SmoothShave Pro 2.0 Kit.",
         "body": "Engineered with precision and enhanced performance, this kit delivers a smooth, effortless head shave every time. It provides a closer shave, superior comfort, and long-lasting results.",
-        "display_title": "See\nWhat’s\nNew"
+        "display_title": "See\nWhat’s\nNew",
+        "product": "buzzbro-smoothshave-kit-2-0"
       }
     },
     "gear": {
@@ -46,20 +70,58 @@
         "heading": "Gear up",
         "heading_suffix": "with",
         "subheading": "BuzzBro Full on Pack",
-        "limit": 6
+        "limit": 6,
+        "collection": "blades"
       }
     },
     "why": {
       "type": "why-buzzbro",
       "blocks": {
-        "b1": { "type": "benefit", "settings": { "text": "Razor Close Smooth" } },
-        "b2": { "type": "benefit", "settings": { "text": "Zero Nicks or Cuts" } },
-        "b3": { "type": "benefit", "settings": { "text": "No Irritation" } },
-        "b4": { "type": "benefit", "settings": { "text": "Wet or Dry Shaving" } },
-        "b5": { "type": "benefit", "settings": { "text": "Ergonomic Handheld" } },
-        "b6": { "type": "benefit", "settings": { "text": "Used on any body area" } }
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "text": "Razor Close Smooth"
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "text": "Zero Nicks or Cuts"
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "text": "No Irritation"
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "text": "Wet or Dry Shaving"
+          }
+        },
+        "b5": {
+          "type": "benefit",
+          "settings": {
+            "text": "Ergonomic Handheld"
+          }
+        },
+        "b6": {
+          "type": "benefit",
+          "settings": {
+            "text": "Used on any body area"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"],
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ],
       "settings": {
         "heading": "Why use BuzzBro",
         "caption": "Shave in 90 Seconds",
@@ -71,18 +133,52 @@
       "settings": {
         "heading": "When the Buzz gets you",
         "wordmark": "BUZZBRO",
-        "button_label": "Get the SmoothShave 2.0"
+        "button_label": "Get the SmoothShave 2.0",
+        "product": "buzzbro-smoothshave-kit-2-0"
       }
     },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
-        "t1": { "type": "testimonial", "settings": { "default_image": "testimonial-1.png", "quote": "Every shave is just smooth, no hassle at all.", "author": "Amy Lieberman" } },
-        "t2": { "type": "testimonial", "settings": { "default_image": "testimonial-2.png", "quote": "No more cuts and nicks—this shaver changed everything for me!", "author": "Solomon Ajah" } },
-        "t3": { "type": "testimonial", "settings": { "default_image": "testimonial-3.png", "quote": "Finally, no more razor bumps. This is so much better.", "author": "Cookie Melusi" } },
-        "t4": { "type": "testimonial", "settings": { "default_image": "testimonial-4.png", "quote": "Works perfectly, wet or dry. Seriously a game-changer.", "author": "Jake Strong" } }
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "default_image": "testimonial-1.png",
+            "quote": "Every shave is just smooth, no hassle at all.",
+            "author": "Amy Lieberman"
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "default_image": "testimonial-2.png",
+            "quote": "No more cuts and nicks—this shaver changed everything for me!",
+            "author": "Solomon Ajah"
+          }
+        },
+        "t3": {
+          "type": "testimonial",
+          "settings": {
+            "default_image": "testimonial-3.png",
+            "quote": "Finally, no more razor bumps. This is so much better.",
+            "author": "Cookie Melusi"
+          }
+        },
+        "t4": {
+          "type": "testimonial",
+          "settings": {
+            "default_image": "testimonial-4.png",
+            "quote": "Works perfectly, wet or dry. Seriously a game-changer.",
+            "author": "Jake Strong"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4"],
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
       "settings": {
         "heading": "Testimonials",
         "link_label": "See all reviews",
@@ -90,5 +186,13 @@
       }
     }
   },
-  "order": ["hero", "companion", "featured", "gear", "why", "cta", "testimonials"]
+  "order": [
+    "hero",
+    "companion",
+    "featured",
+    "gear",
+    "why",
+    "cta",
+    "testimonials"
+  ]
 }
