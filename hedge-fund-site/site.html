@@ -1,1127 +1,460 @@
 <title>Vesperline Capital</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Vesperline Capital is a multi-strategy investment manager for institutions and qualified investors.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@300..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <style>
-/* Layout: an editorial broadsheet with "dusk" image panels. Paper and ink carry the reading; dusk gradients, fluted glass and colour-block posters carry the brand. One ember accent, used like a footnote mark. */
+/* Layout: corporate, image-led. Full-bleed cinematic imagery for hero and section breaks; Paper and Stone sections for reading; Navy for emphasis; Copper only for small accents. One typeface, upright only. */
 :root {
-  --paper: #EFEBE3;
-  --paper-2: #E4DDD0;
-  --surface: #F7F4EE;
-  --ink: #0D1A24;
-  --muted: #4E5B64;
-  --line: rgba(13, 26, 36, .14);
-  --line-strong: rgba(13, 26, 36, .32);
-  --ember: #E8603A;
-  --tide: #2D4C61;
-  --pine: #1E3A31;
-  --mint: #B9D9C4;
-  --mist: #BFD3DE;
-  --cobalt: #3A4FD8;
-  --on-dark: #F3ECE0;
-  --on-dark-muted: rgba(243, 236, 224, .68);
-  --dusk-1: #0E2131;
-  --dusk-2: #24445A;
-  --dusk-3: #7E8B8A;
-  --dusk-4: #E7C7A0;
-  --glass: rgba(255, 255, 255, .58);
-  --glass-line: rgba(255, 255, 255, .7);
-  --glass-ink: #13212B;
-
-  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
-  --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-
-  --t-hero: clamp(3.1rem, 8.4vw, 7.6rem);
-  --t-h1: clamp(2.6rem, 6vw, 5.4rem);
-  --t-h2: clamp(2rem, 4.2vw, 3.6rem);
-  --t-h3: clamp(1.35rem, 2vw, 1.7rem);
-  --t-body: 1.0625rem;
-  --t-small: .875rem;
-  --t-label: .72rem;
-
-  --r-sm: 8px;
-  --r-md: 14px;
-  --r-lg: 28px;
-  --wrap: 1320px;
-  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
-  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --navy: #0B1F33;
+  --ink: #12171C;
+  --slate: #5E6873;
+  --paper: #F6F4F0;
+  --stone: #E8E3DA;
+  --rule: #D6D0C6;
+  --copper: #B8643E;
+  --white: #FFFFFF;
+  --on-img: #FFFFFF;
+  --on-img-muted: rgba(255, 255, 255, .78);
+  --font: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --r: 4px;
+  --wrap: 1280px;
+  --gl: max(20px, env(safe-area-inset-left, 0px));
+  --gr: max(20px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
 }
-@media (min-width: 720px) {
-  :root { --gutter-l: max(32px, env(safe-area-inset-left, 0px)); --gutter-r: max(32px, env(safe-area-inset-right, 0px)); }
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0B151C; --paper-2: #13212B; --surface: #101C25; --ink: #ECE5D8; --muted: #9AA7AF;
-    --line: rgba(236, 229, 216, .14); --line-strong: rgba(236, 229, 216, .34);
-    --ember: #F2764F; --glass: rgba(14, 28, 38, .6); --glass-line: rgba(255, 255, 255, .16); --glass-ink: #ECE5D8;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0B151C; --paper-2: #13212B; --surface: #101C25; --ink: #ECE5D8; --muted: #9AA7AF;
-  --line: rgba(236, 229, 216, .14); --line-strong: rgba(236, 229, 216, .34);
-  --ember: #F2764F; --glass: rgba(14, 28, 38, .6); --glass-line: rgba(255, 255, 255, .16); --glass-ink: #ECE5D8;
-  color-scheme: dark;
-}
+@media (min-width: 768px) { :root { --gl: max(40px, env(safe-area-inset-left, 0px)); --gr: max(40px, env(safe-area-inset-right, 0px)); } }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
-body {
-  margin: 0; background: var(--paper); color: var(--ink);
-  font-family: var(--f-body); font-size: var(--t-body); line-height: 1.6;
-  -webkit-font-smoothing: antialiased; overflow-x: hidden;
-}
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--paper); }
-a { color: inherit; }
-img, svg { max-width: 100%; }
-:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; border-radius: 4px; }
-h1, h2, h3, h4 { margin: 0; text-wrap: balance; font-weight: 400; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--navy); }
+h1, h2, h3, h4 { margin: 0; font-weight: 500; letter-spacing: -.01em; text-wrap: balance; }
 p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: var(--gl); padding-right: var(--gr); }
+.eyebrow { font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--copper); }
+.h1 { font-size: clamp(40px, 5.6vw, 68px); line-height: 1.06; letter-spacing: -.02em; }
+.h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.15; letter-spacing: -.015em; }
+.h3 { font-size: 22px; line-height: 1.3; }
+.body-l { font-size: 19px; color: var(--slate); max-width: 60ch; }
 
-.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
-.label { font-family: var(--f-mono); font-size: var(--t-label); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.serif { font-family: var(--f-display); }
-.ast { color: var(--ember); font-family: var(--f-display); font-style: normal; font-size: .55em; vertical-align: super; line-height: 0; margin-left: .04em; }
-.num { font-variant-numeric: tabular-nums; }
-.prose { max-width: 64ch; }
-.prose p + p { margin-top: 1em; }
-.lede { font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.55; max-width: 52ch; }
-.muted { color: var(--muted); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; border-radius: var(--r); font: 500 16px/1 var(--font); text-decoration: none; border: 1px solid transparent; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.btn-primary { background: var(--navy); color: var(--white); }
+.btn-primary:hover { background: #163150; }
+.btn-white { background: var(--white); color: var(--navy); }
+.btn-white:hover { background: var(--stone); }
+.btn-outline-white { border-color: rgba(255,255,255,.6); color: var(--white); }
+.btn-outline-white:hover { background: rgba(255,255,255,.1); }
+.link { display: inline-flex; gap: 8px; font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--copper); padding-bottom: 2px; }
+.link:hover { color: var(--copper); }
 
-/* ---------- Nav ---------- */
-.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
-.nav-in { display: flex; align-items: center; gap: 24px; min-height: 68px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--f-body); font-weight: 600; letter-spacing: .02em; font-size: 1.05rem; }
-.brand svg { width: 30px; height: 30px; color: var(--ember); }
-.brand small { font-family: var(--f-mono); font-weight: 400; font-size: .62rem; letter-spacing: .16em; color: var(--muted); margin-left: 2px; }
-.nav-links { display: flex; gap: 26px; margin-left: auto; list-style: none; padding: 0; margin-block: 0; }
-.nav-links a { text-decoration: none; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; padding-block: 6px; border-bottom: 1px solid transparent; }
-.nav-links a:hover, .nav-links a[aria-current="page"] { border-bottom-color: var(--ink); }
-.nav-cta { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--ember); white-space: nowrap; }
-.menu-btn { display: none; margin-left: auto; background: none; border: 1px solid var(--line-strong); color: var(--ink); border-radius: 999px; padding: 8px 14px; font: 500 .72rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
-@media (max-width: 980px) {
-  .menu-btn { display: inline-flex; }
-  .nav-cta { display: none; }
-  .nav-links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0; background: var(--paper); border-bottom: 1px solid var(--line); padding: 8px var(--gutter-r) 20px var(--gutter-l); }
-  .nav.open .nav-links { display: flex; }
-  .nav-links a { display: block; padding-block: 14px; border-bottom: 1px solid var(--line); font-size: .85rem; }
-}
+/* Image slots: rendered stand-ins, replaced by photography in Relume */
+.img { position: relative; overflow: hidden; background: var(--navy); border-radius: var(--r); }
+.img canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.img .tag { position: absolute; left: 12px; bottom: 12px; z-index: 2; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.8); background: rgba(11,31,51,.6); padding: 5px 8px; border-radius: 2px; }
 
-/* ---------- Buttons ---------- */
-.btn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font: 600 .78rem/1 var(--f-body); letter-spacing: .12em; text-transform: uppercase; padding: 8px 8px 8px 22px; border-radius: 999px; border: 1px solid currentColor; cursor: pointer; background: transparent; color: inherit; transition: background .2s, color .2s; }
-.btn .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--ember); color: #fff; display: grid; place-items: center; flex: none; transition: transform .25s; }
-.btn:hover .dot { transform: rotate(45deg); }
-.btn.solid { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.btn.light { color: var(--on-dark); }
-.btn.plain { padding: 13px 22px; }
-.arrow { width: 14px; height: 14px; }
+/* Nav */
+.nav { position: absolute; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 20; color: var(--white); border-bottom: 1px solid rgba(255,255,255,.18); }
+.nav-in { display: flex; align-items: center; gap: 32px; height: 80px; }
+.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 19px; letter-spacing: .01em; }
+.logo svg { width: 28px; height: 28px; flex: none; }
+.nav ul { display: flex; gap: 32px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav ul a { text-decoration: none; font-size: 15px; font-weight: 500; opacity: .9; }
+.nav ul a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
+.nav .acts { display: flex; gap: 12px; }
+.nav .btn { padding: 11px 18px; font-size: 15px; }
+.menu { display: none; margin-left: auto; background: none; border: 1px solid rgba(255,255,255,.5); color: var(--white); border-radius: var(--r); padding: 9px 14px; font: 500 14px var(--font); }
+@media (max-width: 1080px) { .nav ul, .nav .acts { display: none; } .menu { display: inline-block; } }
 
-/* ---------- Dusk panels (the imagery) ---------- */
-.dusk {
-  position: relative; isolation: isolate; color: var(--on-dark); overflow: hidden;
-  background:
-    radial-gradient(120% 70% at 62% 108%, var(--dusk-4) 0%, rgba(231,199,160,.55) 22%, rgba(126,139,138,.2) 46%, transparent 64%),
-    linear-gradient(176deg, var(--dusk-1) 0%, var(--dusk-2) 52%, var(--dusk-3) 82%, var(--dusk-4) 100%);
-}
-.dusk::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .35; mix-blend-mode: overlay; pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.6'/></svg>"); }
-.dusk.night { background:
-    radial-gradient(90% 60% at 30% 115%, rgba(232,96,58,.55) 0%, rgba(232,96,58,.12) 30%, transparent 55%),
-    linear-gradient(180deg, #08131C 0%, var(--dusk-1) 45%, var(--dusk-2) 100%); }
-.dusk .label { color: var(--on-dark-muted); }
+/* Hero */
+.hero { position: relative; min-height: 780px; display: flex; align-items: flex-end; color: var(--on-img); background: var(--navy); }
+.hero > .img { position: absolute; inset: 0; border-radius: 0; }
+.hero .shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(8,20,33,.6) 0%, rgba(8,20,33,.1) 30%, rgba(8,20,33,.5) 62%, rgba(8,20,33,.94) 100%); }
+.hero-in { position: relative; z-index: 2; width: 100%; padding-block: 170px 0; }
+.hero .eyebrow { color: var(--on-img-muted); }
+.hero h1 { margin-top: 20px; max-width: 16ch; }
+.hero p.lead { margin-top: 24px; font-size: 20px; color: var(--on-img-muted); max-width: 56ch; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.stats { margin-top: 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid rgba(255,255,255,.22); }
+.stat { padding: 28px 24px 36px 0; display: grid; gap: 6px; min-width: 0; align-content: start; }
+.stat + .stat { padding-left: 24px; border-left: 1px solid rgba(255,255,255,.22); }
+.stat b { font-size: clamp(30px, 3.4vw, 42px); font-weight: 500; letter-spacing: -.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 15px; color: var(--on-img-muted); }
+@media (max-width: 860px) { .hero { min-height: 0; } .hero-in { padding-top: 140px; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stat:nth-child(3) { padding-left: 0; border-left: 0; } .stat:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,.22); } }
 
-/* ---------- Home hero ---------- */
-.hero { display: grid; grid-template-columns: 1.45fr 1fr; gap: 12px; padding-block: 12px 0; }
-.hero-main { border-radius: var(--r-lg); padding: clamp(28px, 5vw, 64px); display: flex; flex-direction: column; gap: 28px; min-height: 560px; }
-.hero-main h1 { font-family: var(--f-display); font-size: var(--t-hero); line-height: .95; letter-spacing: -.02em; font-weight: 400; }
-.hero-main h1 em { font-style: italic; }
-.hero-main .lede { color: var(--on-dark-muted); }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; }
-.hero-side { border-radius: var(--r-lg); background: var(--paper-2); display: grid; grid-template-rows: 1fr auto; padding: clamp(24px, 4vw, 44px); gap: 20px; position: relative; overflow: hidden; }
-.bigmark { display: grid; place-items: center; }
-.bigmark svg { width: min(78%, 340px); height: auto; color: var(--ember); }
-.bigmark .reflect { filter: blur(7px); }
-.bigmark .top { animation: rise 6s ease-in-out infinite alternate; transform-origin: center; }
-@keyframes rise { from { transform: translateY(3px); } to { transform: translateY(-3px); } }
-.hero-side p { font-size: var(--t-small); color: var(--muted); max-width: 40ch; }
-.facts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-block: 1px solid var(--line); margin-top: 12px; }
-.fact { padding: 22px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.fact + .fact { border-left: 1px solid var(--line); }
-.fact b { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.6rem, 2.6vw, 2.3rem); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-main { min-height: 0; }
-  .hero-side { grid-template-rows: auto auto; }
-  .bigmark svg { width: min(54%, 240px); }
-  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .fact:nth-child(odd) { border-left: 0; }
-  .fact { border-top: 1px solid var(--line); }
-  .fact:nth-child(-n+2) { border-top: 0; }
-  .fact:last-child { grid-column: span 2; border-left: 0; }
-}
+/* Sections */
+.sec { padding-block: clamp(80px, 10vw, 128px); }
+.sec.stone { background: var(--stone); }
+.head { display: grid; gap: 18px; margin-bottom: 56px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 64px; align-items: end; }
+.head .eyebrow { grid-column: 1 / -1; }
+@media (max-width: 860px) { .head { grid-template-columns: 1fr; } }
 
-/* ---------- Sections ---------- */
-.section { padding-block: clamp(72px, 10vw, 136px); }
-.section.tight { padding-block: clamp(48px, 6vw, 88px); }
-.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 64px; align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
-.sec-head h2 { font-family: var(--f-display); font-size: var(--t-h2); line-height: 1.02; letter-spacing: -.015em; }
-.sec-head h2 em { font-style: italic; }
-.sec-head .label { grid-column: 1 / -1; display: flex; gap: 12px; align-items: center; }
-.sec-head .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-@media (max-width: 800px) { .sec-head { grid-template-columns: 1fr; } }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
+.two .txt { display: grid; gap: 22px; min-width: 0; }
+.two > .img { aspect-ratio: 4 / 5; max-width: 100%; }
+@media (max-width: 860px) { .two { grid-template-columns: 1fr; } .two > .img { aspect-ratio: 4 / 3; } }
 
-/* Principles (outline marks) */
-.principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
-.principle { padding: 32px 32px 8px 0; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.principle + .principle { padding-left: 32px; border-left: 1px solid var(--line); }
-.principle svg { width: 44px; height: 44px; color: var(--ink); opacity: .8; }
-.principle h3 { font-family: var(--f-body); font-weight: 600; font-size: 1.05rem; }
-.principle p { color: var(--muted); }
-@media (max-width: 800px) { .principles { grid-template-columns: 1fr; } .principle + .principle { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.card { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.card .img { aspect-ratio: 4 / 3; max-width: 100%; }
+.card p { font-size: 16px; color: var(--slate); }
+@media (max-width: 1000px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
 
-/* Uppercase grotesk headline with cursor */
-.shout { font-family: var(--f-body); font-weight: 300; text-transform: uppercase; font-size: clamp(2.2rem, 5.6vw, 4.8rem); line-height: 1; letter-spacing: -.01em; }
-.cursor { display: inline-block; width: .5em; height: .07em; background: currentColor; vertical-align: baseline; margin-left: .12em; animation: blink 1.1s steps(1) infinite; }
-@keyframes blink { 50% { opacity: 0; } }
+.strats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.strat { padding: 32px 28px 32px 0; display: grid; gap: 14px; align-content: start; min-width: 0; text-decoration: none; }
+.strat + .strat { padding-left: 28px; border-left: 1px solid var(--rule); }
+.strat .k { font-size: 13px; color: var(--slate); font-variant-numeric: tabular-nums; }
+.strat p { font-size: 16px; color: var(--slate); }
+.strat .fig { margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 15px; font-weight: 500; }
+.strat:hover h3 { color: var(--copper); }
+@media (max-width: 1000px) { .strats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .strat:nth-child(3) { padding-left: 0; border-left: 0; } .strat:nth-child(n+3) { border-top: 1px solid var(--rule); } }
+@media (max-width: 560px) { .strats { grid-template-columns: 1fr; } .strat + .strat { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); } }
 
-/* Strategy bento */
-.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
-.tile { border-radius: var(--r-md); padding: 26px; display: flex; flex-direction: column; gap: 18px; text-decoration: none; position: relative; overflow: hidden; min-height: 300px; isolation: isolate; transition: transform .35s ease; }
-.tile:hover { transform: translateY(-4px); }
-.tile .k { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; }
-.tile h3 { font-family: var(--f-display); font-size: clamp(1.7rem, 2.6vw, 2.4rem); line-height: 1.02; }
-.tile p { font-size: var(--t-small); max-width: 34ch; }
-.tile .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: end; gap: 12px; }
-.tile .big { font-family: var(--f-body); font-weight: 300; font-size: clamp(3rem, 6vw, 5.4rem); line-height: .9; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.tile .go { width: 42px; height: 42px; flex: none; }
-.t-multi { grid-column: span 5; color: var(--on-dark); }
-.t-macro { grid-column: span 7; color: #0E2131; background: linear-gradient(120deg, #9FC3E6 0%, #6FA0D8 45%, #BCD7EF 100%); }
-.t-macro::before { content: ""; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(90deg, rgba(255,255,255,.42) 0 2px, rgba(255,255,255,0) 3px 14px, rgba(20,60,110,.10) 18px 20px, rgba(255,255,255,0) 21px 26px); }
-.t-macro .split { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; height: 100%; }
-.t-macro .figs { display: grid; gap: 12px; text-align: left; }
-.t-macro .figs span { display: block; font-size: .78rem; }
-.t-credit { grid-column: span 4; color: #10261D; background: linear-gradient(160deg, #CFE6D6 0%, #A6CDB4 60%, #8DBB9F 100%); }
-.t-credit::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(16,38,29,.25); }
-.t-sys { grid-column: span 4; background: var(--paper-2); color: var(--ink); }
-.t-sys .orb { position: absolute; right: -40px; bottom: -40px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0%, var(--ember) 40%, #9B3416 100%); opacity: .9; z-index: -1; }
-.t-sys .plinth { position: absolute; right: 0; bottom: 0; width: 46%; height: 26%; background: linear-gradient(180deg, var(--surface), var(--paper)); z-index: -1; border-top-left-radius: 6px; }
-.t-cta { grid-column: span 4; border: 1px solid var(--line-strong); color: var(--ink); justify-content: space-between; }
-.t-cta .card-num { font-family: var(--f-mono); letter-spacing: .3em; font-size: 1.05rem; }
-@media (max-width: 980px) { .t-multi, .t-macro { grid-column: span 12; } .t-credit, .t-sys, .t-cta { grid-column: span 6; } .t-cta { grid-column: span 12; min-height: 0; } }
-@media (max-width: 620px) { .t-credit, .t-sys { grid-column: span 12; } .t-macro .split { grid-template-columns: 1fr; } }
+.steps { display: grid; border-top: 1px solid var(--rule); }
+.step { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; padding-block: 24px; border-bottom: 1px solid var(--rule); }
+.step .n { font-size: 15px; font-weight: 500; color: var(--copper); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.step p { font-size: 16px; color: var(--slate); margin-top: 6px; }
 
-/* Glass process tiles */
-.glass-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.gtile { border-radius: var(--r-md); min-height: 420px; padding: 24px; display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; isolation: isolate; color: var(--on-dark); }
-.g-peach { background: linear-gradient(180deg, #A9705E 0%, #8A6274 32%, #2A2F5A 72%, #11163A 100%); }
-.g-navy { background: linear-gradient(180deg, #0C1550 0%, #1B2D7A 45%, #9A9DB9 80%, #E9C5A6 100%); }
-.g-blue { background: radial-gradient(70% 60% at 50% 80%, #4E73E0 0%, #20368E 45%, #0A1240 100%); }
-.gtile h3 { font-family: var(--f-display); font-size: var(--t-h3); line-height: 1.1; }
-.gtile .label { color: var(--on-dark-muted); }
-.gtile p.cap { font-size: var(--t-small); color: var(--on-dark-muted); max-width: 34ch; }
-.gcard { margin-top: auto; background: var(--glass); color: var(--glass-ink); border: 1px solid var(--glass-line); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); border-radius: 12px; padding: 16px; display: grid; gap: 10px; font-size: .82rem; box-shadow: 0 24px 50px -20px rgba(0,0,0,.45); }
-.gcard .row { display: flex; justify-content: space-between; gap: 12px; padding-block: 6px; border-bottom: 1px solid rgba(127,127,127,.22); }
-.gcard .row:last-child { border-bottom: 0; }
-.gcard .t { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
-.gcard .v { font-variant-numeric: tabular-nums; font-weight: 600; }
-.gcard .big { font-size: 1.8rem; font-weight: 300; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.spark { width: 100%; height: 44px; display: block; }
-.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; border: 1px solid currentColor; }
-.chip.ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.globe { margin-top: auto; display: grid; place-items: center; }
-.globe svg { width: 100%; max-width: 300px; height: auto; }
-.illu { font-family: var(--f-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; opacity: .55; }
-@media (max-width: 980px) { .glass-grid { grid-template-columns: 1fr; } .gtile { min-height: 360px; } }
+.band { position: relative; color: var(--on-img); background: var(--navy); overflow: hidden; }
+.band > .img { position: absolute; inset: 0; border-radius: 0; }
+.band .shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8,20,33,.94) 0%, rgba(8,20,33,.8) 45%, rgba(8,20,33,.4) 100%); }
+.band > .wrap { position: relative; z-index: 2; padding-block: clamp(88px, 11vw, 140px); }
+.band .eyebrow { color: var(--on-img-muted); }
+.oversight { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 56px; }
+.oversight div { border-top: 1px solid rgba(255,255,255,.3); padding-top: 20px; display: grid; gap: 8px; align-content: start; }
+.oversight p { font-size: 16px; color: var(--on-img-muted); }
+@media (max-width: 900px) { .oversight { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .oversight { grid-template-columns: 1fr; } }
 
-/* Poster wall */
-.posters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border-radius: var(--r-md); overflow: hidden; }
-.poster { aspect-ratio: 3 / 4.4; max-width: 100%; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; position: relative; overflow: hidden; }
-.poster .pm { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: .85rem; letter-spacing: .02em; }
-.poster .pm svg { width: 20px; height: 20px; }
-.poster h3 { font-family: var(--f-body); font-weight: 600; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.05; letter-spacing: -.01em; }
-.p1 { background: var(--pine); color: var(--on-dark); } .p1 em { color: var(--mint); font-style: normal; }
-.p2 { background: #F4F1EA; color: #0D1A24; } .p2 .blk { position: absolute; left: -20%; right: -20%; bottom: -46%; height: 80%; border-radius: 50%; background: #0D1A24; }
-.p2 .url { position: relative; color: #F4F1EA; font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; }
-.p3 { background: var(--cobalt); color: #fff; }
-.p4 { color: var(--on-dark); }
-.p4 .ring { position: absolute; inset: 22% 14% auto; aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(243,236,224,.35); max-width: 100%; }
-.p5 { background: #0A0F2C; color: #fff; } .p5 em { font-style: normal; color: var(--mint); }
-.p1 svg, .p4 svg { color: var(--mint); } .p2 svg { color: var(--pine); } .p3 svg, .p5 svg { color: #fff; }
-@media (max-width: 980px) { .posters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .poster:last-child { grid-column: span 2; aspect-ratio: auto; min-height: 220px; } }
+.quote { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
+.quote > .img { aspect-ratio: 1; max-width: 100%; }
+.quote blockquote { margin: 24px 0 0; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.35; font-weight: 400; letter-spacing: -.01em; }
+.quote cite { display: block; margin-top: 28px; font-style: normal; font-size: 16px; font-weight: 500; }
+.quote cite span { display: block; color: var(--slate); font-weight: 400; }
+@media (max-width: 860px) { .quote { grid-template-columns: 1fr; } .quote > .img { aspect-ratio: 4 / 3; } }
 
-/* Editorial list */
-.elist { border-top: 1px solid var(--line-strong); }
-.erow { display: grid; grid-template-columns: 140px 160px minmax(0, 1fr) 120px; gap: 24px; align-items: baseline; padding-block: 26px; border-bottom: 1px solid var(--line); text-decoration: none; transition: padding .3s; }
-.erow:hover { padding-left: 12px; }
-.erow h3 { font-family: var(--f-display); font-size: clamp(1.3rem, 2.2vw, 1.9rem); line-height: 1.15; }
-.erow .r { text-align: right; }
-.erow .lock { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.erow .open { color: var(--ember); }
-@media (max-width: 800px) { .erow { grid-template-columns: 1fr auto; gap: 6px 16px; } .erow h3 { grid-column: 1 / -1; order: 3; } .erow .r { order: 4; text-align: left; } }
+.team { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.person { display: grid; gap: 14px; align-content: start; }
+.person .img { aspect-ratio: 4 / 5; max-width: 100%; }
+.person p { font-size: 15px; color: var(--slate); }
+@media (max-width: 760px) { .team { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .team { grid-template-columns: 1fr; } }
 
-/* FAQ */
-.faq-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; }
-.faq details { border-top: 1px solid var(--line); }
-.faq details:last-child { border-bottom: 1px solid var(--line); }
-.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 20px; padding-block: 22px; font-weight: 600; font-size: 1.02rem; letter-spacing: .01em; }
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; font-family: var(--f-mono); font-weight: 400; color: var(--ember); font-size: 1.2rem; line-height: 1; transition: transform .25s; }
-.faq details[open] summary::after { transform: rotate(45deg); }
-.faq details p { padding-bottom: 24px; color: var(--muted); max-width: 62ch; }
-@media (max-width: 800px) { .faq-grid { grid-template-columns: 1fr; gap: 24px; } }
+.posts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.post { display: grid; gap: 14px; text-decoration: none; align-content: start; }
+.post .img { aspect-ratio: 16 / 10; max-width: 100%; }
+.post .meta { font-size: 14px; color: var(--slate); }
+.post:hover h3 { color: var(--copper); }
+@media (max-width: 860px) { .posts { grid-template-columns: 1fr; } }
 
-/* CTA band */
-.cta-band { border-radius: var(--r-lg); padding: clamp(32px, 6vw, 80px); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: end; }
-.cta-band h2 { font-family: var(--f-display); font-size: var(--t-h2); line-height: 1.02; }
-.cta-band p { color: var(--on-dark-muted); max-width: 44ch; }
-.cta-band .acts { display: flex; flex-direction: column; gap: 22px; align-items: flex-start; }
-@media (max-width: 800px) { .cta-band { grid-template-columns: 1fr; } }
+.cta-band > .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+.cta-band p { color: var(--on-img-muted); }
+.cta-band .shade { background: linear-gradient(0deg, rgba(8,20,33,.9), rgba(8,20,33,.5)); }
+@media (max-width: 860px) { .cta-band > .wrap { grid-template-columns: 1fr; } }
 
-/* ---------- Inner pages ---------- */
-.page-hero { padding-block: clamp(56px, 8vw, 112px) clamp(40px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 64px; align-items: end; border-bottom: 1px solid var(--line); }
-.page-hero h1 { font-family: var(--f-display); font-size: var(--t-h1); line-height: .98; letter-spacing: -.02em; }
-.page-hero h1 em { font-style: italic; }
-.page-hero .label { grid-column: 1 / -1; }
-@media (max-width: 800px) { .page-hero { grid-template-columns: 1fr; } }
-.banner { border-radius: var(--r-lg); height: clamp(200px, 30vw, 380px); margin-top: 12px; display: flex; align-items: flex-end; padding: clamp(20px, 4vw, 40px); }
-.banner .label { color: var(--on-dark-muted); }
-
-.split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 64px; }
-.split > :first-child { position: sticky; top: 100px; align-self: start; }
-@media (max-width: 800px) { .split { grid-template-columns: 1fr; } .split > :first-child { position: static; } }
-.split h2 { font-family: var(--f-display); font-size: var(--t-h2); line-height: 1.02; }
-
-.timeline { border-left: 1px solid var(--line-strong); display: grid; gap: 0; }
-.tl { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 20px; padding: 0 0 36px 28px; position: relative; }
-.tl::before { content: ""; position: absolute; left: -5px; top: 9px; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1px solid var(--ink); }
-.tl:last-child::before { background: var(--ember); border-color: var(--ember); }
-.tl b { font-family: var(--f-display); font-weight: 400; font-size: 1.6rem; line-height: 1.1; }
-.tl h3 { font-weight: 600; font-size: 1.02rem; margin-bottom: 4px; }
-.tl p { color: var(--muted); }
-@media (max-width: 560px) { .tl { grid-template-columns: 1fr; gap: 4px; } }
-
-.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.person { border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px; display: grid; gap: 14px; background: var(--surface); }
-.person .mono { width: 100%; aspect-ratio: 4 / 3; max-width: 100%; border-radius: 10px; display: grid; place-items: center; font-family: var(--f-display); font-size: 3.4rem; font-style: italic; color: var(--on-dark); }
-.person h3 { font-weight: 600; font-size: 1.05rem; }
-.person p { color: var(--muted); font-size: var(--t-small); }
-@media (max-width: 900px) { .people { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .people { grid-template-columns: 1fr; } }
-
-.strat { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px 64px; padding-block: 56px; border-top: 1px solid var(--line); }
-.strat h2 { font-family: var(--f-display); font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.02; margin-top: 10px; }
-.strat .swatch { height: 160px; border-radius: var(--r-md); margin-top: 24px; position: relative; overflow: hidden; }
-.kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); margin-top: 28px; }
-.kv div { padding: 14px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; min-width: 0; }
-.kv div:nth-child(odd) { padding-right: 16px; }
-.kv dt { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.kv dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
-@media (max-width: 800px) { .strat { grid-template-columns: 1fr; } }
-
-.table-wrap { overflow-x: auto; border-top: 1px solid var(--line-strong); }
-table { width: 100%; border-collapse: collapse; min-width: 640px; font-variant-numeric: tabular-nums; }
-th, td { text-align: left; padding: 16px 16px 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
-td:first-child { font-weight: 600; }
-
-.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: s; }
-.step { border-top: 2px solid var(--ink); padding-top: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
-.step .n { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .14em; color: var(--ember); }
-.step h3 { font-family: var(--f-display); font-size: 1.5rem; line-height: 1.1; }
-.step p { color: var(--muted); font-size: .95rem; }
-.steps.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 900px) { .steps, .steps.three { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 12px; } }
-@media (max-width: 560px) { .steps, .steps.three { grid-template-columns: 1fr; } }
-
-.limits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.limit { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px; display: grid; gap: 12px; }
-.limit .bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
-.limit .bar i { display: block; height: 100%; background: var(--ink); border-radius: inherit; }
-.limit .meta { display: flex; justify-content: space-between; gap: 12px; font-size: var(--t-small); }
-.limit .meta span:last-child { color: var(--muted); }
-@media (max-width: 700px) { .limits { grid-template-columns: 1fr; } }
-
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-.filters button { font: 500 .72rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); cursor: pointer; }
-.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-/* Article */
-.article { max-width: 760px; margin-inline: auto; }
-.article header { padding-block: clamp(48px, 7vw, 96px) 40px; display: grid; gap: 22px; text-align: center; justify-items: center; }
-.article header h1 { font-family: var(--f-display); font-size: clamp(2.4rem, 5.6vw, 4.6rem); line-height: 1; letter-spacing: -.02em; }
-.article header h1 em { font-style: italic; }
-.byline { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 20px; }
-.article .body { font-family: var(--f-display); font-size: 1.2rem; line-height: 1.65; display: grid; gap: 1.1em; padding-bottom: 48px; }
-.article .body > p:first-child::first-letter { float: left; font-size: 4.6em; line-height: .82; padding: .06em .1em 0 0; color: var(--ember); }
-.article .body h2 { font-family: var(--f-body); font-weight: 600; font-size: 1.1rem; letter-spacing: .01em; margin-top: .8em; }
-.pull { font-style: italic; font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.2; border-block: 1px solid var(--line-strong); padding-block: 28px; margin-block: 16px; text-align: center; }
-.article table { font-family: var(--f-body); font-size: .95rem; min-width: 520px; }
-.sig { font-style: italic; }
-
-/* Forms */
-.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-.field { display: grid; gap: 8px; min-width: 0; }
-.field.full { grid-column: 1 / -1; }
-.field label { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.field input, .field select, .field textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 13px 14px; width: 100%; }
-.field textarea { min-height: 140px; resize: vertical; }
-.check { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; font-size: var(--t-small); color: var(--muted); }
-.check input { margin-top: 4px; accent-color: var(--ember); }
-.form-note { grid-column: 1 / -1; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 16px; background: var(--surface); }
-@media (max-width: 640px) { .form { grid-template-columns: 1fr; } }
-
-.offices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.office { border-radius: var(--r-md); padding: 24px; min-height: 260px; display: flex; flex-direction: column; gap: 10px; }
-.office h3 { font-family: var(--f-display); font-size: 2rem; line-height: 1; }
-.office .tz { margin-top: auto; font-family: var(--f-mono); font-size: .78rem; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
-@media (max-width: 900px) { .offices { grid-template-columns: 1fr; } .office { min-height: 200px; } }
-.copyrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.copyrow code { font-family: var(--f-mono); font-size: .9rem; user-select: all; }
-.copybtn { font: 500 .66rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); cursor: pointer; }
-
-.notice { border: 1px solid var(--line-strong); border-radius: var(--r-md); padding: 22px 24px; display: grid; gap: 8px; background: var(--surface); }
-.notice b { font-weight: 600; }
-
-/* ---------- Footer ---------- */
-footer { margin-top: clamp(72px, 10vw, 120px); background: var(--pine); color: var(--on-dark); padding-top: 72px; overflow: hidden; }
-.foot-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 40px; }
-.foot-grid h4 { font-family: var(--f-mono); font-weight: 400; font-size: var(--t-label); letter-spacing: .14em; text-transform: uppercase; color: var(--on-dark-muted); margin-bottom: 14px; }
-.foot-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.foot-grid a { text-decoration: none; }
-.foot-grid a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.foot-grid p { color: var(--on-dark-muted); font-size: var(--t-small); max-width: 38ch; }
-.wordmark { font-family: var(--f-display); font-size: clamp(3.4rem, 15.5vw, 15.5rem); line-height: .8; letter-spacing: -.04em; margin-top: 64px; white-space: nowrap; color: var(--on-dark); transform: translateY(.14em); text-align: center; }
-.wordmark em { font-style: italic; color: var(--mint); }
-.legal { border-top: 1px solid rgba(243,236,224,.2); padding-block: 22px; display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; font-size: .78rem; color: var(--on-dark-muted); position: relative; z-index: 1; background: var(--pine); }
-@media (max-width: 800px) { .foot-grid { grid-template-columns: 1fr 1fr; } .foot-grid > :first-child { grid-column: 1 / -1; } }
-
-/* Page switching */
-[data-page] { animation: fade .5s ease both; }
-@keyframes fade { from { opacity: .001; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+footer { background: var(--navy); color: var(--white); padding-top: 80px; }
+.fgrid { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr)); gap: 40px; padding-bottom: 64px; }
+.fgrid h4 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 16px; font-weight: 500; }
+.fgrid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 16px; }
+.fgrid a { text-decoration: none; color: rgba(255,255,255,.9); }
+.fgrid a:hover { text-decoration: underline; }
+.fgrid p { font-size: 15px; color: rgba(255,255,255,.65); max-width: 36ch; margin-top: 16px; }
+.legal { border-top: 1px solid rgba(255,255,255,.15); padding-block: 28px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.6); display: grid; gap: 10px; }
+@media (max-width: 900px) { .fgrid { grid-template-columns: 1fr 1fr; } .fgrid > :first-child { grid-column: 1 / -1; } }
 </style>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <linearGradient id="reflect-g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="currentColor" stop-opacity=".6"/>
-      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
-    </linearGradient>
-    <symbol id="mark" viewBox="0 0 40 40">
-      <path d="M5 18.5 A15 15 0 0 1 35 18.5 Z" fill="currentColor"/>
-      <path d="M5 21.5 H35 A15 15 0 0 1 5 21.5 Z" fill="url(#reflect-g)"/>
-    </symbol>
-    <symbol id="arrow" viewBox="0 0 16 16"><path d="M4 12 L12 4 M5.5 4 H12 V10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  </defs>
-</svg>
-
-<header class="nav" id="nav">
+<header class="nav">
   <div class="wrap nav-in">
-    <a class="brand" href="#home" aria-label="Vesperline Capital, home"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline <small>CAPITAL</small></a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#firm">Firm</a></li>
+    <a class="logo" href="#top" aria-label="Vesperline Capital home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 9 L14 20 L21 9" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      Vesperline Capital
+    </a>
+    <ul>
+      <li><a href="#about">About</a></li>
       <li><a href="#strategies">Strategies</a></li>
       <li><a href="#approach">Approach</a></li>
+      <li><a href="#clients">Clients</a></li>
       <li><a href="#insights">Insights</a></li>
-      <li><a href="#careers">Careers</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#leadership">Leadership</a></li>
     </ul>
-    <a class="nav-cta" href="#investors">Investors <svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></a>
-    <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <div class="acts">
+      <a class="btn btn-outline-white" href="#contact">Investor login</a>
+      <a class="btn btn-white" href="#contact">Contact</a>
+    </div>
+    <button class="menu" type="button">Menu</button>
   </div>
 </header>
 
-<main id="main">
+<main id="top">
+  <section class="hero">
+    <div class="img" data-scene="aerial" data-seed="7"><canvas></canvas></div>
+    <div class="shade"></div>
+    <div class="wrap hero-in">
+      <span class="eyebrow">Multi-strategy investment manager · London · New York · Singapore</span>
+      <h1 class="h1">Disciplined capital for institutions that think in decades.</h1>
+      <p class="lead">For seventeen years, Vesperline has managed capital for pension funds, endowments and sovereign investors. We pursue steady, uncorrelated returns through four strategies and one independent risk framework.</p>
+      <div class="cta">
+        <a class="btn btn-white" href="#strategies">Our strategies</a>
+        <a class="btn btn-outline-white" href="#contact">Speak with our team</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>$14.2bn</b><span>Assets under management</span></div>
+        <div class="stat"><b>17 years</b><span>Managing institutional capital</span></div>
+        <div class="stat"><b>140+</b><span>Institutional clients worldwide</span></div>
+        <div class="stat"><b>11%</b><span>Of fund capital held by our partners and staff</span></div>
+      </div>
+    </div>
+  </section>
 
-<!-- ======================= HOME ======================= -->
-<section data-page="home">
-  <div class="wrap">
-    <div class="hero">
-      <div class="hero-main dusk">
-        <span class="label">Multi-strategy investment manager · Est. 2009</span>
-        <h1>Patience,<br><em>priced</em> in<span class="ast">*</span></h1>
-        <p class="lede">Vesperline manages capital for pension funds, endowments, sovereign investors and family offices. We run four strategies inside one risk framework, and we size every position to survive the drawdown before we count the return.</p>
-        <div class="hero-actions">
-          <a class="btn light" href="#strategies">Our strategies <span class="dot"><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></a>
-          <a class="btn light plain" href="#insights">Read the Q3 letter</a>
-        </div>
+  <section class="sec" id="about">
+    <div class="wrap two">
+      <div class="txt">
+        <span class="eyebrow">Who we are</span>
+        <h2 class="h2">A partnership built around one responsibility: protecting the capital entrusted to us.</h2>
+        <p class="body-l">Vesperline was founded in 2009, after the financial crisis, by three portfolio managers who had seen sound positions abandoned because the capital behind them could not wait. They built a firm that sizes every investment to survive a downturn first, and judges itself over full market cycles, not quarters.</p>
+        <p class="body-l">Today we are 186 people across three offices. The firm is owned entirely by its eleven partners, who invest most of their own wealth in our funds on the same terms as our clients.</p>
+        <div><a class="link" href="#about">About the firm →</a></div>
       </div>
-      <div class="hero-side">
-        <div class="bigmark" aria-hidden="true">
-          <svg viewBox="0 0 40 40">
-            <path class="top" d="M5 18.5 A15 15 0 0 1 35 18.5 Z" fill="currentColor"/>
-            <path class="reflect" d="M5 21.5 H35 A15 15 0 0 1 5 21.5 Z" fill="url(#reflect-g)"/>
-          </svg>
-        </div>
-        <p><span class="ast" style="font-size:1em;vertical-align:baseline">*</span> The sun on the horizon, and its reflection. Our edge is time: the ability to hold a sound position through the stretch that forces shorter-horizon capital out.</p>
-      </div>
+      <div class="img" data-scene="room" data-seed="11"><canvas></canvas><span class="tag">Photo: meeting room at dawn, city view</span></div>
     </div>
-    <div class="facts" aria-label="Firm at a glance">
-      <div class="fact"><span class="label">Assets under management</span><b>$14.2bn</b></div>
-      <div class="fact"><span class="label">Strategies</span><b>4</b></div>
-      <div class="fact"><span class="label">Investment staff</span><b>78</b></div>
-      <div class="fact"><span class="label">Partner capital in funds</span><b>11%</b></div>
-      <div class="fact"><span class="label">Offices</span><b>LDN · NYC · SG</b></div>
-    </div>
-    <p class="label" style="margin-top:12px">Figures as of 30 September 2026 · Illustrative</p>
-  </div>
+  </section>
 
-  <div class="wrap section">
-    <div class="sec-head">
-      <span class="label">What we believe</span>
-      <h2>Three commitments we make to <em>every</em> allocator.</h2>
-      <p class="lede muted">They shape how we hire, how we pay, and what we say no to. We report against each of them in our annual letter.</p>
-    </div>
-    <div class="principles">
-      <div class="principle">
-        <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="7" y="7" width="30" height="30" rx="8" transform="rotate(45 22 22)" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M15 22h14M22 15v14" stroke="currentColor" stroke-width="1.2"/></svg>
-        <h3>Alignment you can audit</h3>
-        <p>Partners keep the majority of their liquid net worth in our funds, on the same terms as clients. Incentive fees pay only above a high-water mark, with a multi-year clawback.</p>
+  <section class="sec stone" id="clients">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Who we serve</span>
+        <h2 class="h2">We manage capital for institutions with long-term obligations.</h2>
+        <p class="body-l">Our clients answer to members, beneficiaries and future generations. Every mandate is shaped around their liquidity needs, risk tolerance and reporting standards.</p>
       </div>
-      <div class="principle">
-        <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="7" y="7" width="30" height="30" rx="8" transform="rotate(45 22 22)" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M15.5 22.5l4.5 4.5 8.5-9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-        <h3>Risk sized first</h3>
-        <p>Every position starts from its loss budget. Exposure limits, stress tests and liquidity are set by an independent risk team before a portfolio manager can trade.</p>
-      </div>
-      <div class="principle">
-        <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="7" y="7" width="30" height="30" rx="8" transform="rotate(45 22 22)" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="22" cy="22" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-        <h3>Transparency by default</h3>
-        <p>Monthly risk reports, quarterly position-level transparency for qualifying investors, and a portfolio manager on every quarterly call.</p>
+      <div class="cards">
+        <div class="card"><div class="img" data-scene="skyline" data-seed="3"><canvas></canvas></div><h3 class="h3">Pension funds</h3><p>Steady returns with low correlation to equity and bond markets, to help meet commitments to members.</p></div>
+        <div class="card"><div class="img" data-scene="facade" data-seed="5"><canvas></canvas></div><h3 class="h3">Endowments and foundations</h3><p>Real growth to support grants, scholarships and research, protected against deep drawdowns.</p></div>
+        <div class="card"><div class="img" data-scene="aerial" data-seed="9"><canvas></canvas></div><h3 class="h3">Sovereign wealth funds</h3><p>Separately managed accounts, tailored to each mandate's liquidity, risk and reporting needs.</p></div>
+        <div class="card"><div class="img" data-scene="facade" data-seed="12"><canvas></canvas></div><h3 class="h3">Family offices and insurers</h3><p>Institutional strategies, with the transparency and governance of a large allocator.</p></div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="wrap section tight">
-    <div class="sec-head" style="align-items:end">
-      <span class="label">Strategies</span>
-      <h2 class="shout">Four ways<br>to hold risk<span class="cursor" aria-hidden="true"></span></h2>
-      <p class="lede muted">Each strategy has its own team and process. All four share one risk system, one operations platform and one investment committee.</p>
+  <section class="sec" id="strategies">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Our strategies</span>
+        <h2 class="h2">Four strategies. One risk framework.</h2>
+        <p class="body-l">Each strategy has its own team and process. All four share one independent risk function, one investment committee and one operations platform.</p>
+      </div>
+      <div class="strats">
+        <a class="strat" href="#strategies"><span class="k">01 · Flagship</span><h3 class="h3">Multi-Strategy</h3><p>Allocates across all four strategies, rebalanced monthly against a single volatility target.</p><span class="fig">Since 2009 · Target volatility 8–10%</span></a>
+        <a class="strat" href="#strategies"><span class="k">02 · Discretionary</span><h3 class="h3">Global Macro</h3><p>Rates, currencies and commodities across 30 markets, mostly through relative-value positions.</p><span class="fig">Holding period 3–9 months</span></a>
+        <a class="strat" href="#strategies"><span class="k">03 · Fundamental</span><h3 class="h3">Credit Opportunities</h3><p>Stressed and special-situation credit, and direct lending to mid-market companies.</p><span class="fig">64% senior secured</span></a>
+        <a class="strat" href="#strategies"><span class="k">04 · Quantitative</span><h3 class="h3">Systematic Equity</h3><p>Market-neutral equity models across 4,000 stocks in the US, Europe and Japan.</p><span class="fig">Market beta near zero</span></a>
+      </div>
+      <div style="margin-top:40px"><a class="btn btn-primary" href="#strategies">Explore our strategies</a></div>
     </div>
-    <div class="bento">
-      <a class="tile t-multi dusk" href="#strategies">
-        <span class="k">Flagship · Since 2009</span>
-        <h3>Vesperline<br>Multi-Strategy</h3>
-        <p style="color:var(--on-dark-muted)">Capital allocated across all four books, rebalanced monthly against a single volatility target.</p>
-        <div class="foot"><span class="big num">8–10<small style="font-size:.3em;letter-spacing:0">%</small></span><span class="label" style="text-align:right">Target annual<br>volatility</span></div>
-      </a>
-      <a class="tile t-macro" href="#strategies">
-        <div class="split">
-          <div style="display:grid;gap:18px">
-            <span class="k">02 · Discretionary</span>
-            <h3>Global Macro</h3>
-            <p>Rates, currencies and commodities across 30 developed and emerging markets, expressed mostly through relative-value trades.</p>
-          </div>
-          <div class="figs">
-            <div><span>Typical holding period</span><b class="big" style="font-size:clamp(2.6rem,5vw,4.4rem)">3–9</b><span>months</span></div>
-          </div>
-        </div>
-      </a>
-      <a class="tile t-credit" href="#strategies">
-        <span class="k">03 · Fundamental</span>
-        <h3>Credit Opportunities</h3>
-        <p>Stressed and special-situation credit, capital-structure arbitrage and private lending to mid-market companies.</p>
-        <div class="foot"><span class="label" style="color:inherit;opacity:.7">Senior secured share</span><span class="big num" style="font-size:2.6rem">64%</span></div>
-      </a>
-      <a class="tile t-sys" href="#strategies">
-        <span class="orb" aria-hidden="true"></span><span class="plinth" aria-hidden="true"></span>
-        <span class="k" style="color:var(--ember)">04 · Quantitative</span>
-        <h3>Systematic<br>Equity</h3>
-        <p class="muted">Market-neutral equity models across 4,000 stocks, with beta, sector and factor exposures held close to zero.</p>
-      </a>
-      <a class="tile t-cta" href="#investors">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span class="k muted">For allocators</span><span class="chip">Data room <svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></div>
-        <div>
-          <p class="muted" style="margin-bottom:10px">Open a due-diligence file with</p>
-          <span class="card-num">VSP · DDQ · 2026</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:end;gap:12px"><span class="serif" style="font-size:1.9rem;line-height:1">Request access</span><span class="label">Qualified<br>investors only</span></div>
-      </a>
-    </div>
-  </div>
+  </section>
 
-  <div class="wrap section">
-    <div class="sec-head">
-      <span class="label">Inside the process</span>
-      <h2>The infrastructure behind a <em>patient</em> book.</h2>
-      <p class="lede muted">We built our risk, research and trading systems in house, so every decision leaves a record an allocator can inspect.</p>
-    </div>
-    <div class="glass-grid">
-      <div class="gtile g-peach">
-        <span class="label">Risk</span>
-        <h3>Exposure, re-measured every fifteen minutes</h3>
-        <p class="cap">One view of the whole firm, from the trading desk to the board.</p>
-        <div class="gcard" role="img" aria-label="Illustrative risk summary: gross 312 percent, net 7.8 percent, one-day 99 percent VaR 1.42 percent">
-          <div class="row"><span class="t">Firm book</span><span class="chip ok">Within limits</span></div>
-          <div class="row"><span>Gross exposure</span><span class="v">312%</span></div>
-          <div class="row"><span>Net exposure</span><span class="v">7.8%</span></div>
-          <div class="row"><span>VaR · 99% · 1 day</span><span class="v">1.42%</span></div>
-          <svg class="spark" viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L20 28 L40 31 L60 24 L80 26 L100 20 L120 22 L140 17 L160 19 L180 14 L200 16 L200 44 L0 44 Z" fill="currentColor" opacity=".12"/><path d="M0 30 L20 28 L40 31 L60 24 L80 26 L100 20 L120 22 L140 17 L160 19 L180 14 L200 16" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          <span class="illu">Illustrative view</span>
-        </div>
-      </div>
-      <div class="gtile g-navy">
-        <span class="label">Research</span>
-        <h3>No trade without a written thesis</h3>
-        <p class="cap">Each idea is a memo with an entry case, an exit case and a loss limit, reviewed by the investment committee.</p>
-        <div class="gcard">
-          <div class="row"><span class="t">Memo 4128</span><span class="t">Macro</span></div>
-          <div style="font-weight:600;font-size:.95rem;line-height:1.3">Japanese regional banks and the end of yield-curve control</div>
-          <div class="row"><span>Loss budget</span><span class="v">35 bp</span></div>
-          <div class="row"><span>Review date</span><span class="v">14 Jan 2027</span></div>
-          <div class="row"><span>Committee</span><span class="chip ok">Approved</span></div>
-          <span class="illu">Illustrative view</span>
-        </div>
-      </div>
-      <div class="gtile g-blue">
-        <span class="label">Coverage</span>
-        <h3>Three offices, one book</h3>
-        <p class="cap">London, New York and Singapore hand the portfolio over across a 24-hour trading day.</p>
-        <div class="globe" aria-hidden="true">
-          <svg viewBox="0 0 300 220">
-            <g fill="none" stroke="rgba(255,255,255,.35)" stroke-width=".8">
-              <ellipse cx="150" cy="230" rx="140" ry="140"/>
-              <ellipse cx="150" cy="230" rx="100" ry="140"/>
-              <ellipse cx="150" cy="230" rx="55" ry="140"/>
-              <line x1="150" y1="90" x2="150" y2="220"/>
-              <ellipse cx="150" cy="150" rx="122" ry="18"/>
-              <ellipse cx="150" cy="185" rx="136" ry="22"/>
-              <ellipse cx="150" cy="118" rx="80" ry="10"/>
-            </g>
-            <path d="M74 158 Q 120 70 172 128" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1" stroke-dasharray="3 4"/>
-            <path d="M172 128 Q 220 90 246 170" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1" stroke-dasharray="3 4"/>
-            <g fill="#fff"><circle cx="74" cy="158" r="3.5"/><circle cx="172" cy="128" r="3.5"/><circle cx="246" cy="170" r="3.5"/></g>
-            <g fill="rgba(255,255,255,.85)" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1"><text x="40" y="178">NEW YORK</text><text x="150" y="116">LONDON</text><text x="214" y="190">SINGAPORE</text></g>
-          </svg>
+  <section class="sec stone" id="approach">
+    <div class="wrap two">
+      <div class="img" data-scene="desk" data-seed="13"><canvas></canvas><span class="tag">Photo: trader at screens, evening light</span></div>
+      <div class="txt">
+        <span class="eyebrow">How we invest</span>
+        <h2 class="h2">We decide how much we can afford to lose before we decide what to buy.</h2>
+        <div class="steps">
+          <div class="step"><span class="n">01</span><div><h3 class="h3">Research</h3><p>Every investment starts as a written thesis, with the case for it, the case against it and a date to review it.</p></div></div>
+          <div class="step"><span class="n">02</span><div><h3 class="h3">Risk sizing</h3><p>An independent risk team sets the loss limit and position size before any trade is placed.</p></div></div>
+          <div class="step"><span class="n">03</span><div><h3 class="h3">Review</h3><p>Positions are reviewed on schedule, or as soon as they use half their loss limit. A broken thesis is closed, never averaged down.</p></div></div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="wrap section tight">
-    <div class="posters" aria-label="Brand statements">
-      <div class="poster p1"><span class="pm"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline</span><h3>Measured.<br><em>Hedged.</em><br>Patient.</h3></div>
-      <div class="poster p2"><span class="pm"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline</span><span class="blk" aria-hidden="true"></span><span class="url">Capital that compounds quietly.</span></div>
-      <div class="poster p3"><span class="pm"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline</span><h3>Risk sized<br>before return.</h3></div>
-      <div class="poster p4 dusk night"><span class="ring" aria-hidden="true"></span><span class="pm"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline</span><h3 style="position:relative">Seventeen years, one framework.</h3></div>
-      <div class="poster p5"><span class="pm"><svg aria-hidden="true"><use href="#mark"/></svg>Vesperline</span><h3>Your capital's<br><em>long horizon.</em></h3></div>
-    </div>
-  </div>
-
-  <div class="wrap section">
-    <div class="sec-head">
-      <span class="label">Insights</span>
-      <h2>Letters and research from the <em>desk</em>.</h2>
-      <p class="lede muted">Our quarterly letter is public. Strategy research and position notes are shared with investors through the portal.</p>
-    </div>
-    <div class="elist">
-      <a class="erow" href="#letter-q3-2026"><span class="label">Oct 2026</span><span class="label">Quarterly letter</span><h3>The cost of being early</h3><span class="r open label" style="color:var(--ember)">Read · 9 min</span></a>
-      <a class="erow" href="#insights"><span class="label">Sep 2026</span><span class="label">Macro research</span><h3>Term premium is back. Who holds the duration now?</h3><span class="r lock">Investors</span></a>
-      <a class="erow" href="#insights"><span class="label">Aug 2026</span><span class="label">Credit research</span><h3>Maturity walls in European mid-market loans, 2027–2029</h3><span class="r lock">Investors</span></a>
-    </div>
-  </div>
-
-  <div class="wrap section tight">
-    <div class="faq-grid">
-      <div class="sec-head" style="display:block;margin:0">
-        <span class="label" style="margin-bottom:24px">For allocators</span>
-        <h2 style="margin-top:24px">Questions we hear in the <em>first</em> meeting.</h2>
-        <p class="muted" style="margin-top:20px;max-width:40ch">Full terms are set out in each fund's offering documents, which we share after an introductory call.</p>
-      </div>
-      <div class="faq">
-        <details open><summary>Who can invest with Vesperline?</summary><p>Our funds are open only to institutional investors and to individuals who meet the professional, accredited or qualified-purchaser tests in their jurisdiction. We do not accept retail investors and we do not market to the general public.</p></details>
-        <details><summary>What is the minimum investment?</summary><p>The minimum initial subscription is $5 million for the flagship fund and $10 million for single-strategy funds. Separately managed accounts start at $250 million.</p></details>
-        <details><summary>How often can investors redeem?</summary><p>The flagship fund offers quarterly liquidity with 60 days' notice and a 25% investor-level gate. Credit Opportunities has annual liquidity to match the assets it holds.</p></details>
-        <details><summary>How are fees structured?</summary><p>A management fee that steps down with commitment size, and an incentive fee charged only on gains above a high-water mark. Founders' and long-lock share classes carry lower fees.</p></details>
-        <details><summary>Where are the funds domiciled?</summary><p>Master-feeder structures with Cayman Islands and Delaware feeders, and an Irish ICAV for European investors. Funds are administered and audited by independent third parties.</p></details>
+  <section class="band">
+    <div class="img" data-scene="skyline" data-seed="21"><canvas></canvas></div>
+    <div class="shade"></div>
+    <div class="wrap">
+      <span class="eyebrow">Governance</span>
+      <h2 class="h2" style="margin-top:18px;max-width:20ch">Independent at every point where it matters.</h2>
+      <div class="oversight">
+        <div><h3 class="h3">Independent administrator</h3><p>A third-party administrator calculates every net asset value.</p></div>
+        <div><h3 class="h3">Annual audit</h3><p>Each fund is audited every year by an independent accounting firm.</p></div>
+        <div><h3 class="h3">Four prime brokers</h3><p>Assets are spread across four prime brokers and two custodians.</p></div>
+        <div><h3 class="h3">Independent boards</h3><p>Every fund board has a majority of independent directors.</p></div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="wrap">
-    <div class="cta-band dusk">
+  <section class="sec">
+    <div class="wrap quote">
+      <div class="img" data-scene="portrait" data-seed="1"><canvas></canvas><span class="tag">Photo: portrait of the CIO</span></div>
       <div>
-        <span class="label">Investor relations</span>
-        <h2 style="margin-top:20px">Start with a conversation, not a pitch book.</h2>
-      </div>
-      <div class="acts">
-        <p>Tell us about your mandate and horizon. A partner and a member of our investor relations team will reply within two business days.</p>
-        <a class="btn light" href="#contact">Speak with us <span class="dot"><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></a>
+        <span class="eyebrow">From our Chief Investment Officer</span>
+        <blockquote>"Our clients pay us for judgement, but they trust us with their capital. Our first job is to make sure that trust is never put at risk for the sake of a better quarter."</blockquote>
+        <cite>Eleanor Ashdown<span>Founding Partner and Chief Investment Officer</span></cite>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ======================= FIRM ======================= -->
-<section data-page="firm" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">The firm</span>
-      <h1>Built to be early, and to stay <em>solvent</em> while it waits.</h1>
-      <p class="lede muted">Vesperline was founded in 2009 by three portfolio managers who had watched good trades fail because the capital behind them could not wait. We designed the firm around one idea: match the horizon of the capital to the horizon of the opportunity.</p>
+  <section class="sec stone" id="leadership">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Leadership</span>
+        <h2 class="h2">Led by the partners who invest alongside you.</h2>
+        <p class="body-l">Our investment committee averages 22 years in markets. Every member manages or oversees capital directly.</p>
+      </div>
+      <div class="team">
+        <div class="person"><div class="img" data-scene="portrait" data-seed="2"><canvas></canvas><span class="tag">Photo: partner portrait</span></div><div><h3 class="h3">Eleanor Ashdown</h3><p>Founding Partner · Chief Investment Officer</p></div></div>
+        <div class="person"><div class="img" data-scene="portrait" data-seed="4"><canvas></canvas><span class="tag">Photo: partner portrait</span></div><div><h3 class="h3">Tobiah Okafor</h3><p>Founding Partner · Head of Credit</p></div></div>
+        <div class="person"><div class="img" data-scene="portrait" data-seed="6"><canvas></canvas><span class="tag">Photo: partner portrait</span></div><div><h3 class="h3">Sofia Varga</h3><p>Partner · Chief Risk Officer</p></div></div>
+      </div>
+      <div style="margin-top:40px"><a class="link" href="#leadership">Meet the leadership team →</a></div>
     </div>
-    <div class="banner dusk"><span class="label">London · St James's</span></div>
-  </div>
+  </section>
 
-  <div class="wrap section">
-    <div class="split">
-      <div><span class="label">Our history</span><h2 style="margin-top:20px">Seventeen years, <em>one</em> framework.</h2></div>
-      <div class="timeline">
-        <div class="tl"><b>2009</b><div><h3>Founded in London</h3><p>Launched the Multi-Strategy fund with $310 million from two university endowments and the partners' own capital.</p></div></div>
-        <div class="tl"><b>2012</b><div><h3>Credit Opportunities</h3><p>Opened a dedicated credit book to buy the European bank loans regulators were forcing banks to sell.</p></div></div>
-        <div class="tl"><b>2016</b><div><h3>New York office</h3><p>Built a US rates and credit team and our first separately managed account for a public pension plan.</p></div></div>
-        <div class="tl"><b>2019</b><div><h3>Systematic Equity</h3><p>Launched market-neutral equity models after a four-year research programme run on live paper portfolios.</p></div></div>
-        <div class="tl"><b>2022</b><div><h3>Singapore office</h3><p>Opened in Singapore to run Asian macro and give the firm a full 24-hour trading day.</p></div></div>
-        <div class="tl"><b>2026</b><div><h3>Partnership renewed</h3><p>Eleven partners now own the firm. No outside equity, no stake sold to a platform.</p></div></div>
+  <section class="sec" id="insights">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Insights</span>
+        <h2 class="h2">Perspectives from our investment team.</h2>
+        <p class="body-l">Our quarterly letter is public. Research and position notes are shared with investors.</p>
+      </div>
+      <div class="posts">
+        <a class="post" href="#insights"><div class="img" data-scene="aerial" data-seed="31"><canvas></canvas></div><span class="meta">Quarterly letter · October 2026</span><h3 class="h3">Q3 2026 Letter: The cost of being early</h3></a>
+        <a class="post" href="#insights"><div class="img" data-scene="facade" data-seed="33"><canvas></canvas></div><span class="meta">Macro research · September 2026</span><h3 class="h3">Term premium is back. Who holds the duration now?</h3></a>
+        <a class="post" href="#insights"><div class="img" data-scene="skyline" data-seed="35"><canvas></canvas></div><span class="meta">Credit research · August 2026</span><h3 class="h3">Maturity walls in European mid-market loans, 2027–2029</h3></a>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="wrap section tight">
-    <div class="sec-head">
-      <span class="label">Leadership</span>
-      <h2>The partners who sit on the <em>investment committee</em>.</h2>
-      <p class="lede muted">Committee members have an average of 22 years in markets. Each runs or oversees capital, and none is a full-time manager of people.</p>
-    </div>
-    <div class="people">
-      <div class="person"><div class="mono dusk">EA</div><div><h3>Eleanor Ashdown</h3><p class="label">Founding partner · Chief Investment Officer</p></div><p>Previously ran European rates at a global investment bank. Chairs the investment committee.</p></div>
-      <div class="person"><div class="mono" style="background:var(--pine)">TO</div><div><h3>Tobiah Okafor</h3><p class="label">Founding partner · Head of Credit</p></div><p>Restructuring specialist with 25 years in stressed European and US credit.</p></div>
-      <div class="person"><div class="mono" style="background:var(--cobalt)">MK</div><div><h3>Mei Kuroda</h3><p class="label">Partner · Head of Systematic</p></div><p>PhD in statistics. Built the firm's equity models and its research computing platform.</p></div>
-      <div class="person"><div class="mono" style="background:var(--tide)">JR</div><div><h3>Julian Reyes</h3><p class="label">Partner · Head of Macro, Singapore</p></div><p>Trades Asian rates and currencies. Previously at a central bank reserves team.</p></div>
-      <div class="person"><div class="mono dusk night">SV</div><div><h3>Sofia Varga</h3><p class="label">Partner · Chief Risk Officer</p></div><p>Reports to the board, not the CIO. Holds a veto over any position that breaches a limit.</p></div>
-      <div class="person"><div class="mono" style="background:#5B4636">DM</div><div><h3>David Marchetti</h3><p class="label">Partner · Chief Operating Officer</p></div><p>Oversees operations, technology, compliance and investor services.</p></div>
-    </div>
-    <p class="label" style="margin-top:16px">People and biographies are illustrative placeholders</p>
-  </div>
-
-  <div class="wrap section tight">
-    <div class="sec-head">
-      <span class="label">Ownership and alignment</span>
-      <h2>Our money sits <em>beside</em> yours.</h2>
-      <p class="lede muted">Alignment is a structure, not a sentiment. These are the rules we hold ourselves to.</p>
-    </div>
-    <div class="principles">
-      <div class="principle"><h3>Partners invest first</h3><p>Partners must hold at least 60% of their liquid net worth in Vesperline funds. Partner and employee capital is 11% of firm assets.</p></div>
-      <div class="principle"><h3>Deferred pay</h3><p>Half of every investment professional's bonus is deferred for three years into the funds they manage, and it can be clawed back.</p></div>
-      <div class="principle"><h3>Capacity limits</h3><p>Each strategy has a published capacity. We closed the flagship to new capital in 2021 and 2024 rather than dilute returns.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= STRATEGIES ======================= -->
-<section data-page="strategies" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Strategies</span>
-      <h1>Four books. One <em>risk</em> framework.</h1>
-      <p class="lede muted">Each strategy is run by its own team with its own process. All four share one risk system, one investment committee and one operations platform, which is what lets us combine them in the flagship fund.</p>
-    </div>
-  </div>
-  <div class="wrap">
-    <article class="strat">
-      <div><span class="label">01 · Flagship</span><h2>Multi-Strategy</h2><div class="swatch dusk"></div></div>
+  <section class="band cta-band" id="contact">
+    <div class="img" data-scene="aerial" data-seed="41"><canvas></canvas></div>
+    <div class="shade"></div>
+    <div class="wrap">
       <div>
-        <p class="lede">Our original fund. It allocates capital across the other three books and rebalances monthly so that no single strategy contributes more than 40% of total risk.</p>
-        <dl class="kv"><div><dt>Inception</dt><dd>June 2009</dd></div><div><dt>Target volatility</dt><dd>8–10% annualised</dd></div><div><dt>Liquidity</dt><dd>Quarterly, 60 days' notice</dd></div><div><dt>Capacity</dt><dd>$9bn</dd></div><div><dt>Vehicles</dt><dd>Cayman, Delaware, Irish ICAV</dd></div><div><dt>Status</dt><dd>Open by allocation</dd></div></dl>
+        <span class="eyebrow">Investor relations</span>
+        <h2 class="h2" style="margin-top:18px">Begin a conversation with our investor relations team.</h2>
       </div>
-    </article>
-    <article class="strat">
-      <div><span class="label">02 · Discretionary</span><h2>Global Macro</h2><div class="swatch t-macro" style="background:linear-gradient(120deg,#9FC3E6,#6FA0D8 45%,#BCD7EF)"></div></div>
-      <div>
-        <p class="lede">Rates, currencies and commodities across 30 markets. Most risk sits in relative-value trades, such as one yield curve against another, so returns depend less on calling direction.</p>
-        <dl class="kv"><div><dt>Inception</dt><dd>June 2009</dd></div><div><dt>Holding period</dt><dd>3–9 months</dd></div><div><dt>Liquidity</dt><dd>Monthly, 30 days' notice</dd></div><div><dt>Capacity</dt><dd>$4bn</dd></div><div><dt>Instruments</dt><dd>Futures, swaps, FX options</dd></div><div><dt>Status</dt><dd>Open</dd></div></dl>
-      </div>
-    </article>
-    <article class="strat">
-      <div><span class="label">03 · Fundamental</span><h2>Credit Opportunities</h2><div class="swatch t-credit" style="background:linear-gradient(160deg,#CFE6D6,#A6CDB4 60%,#8DBB9F)"></div></div>
-      <div>
-        <p class="lede">Stressed and special-situation credit, capital-structure arbitrage and direct lending to mid-market companies in Europe and North America. We prefer senior secured paper where we can influence a restructuring.</p>
-        <dl class="kv"><div><dt>Inception</dt><dd>March 2012</dd></div><div><dt>Holding period</dt><dd>12–36 months</dd></div><div><dt>Liquidity</dt><dd>Annual, 90 days' notice</dd></div><div><dt>Capacity</dt><dd>$3bn</dd></div><div><dt>Senior secured share</dt><dd>64%</dd></div><div><dt>Status</dt><dd>Closed · next window Q2 2027</dd></div></dl>
-      </div>
-    </article>
-    <article class="strat">
-      <div><span class="label">04 · Quantitative</span><h2>Systematic Equity</h2><div class="swatch" style="background:var(--paper-2)"><span style="position:absolute;right:-30px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--ember) 40%,#9B3416)"></span></div></div>
-      <div>
-        <p class="lede">Market-neutral models trading about 4,000 stocks in the US, Europe and Japan. Signals combine fundamentals, analyst behaviour and order flow, with beta, sector and style exposures held near zero.</p>
-        <dl class="kv"><div><dt>Inception</dt><dd>January 2019</dd></div><div><dt>Holding period</dt><dd>5–20 trading days</dd></div><div><dt>Liquidity</dt><dd>Monthly, 30 days' notice</dd></div><div><dt>Capacity</dt><dd>$2.5bn</dd></div><div><dt>Market beta</dt><dd>Between −0.05 and 0.05</dd></div><div><dt>Status</dt><dd>Open</dd></div></dl>
-      </div>
-    </article>
-  </div>
-  <div class="wrap section tight">
-    <div class="sec-head"><span class="label">Side by side</span><h2>How the strategies <em>compare</em>.</h2><p class="lede muted">Terms shown are for the main share class. Founders' and long-lock classes are described in the offering documents.</p></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Strategy</th><th>Style</th><th>Target volatility</th><th>Liquidity</th><th>Minimum</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Multi-Strategy</td><td>Allocated, all books</td><td>8–10%</td><td>Quarterly</td><td>$5m</td><td>Open by allocation</td></tr>
-          <tr><td>Global Macro</td><td>Discretionary</td><td>10–12%</td><td>Monthly</td><td>$10m</td><td>Open</td></tr>
-          <tr><td>Credit Opportunities</td><td>Fundamental</td><td>7–9%</td><td>Annual</td><td>$10m</td><td>Closed</td></tr>
-          <tr><td>Systematic Equity</td><td>Quantitative</td><td>6–8%</td><td>Monthly</td><td>$10m</td><td>Open</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="label" style="margin-top:14px">Targets are not forecasts or guarantees · Illustrative terms</p>
-  </div>
-</section>
-
-<!-- ======================= APPROACH ======================= -->
-<section data-page="approach" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Approach</span>
-      <h1>We decide how much we can <em>lose</em> before we decide what to buy.</h1>
-      <p class="lede muted">Our process is written down, the same in every office, and audited each year. These are its three stages and the limits that sit around it.</p>
-    </div>
-  </div>
-  <div class="wrap section">
-    <div class="steps three">
-      <div class="step"><span class="n">STAGE 1</span><h3>Thesis</h3><p>A portfolio manager writes a memo: why the price is wrong, what would prove it right, what would prove it wrong, and when we will look again.</p></div>
-      <div class="step"><span class="n">STAGE 2</span><h3>Sizing</h3><p>Risk sets a loss budget from the memo's downside case, stress tests and market liquidity. Size follows from the budget, never from conviction alone.</p></div>
-      <div class="step"><span class="n">STAGE 3</span><h3>Review</h3><p>Every position is reviewed on its stated date or when it uses half its loss budget, whichever comes first. A failed thesis is closed, not averaged down.</p></div>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="sec-head"><span class="label">Firm-wide limits</span><h2>The lines no portfolio manager <em>can</em> cross.</h2><p class="lede muted">Limits are set by the Chief Risk Officer and approved by the board. Bars show current usage against each limit.</p></div>
-    <div class="limits">
-      <div class="limit"><div class="meta"><b>Gross exposure</b><span class="num">312% of 450%</span></div><div class="bar"><i style="width:69%"></i></div><p class="muted" style="font-size:var(--t-small)">Long plus short market value as a share of fund capital.</p></div>
-      <div class="limit"><div class="meta"><b>Net equity beta</b><span class="num">0.04 of ±0.15</span></div><div class="bar"><i style="width:27%"></i></div><p class="muted" style="font-size:var(--t-small)">Sensitivity of the whole fund to global equity markets.</p></div>
-      <div class="limit"><div class="meta"><b>Single issuer</b><span class="num">3.1% of 5%</span></div><div class="bar"><i style="width:62%"></i></div><p class="muted" style="font-size:var(--t-small)">Largest loss on one issuer in a default scenario.</p></div>
-      <div class="limit"><div class="meta"><b>Liquidity</b><span class="num">81% of 70% minimum</span></div><div class="bar"><i style="width:100%;background:var(--ember)"></i></div><p class="muted" style="font-size:var(--t-small)">Share of the portfolio that can be sold within 30 days without moving prices by more than 1%.</p></div>
-    </div>
-    <p class="label" style="margin-top:14px">Illustrative figures as of 30 September 2026</p>
-  </div>
-  <div class="wrap section tight">
-    <div class="split">
-      <div><span class="label">Governance</span><h2 style="margin-top:20px">Independent where it <em>matters</em>.</h2></div>
-      <div class="principles" style="grid-template-columns:1fr 1fr;border-top:0">
-        <div class="principle" style="border-top:1px solid var(--line);padding-left:0"><h3>Independent administration</h3><p>Net asset values are calculated by a third-party fund administrator, not by us.</p></div>
-        <div class="principle" style="border-top:1px solid var(--line);border-left:0;padding-left:0"><h3>Annual audit</h3><p>Every fund is audited each year by an independent accounting firm.</p></div>
-        <div class="principle" style="border-top:1px solid var(--line);padding-left:0"><h3>Several prime brokers</h3><p>Assets are spread across four prime brokers and two custodians to limit counterparty risk.</p></div>
-        <div class="principle" style="border-top:1px solid var(--line);border-left:0;padding-left:0"><h3>Fund boards</h3><p>Each fund's board has a majority of independent directors.</p></div>
-        <div class="principle" style="border-top:1px solid var(--line);padding-left:0"><h3>Stewardship</h3><p>We vote every proxy we hold and publish our voting record each year.</p></div>
-        <div class="principle" style="border-top:1px solid var(--line);border-left:0;padding-left:0"><h3>Regulation</h3><p>Our advisers are registered with the relevant regulators in the UK, US and Singapore.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= INSIGHTS ======================= -->
-<section data-page="insights" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Insights</span>
-      <h1>Written down, so we can be <em>held</em> to it.</h1>
-      <p class="lede muted">The quarterly letter is public. Research and position notes are available to investors through the portal.</p>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="filters" role="group" aria-label="Filter insights">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
-      <button type="button" data-filter="letter" aria-pressed="false">Letters</button>
-      <button type="button" data-filter="research" aria-pressed="false">Research</button>
-      <button type="button" data-filter="note" aria-pressed="false">Notes</button>
-    </div>
-    <div class="elist" id="insight-list">
-      <a class="erow" data-kind="letter" href="#letter-q3-2026"><span class="label">Oct 2026</span><span class="label">Quarterly letter</span><h3>The cost of being early</h3><span class="r label" style="color:var(--ember)">Read · 9 min</span></a>
-      <a class="erow" data-kind="research" href="#investors"><span class="label">Sep 2026</span><span class="label">Macro research</span><h3>Term premium is back. Who holds the duration now?</h3><span class="r lock">Investors</span></a>
-      <a class="erow" data-kind="research" href="#investors"><span class="label">Aug 2026</span><span class="label">Credit research</span><h3>Maturity walls in European mid-market loans, 2027–2029</h3><span class="r lock">Investors</span></a>
-      <a class="erow" data-kind="note" href="#investors"><span class="label">Aug 2026</span><span class="label">Position note</span><h3>Why we closed our yen volatility position early</h3><span class="r lock">Investors</span></a>
-      <a class="erow" data-kind="letter" href="#investors"><span class="label">Jul 2026</span><span class="label">Quarterly letter</span><h3>Crowded exits and the value of a slow book</h3><span class="r lock">Archive</span></a>
-      <a class="erow" data-kind="research" href="#investors"><span class="label">Jun 2026</span><span class="label">Systematic research</span><h3>Signal decay in analyst-revision factors after 2020</h3><span class="r lock">Investors</span></a>
-      <a class="erow" data-kind="note" href="#investors"><span class="label">May 2026</span><span class="label">Risk note</span><h3>Stress-testing the book against a 1994-style bond sell-off</h3><span class="r lock">Investors</span></a>
-      <a class="erow" data-kind="letter" href="#investors"><span class="label">Apr 2026</span><span class="label">Quarterly letter</span><h3>What our worst quarter taught the risk team</h3><span class="r lock">Archive</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= LETTER ======================= -->
-<section data-page="letter-q3-2026" hidden>
-  <div class="wrap">
-    <article class="article">
-      <header>
-        <span class="label">Quarterly letter · Q3 2026</span>
-        <h1>The cost of being <em>early</em></h1>
-        <div class="byline"><span class="label">Eleanor Ashdown, CIO</span><span class="label">14 October 2026</span><span class="label">9 min read</span></div>
-      </header>
-      <div class="body">
-        <p>Being early and being wrong look the same on a monthly statement. The difference only shows up later, and only if you are still holding the position when it does. This quarter tested that idea in two of our books, and we want to explain what we held, what we sold and why.</p>
-        <h2>The quarter in brief</h2>
-        <p>The Multi-Strategy fund finished the quarter slightly positive after a drawdown in August. Global Macro and Credit Opportunities contributed; Systematic Equity was flat after a difficult period for short-horizon signals in July.</p>
-        <p class="pull">“A loss budget is a promise to ourselves, made before the market has a chance to argue.”</p>
-        <h2>Where we were early</h2>
-        <p>We began buying long-dated Japanese government bond volatility in May. For ten weeks the position lost money as the market priced a slow, orderly exit from yield-curve control. In August it paid for itself in four trading days. We sized it so that the ten weeks would cost no more than a third of its loss budget, and that is what let us stay in.</p>
-        <p>Our European mid-market loan book is in the same position today. We think refinancing pressure in 2027 and 2028 is under-priced, and we are building positions slowly. We expect them to cost us before they help us.</p>
-        <h2>Risk at quarter end</h2>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Measure</th><th>30 Jun 2026</th><th>30 Sep 2026</th><th>Limit</th></tr></thead>
-          <tbody>
-            <tr><td>Gross exposure</td><td>298%</td><td>312%</td><td>450%</td></tr>
-            <tr><td>Net equity beta</td><td>0.06</td><td>0.04</td><td>±0.15</td></tr>
-            <tr><td>VaR · 99% · 1 day</td><td>1.31%</td><td>1.42%</td><td>2.50%</td></tr>
-            <tr><td>30-day liquidity</td><td>84%</td><td>81%</td><td>70% min</td></tr>
-          </tbody>
-        </table></div>
-        <h2>Looking ahead</h2>
-        <p>We will reopen Credit Opportunities to existing investors in the second quarter of 2027. Details will be sent with the December risk report. As always, the partners will be on the quarterly call, and we welcome hard questions.</p>
-        <p class="sig">With thanks for your patience,<br>Eleanor Ashdown and the partners of Vesperline</p>
-        <p class="label" style="font-family:var(--f-mono)">Illustrative letter. Past performance is not a guide to future returns.</p>
-      </div>
-      <a class="btn" href="#insights">All insights <span class="dot"><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></a>
-    </article>
-  </div>
-</section>
-
-<!-- ======================= CAREERS ======================= -->
-<section data-page="careers" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Careers</span>
-      <h1>Small teams, long <em>tenures</em>, hard problems.</h1>
-      <p class="lede muted">We hire slowly and keep people. The average tenure of our investment staff is nine years. We look for people who write clearly, change their minds on evidence and care about getting the small things right.</p>
-    </div>
-    <div class="banner dusk night"><span class="label">186 people · 23 nationalities · 3 offices</span></div>
-  </div>
-  <div class="wrap section tight">
-    <div class="principles">
-      <div class="principle"><h3>Ownership early</h3><p>Analysts present to the investment committee in their first year, and every hire can earn a share of the partnership.</p></div>
-      <div class="principle"><h3>Time to think</h3><p>Researchers get one day in five for self-directed work. Some of our best-performing models began there.</p></div>
-      <div class="principle"><h3>Paid like owners</h3><p>Bonuses are deferred into our funds, so everyone shares in the outcome over years, not months.</p></div>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="sec-head"><span class="label">Open roles</span><h2>Where we are <em>hiring</em>.</h2><p class="lede muted">Send a CV and a short note on a market problem you find interesting. We read every one.</p></div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Role</th><th>Team</th><th>Location</th><th>Experience</th></tr></thead>
-        <tbody>
-          <tr><td>Quantitative Researcher</td><td>Systematic Equity</td><td>London</td><td>PhD or 3+ years</td></tr>
-          <tr><td>Credit Analyst, Special Situations</td><td>Credit Opportunities</td><td>New York</td><td>4+ years</td></tr>
-          <tr><td>Rates Trader, Asia</td><td>Global Macro</td><td>Singapore</td><td>6+ years</td></tr>
-          <tr><td>Risk Engineer</td><td>Risk</td><td>London</td><td>3+ years</td></tr>
-          <tr><td>Investor Relations Associate</td><td>Client Partnerships</td><td>New York</td><td>2+ years</td></tr>
-          <tr><td>Graduate Analyst Programme 2027</td><td>All teams</td><td>All offices</td><td>Final-year students</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="sec-head"><span class="label">How we hire</span><h2>Four steps, about <em>six</em> weeks.</h2></div>
-    <div class="steps">
-      <div class="step"><span class="n">STEP 1</span><h3>Application</h3><p>Your CV and a one-page note. A partner reads every shortlisted application.</p></div>
-      <div class="step"><span class="n">STEP 2</span><h3>Conversation</h3><p>A 45-minute call with the hiring manager about your work and how you think.</p></div>
-      <div class="step"><span class="n">STEP 3</span><h3>Case study</h3><p>A take-home problem from the team's real work, then a discussion of your answer.</p></div>
-      <div class="step"><span class="n">STEP 4</span><h3>Final day</h3><p>Meet the team, a member of the investment committee and someone from operations.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= INVESTORS ======================= -->
-<section data-page="investors" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Investors</span>
-      <h1>For institutions and <em>qualified</em> investors.</h1>
-      <p class="lede muted">We work with pension funds, endowments, foundations, sovereign investors, insurers and family offices. Here is how an allocation with us begins and what you receive once you are invested.</p>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="notice"><b>Important</b><p class="muted">Information on this site is not an offer to sell or a solicitation to buy any interest in a fund. Offers are made only through a fund's offering documents, to investors who meet that fund's eligibility requirements.</p></div>
-  </div>
-  <div class="wrap section tight">
-    <div class="sec-head"><span class="label">Becoming an investor</span><h2>From first call to <em>funded</em>.</h2><p class="lede muted">Most allocations take eight to twelve weeks, depending on your own approval process.</p></div>
-    <div class="steps">
-      <div class="step"><span class="n">STEP 1</span><h3>Introduction</h3><p>A call with a partner and investor relations to understand your mandate, horizon and constraints.</p></div>
-      <div class="step"><span class="n">STEP 2</span><h3>Due diligence</h3><p>Access to our data room: DDQ, audited financials, policies, risk reports and on-site meetings.</p></div>
-      <div class="step"><span class="n">STEP 3</span><h3>Subscription</h3><p>Offering documents, side-letter discussion and investor verification by the fund administrator.</p></div>
-      <div class="step"><span class="n">STEP 4</span><h3>Onboarding</h3><p>Portal access, a reporting calendar and an introduction to your dedicated relationship manager.</p></div>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="split">
-      <div><span class="label">Reporting</span><h2 style="margin-top:20px">What you <em>receive</em>.</h2></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Report</th><th>Frequency</th><th>Contents</th></tr></thead>
-          <tbody>
-            <tr><td>Net asset value statement</td><td>Monthly</td><td>Issued by the administrator</td></tr>
-            <tr><td>Risk report</td><td>Monthly</td><td>Exposures, VaR, stress tests, liquidity</td></tr>
-            <tr><td>Investor letter and call</td><td>Quarterly</td><td>Attribution and outlook, with the partners</td></tr>
-            <tr><td>Position transparency</td><td>Quarterly</td><td>Full holdings, for qualifying investors</td></tr>
-            <tr><td>Audited financials</td><td>Annual</td><td>Within 120 days of year end</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="cta-band dusk">
-      <div><span class="label">Existing investors</span><h2 style="margin-top:20px">Statements and reports live in the investor portal.</h2></div>
-      <div class="acts">
-        <p>Your portal sign-in comes from our fund administrator when your subscription is accepted. We will never ask for your password by email or phone.</p>
-        <a class="btn light" href="#contact">Contact investor services <span class="dot"><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= CONTACT ======================= -->
-<section data-page="contact" hidden>
-  <div class="wrap">
-    <div class="page-hero">
-      <span class="label">Contact</span>
-      <h1>Begin a <em>conversation</em>.</h1>
-      <p class="lede muted">Tell us a little about your organisation. A partner and a member of investor relations will reply within two business days.</p>
-    </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="split">
       <div style="display:grid;gap:24px">
-        <div><span class="label">Investor relations</span><div class="copyrow" style="margin-top:8px"><code id="ir-email">ir@vesperline.example</code><button class="copybtn" type="button" data-copy="ir-email">Copy</button></div></div>
-        <div><span class="label">Careers</span><div class="copyrow" style="margin-top:8px"><code id="hr-email">careers@vesperline.example</code><button class="copybtn" type="button" data-copy="hr-email">Copy</button></div></div>
-        <div><span class="label">Press</span><div class="copyrow" style="margin-top:8px"><code id="press-email">press@vesperline.example</code><button class="copybtn" type="button" data-copy="press-email">Copy</button></div></div>
+        <p>Tell us about your mandate and time horizon. A partner will respond within two business days.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-white" href="#contact">Contact us</a><a class="btn btn-outline-white" href="#contact">Investor login</a></div>
       </div>
-      <form class="form" id="contact-form" novalidate>
-        <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="c-org">Organisation</label><input id="c-org" name="org" autocomplete="organization" required></div>
-        <div class="field"><label for="c-email">Work email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
-        <div class="field"><label for="c-type">Investor type</label>
-          <select id="c-type" name="type"><option>Pension fund</option><option>Endowment or foundation</option><option>Sovereign wealth fund</option><option>Insurance company</option><option>Family office</option><option>Consultant or adviser</option><option>Other</option></select></div>
-        <div class="field full"><label for="c-msg">How can we help?</label><textarea id="c-msg" name="message" placeholder="Mandate size, horizon, strategies of interest"></textarea></div>
-        <label class="check" for="c-elig"><input id="c-elig" type="checkbox" required> I confirm that I represent an institutional or professional investor, and I understand this is not an offer to invest.</label>
-        <div class="field full" style="justify-items:start"><button class="btn solid" type="submit">Send enquiry <span class="dot"><svg class="arrow" aria-hidden="true"><use href="#arrow"/></svg></span></button></div>
-        <div class="form-note" id="form-note" hidden role="status"></div>
-      </form>
     </div>
-  </div>
-  <div class="wrap section tight">
-    <div class="offices">
-      <div class="office dusk"><span class="label">Headquarters</span><h3>London</h3><p style="color:var(--on-dark-muted)">St James's, London SW1<br>+44 (0)20 7946 0000</p><span class="tz" data-tz="Europe/London">—</span></div>
-      <div class="office" style="background:var(--pine);color:var(--on-dark)"><span class="label" style="color:var(--on-dark-muted)">Americas</span><h3>New York</h3><p style="color:var(--on-dark-muted)">Midtown, New York, NY 10022<br>+1 212 555 0100</p><span class="tz" data-tz="America/New_York">—</span></div>
-      <div class="office" style="background:var(--cobalt);color:#fff"><span class="label" style="color:rgba(255,255,255,.7)">Asia Pacific</span><h3>Singapore</h3><p style="color:rgba(255,255,255,.75)">Marina Bay, Singapore 018983<br>+65 6000 0000</p><span class="tz" data-tz="Asia/Singapore">—</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= DISCLOSURES ======================= -->
-<section data-page="disclosures" hidden>
-  <div class="wrap">
-    <div class="page-hero"><span class="label">Legal</span><h1>Important <em>information</em>.</h1><p class="lede muted">Please read this before relying on anything on this website.</p></div>
-  </div>
-  <div class="wrap section tight">
-    <div class="prose">
-      <p><b>Design preview.</b> Vesperline Capital is a fictional firm created for this website design. All names, people, figures, terms and documents are illustrative placeholders and do not describe any real fund or manager.</p>
-      <p><b>No offer.</b> Nothing on this website is an offer to sell, or a solicitation of an offer to buy, any security or interest in any fund. Any such offer is made only by a fund's confidential offering documents, and only where permitted by law.</p>
-      <p><b>Eligible investors.</b> The funds are available only to investors who meet the applicable professional, accredited investor or qualified purchaser standards. This website is not directed at retail investors.</p>
-      <p><b>Risk.</b> Investing in hedge funds involves substantial risk, including the possible loss of all capital. Funds may use leverage, short selling and derivatives, which can magnify losses. Investments are illiquid and subject to restrictions on transfer and redemption.</p>
-      <p><b>Performance.</b> Past performance is not a guide to future results. Targets are objectives, not forecasts or guarantees.</p>
-      <p><b>Privacy.</b> Information submitted through this website is used only to respond to your enquiry.</p>
-    </div>
-  </div>
-</section>
-
+  </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="foot-grid">
+    <div class="fgrid">
       <div>
-        <a class="brand" href="#home" style="color:var(--on-dark)"><svg aria-hidden="true" style="color:var(--mint)"><use href="#mark"/></svg>Vesperline <small style="color:var(--on-dark-muted)">CAPITAL</small></a>
-        <p style="margin-top:16px">A multi-strategy investment manager for institutions and qualified investors. London, New York, Singapore.</p>
+        <a class="logo" href="#top"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 9 L14 20 L21 9" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Vesperline Capital</a>
+        <p>A multi-strategy investment manager for institutional and professional investors.</p>
       </div>
-      <div><h4>Firm</h4><ul><li><a href="#firm">About</a></li><li><a href="#approach">Approach</a></li><li><a href="#careers">Careers</a></li></ul></div>
-      <div><h4>Capital</h4><ul><li><a href="#strategies">Strategies</a></li><li><a href="#investors">Investors</a></li><li><a href="#insights">Insights</a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a href="#contact">Enquiries</a></li><li><a href="#contact">Offices</a></li><li><a href="#disclosures">Disclosures</a></li></ul></div>
+      <div><h4>Firm</h4><ul><li><a href="#about">About</a></li><li><a href="#leadership">Leadership</a></li><li><a href="#top">Careers</a></li></ul></div>
+      <div><h4>Investing</h4><ul><li><a href="#strategies">Strategies</a></li><li><a href="#approach">Approach</a></li><li><a href="#clients">Clients</a></li></ul></div>
+      <div><h4>Resources</h4><ul><li><a href="#insights">Insights</a></li><li><a href="#contact">Investors</a></li><li><a href="#top">Important information</a></li></ul></div>
+      <div><h4>Offices</h4><ul><li>London</li><li>New York</li><li>Singapore</li></ul></div>
     </div>
-  </div>
-  <div class="wordmark" aria-hidden="true">Vesper<em>line</em></div>
-  <div class="legal wrap" style="max-width:none">
-    <span>© 2026 Vesperline Capital LLP · Fictional firm for design purposes</span>
-    <span>Not an offer to invest · Capital at risk · <a href="#disclosures">Important information</a></span>
+    <div class="legal">
+      <p>This website is for institutional and professional investors only. It is not an offer to sell, or a solicitation of an offer to buy, any interest in a fund. Capital is at risk. Past performance is not a guide to future returns.</p>
+      <p>© 2026 Vesperline Capital LLP. Design preview: the firm, people and figures are illustrative placeholders, and images are rendered stand-ins for photography.</p>
+    </div>
   </div>
 </footer>
 
 <script>
 (function () {
-  var pages = Array.prototype.slice.call(document.querySelectorAll('[data-page]'));
-  var links = document.querySelectorAll('.nav-links a, .nav-cta');
-  var nav = document.getElementById('nav');
-  var menuBtn = document.getElementById('menu-btn');
-  var parentOf = { 'letter-q3-2026': 'insights' };
-
-  function show() {
-    var id = (location.hash || '#home').slice(1);
-    var target = pages.find(function (p) { return p.getAttribute('data-page') === id; });
-    if (!target) { target = pages[0]; id = 'home'; }
-    pages.forEach(function (p) { p.hidden = p !== target; });
-    var navId = parentOf[id] || id;
-    links.forEach(function (a) {
-      if (a.getAttribute('href') === '#' + navId) a.setAttribute('aria-current', 'page');
-      else a.removeAttribute('aria-current');
-    });
-    nav.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded', 'false');
-    window.scrollTo(0, 0);
+  // Rendered stand-ins for photography, all in one navy-to-amber dusk grade.
+  function rng(seed) { var s = seed * 7919 + 13; return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
+  function sky(ctx, w, h, hz) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#071423'); g.addColorStop(hz * .65, '#15304A'); g.addColorStop(hz, '#B98B63'); g.addColorStop(Math.min(1, hz + .06), '#2E3440'); g.addColorStop(1, '#09131F');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    var r = ctx.createRadialGradient(w * .62, h * hz, 0, w * .62, h * hz, w * .75);
+    r.addColorStop(0, 'rgba(236,174,112,.55)'); r.addColorStop(.35, 'rgba(236,174,112,.14)'); r.addColorStop(1, 'rgba(236,174,112,0)');
+    ctx.fillStyle = r; ctx.fillRect(0, 0, w, h);
   }
-  window.addEventListener('hashchange', show);
-  show();
-
-  menuBtn.addEventListener('click', function () {
-    var open = nav.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', String(open));
-  });
-
-  // Insight filters
-  var filterBtns = document.querySelectorAll('[data-filter]');
-  filterBtns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      var f = b.getAttribute('data-filter');
-      filterBtns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-      document.querySelectorAll('#insight-list .erow').forEach(function (row) {
-        row.hidden = !(f === 'all' || row.getAttribute('data-kind') === f);
-      });
-    });
-  });
-
-  // Copy buttons
-  document.querySelectorAll('[data-copy]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var el = document.getElementById(b.getAttribute('data-copy'));
-      var text = el.textContent;
-      function selectIt() { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; }
-      try {
-        navigator.clipboard.writeText(text).then(function () { b.textContent = 'Copied'; }, selectIt);
-      } catch (e) { selectIt(); }
-      setTimeout(function () { b.textContent = 'Copy'; }, 1800);
-    });
-  });
-
-  // Contact form (preview only)
-  var form = document.getElementById('contact-form');
-  var note = document.getElementById('form-note');
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var missing = Array.prototype.filter.call(form.querySelectorAll('[required]'), function (el) {
-      return el.type === 'checkbox' ? !el.checked : !el.value.trim() || (el.type === 'email' && !/^\S+@\S+\.\S+$/.test(el.value));
-    });
-    note.hidden = false;
-    if (missing.length) {
-      note.innerHTML = '<b>Some details are missing.</b> Please complete name, organisation, a valid work email and the investor confirmation.';
-      missing[0].focus();
-      return;
+  function glow(ctx, x, y, s, a) { var g = ctx.createRadialGradient(x, y, 0, x, y, s); g.addColorStop(0, 'rgba(255,196,128,' + a + ')'); g.addColorStop(1, 'rgba(255,196,128,0)'); ctx.fillStyle = g; ctx.fillRect(x - s, y - s, s * 2, s * 2); }
+  function cityLights(ctx, w, h, top, R) {
+    var vx = w * .55;
+    ctx.lineWidth = 1;
+    for (var k = -14; k <= 14; k++) { ctx.strokeStyle = 'rgba(255,186,118,' + (.10 + R() * .18) + ')'; ctx.beginPath(); ctx.moveTo(vx + k * w * .012, top); ctx.lineTo(vx + k * w * .22, h); ctx.stroke(); }
+    for (var j = 1; j < 14; j++) { var t = Math.pow(j / 14, 2); var yy = top + t * (h - top); ctx.strokeStyle = 'rgba(255,186,118,' + (.06 + t * .2) + ')'; ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(w, yy); ctx.stroke(); }
+    var n = Math.round(w * h / 140);
+    for (var i = 0; i < n; i++) {
+      var z = R(), t2 = Math.pow(z, 1.7); var y = top + t2 * (h - top);
+      var x = vx + (R() - .5) * w * (.25 + t2 * 2.4); if (x < 0 || x > w) continue;
+      var s = .5 + t2 * 2.2; var warm = R() < .82;
+      ctx.fillStyle = warm ? 'rgba(255,' + (160 + (R() * 70 | 0)) + ',' + (90 + (R() * 50 | 0)) + ',' + (.3 + R() * .7) + ')' : 'rgba(205,225,255,' + (.25 + R() * .5) + ')';
+      ctx.fillRect(x, y, s, s);
+      if (R() < .02) glow(ctx, x, y, 6 + t2 * 18, .25);
     }
-    note.innerHTML = '<b>Enquiry ready.</b> This preview is not connected to an inbox yet, so nothing was sent. When the site goes live, enquiries will route to investor relations.';
-  });
-
-  // Office clocks
-  function tick() {
-    document.querySelectorAll('[data-tz]').forEach(function (el) {
-      try {
-        el.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: el.getAttribute('data-tz'), timeZoneName: 'short' }).format(new Date());
-      } catch (e) { el.textContent = ''; }
-    });
+    var haze = ctx.createLinearGradient(0, top - h * .05, 0, top + h * .18); haze.addColorStop(0, 'rgba(185,139,99,.0)'); haze.addColorStop(.4, 'rgba(185,139,99,.35)'); haze.addColorStop(1, 'rgba(185,139,99,0)');
+    ctx.fillStyle = haze; ctx.fillRect(0, top - h * .05, w, h * .23);
   }
-  tick(); setInterval(tick, 30000);
+  function towers(ctx, w, h, base, R, count, fill, litA) {
+    for (var i = 0; i < count; i++) {
+      var bw = w * (.035 + R() * .07), bh = h * (.12 + R() * .45), x = R() * w - bw / 2;
+      ctx.fillStyle = fill; ctx.fillRect(x, base - bh, bw, bh + 2);
+      if (R() < .4) ctx.fillRect(x + bw * .45, base - bh - h * .04, 2, h * .04);
+      for (var yy = base - bh + 5; yy < base - 3; yy += 6) for (var xx = x + 3; xx < x + bw - 3; xx += 5) if (R() < .3) { ctx.fillStyle = 'rgba(255,200,130,' + (litA * (.4 + R() * .6)) + ')'; ctx.fillRect(xx, yy, 2, 2.5); }
+      ctx.fillStyle = fill;
+    }
+  }
+  var scenes = {
+    aerial: function (ctx, w, h, R) { sky(ctx, w, h, .24); ctx.fillStyle = '#0A1521'; ctx.fillRect(0, h * .27, w, h); towers(ctx, w, h, h * .28, R, 30, '#0E1B28', .5); cityLights(ctx, w, h, h * .28, R); },
+    skyline: function (ctx, w, h, R) { sky(ctx, w, h, .6); towers(ctx, w, h, h * .7, R, 24, '#1A2D40', .45); towers(ctx, w, h, h * .78, R, 20, '#0C1925', .9); ctx.fillStyle = '#07111B'; ctx.fillRect(0, h * .78, w, h); for (var i = 0; i < 200; i++) { ctx.fillStyle = 'rgba(255,190,120,' + R() * .3 + ')'; ctx.fillRect(R() * w, h * .79 + R() * h * .21, 4 + R() * 30, 1); } },
+    facade: function (ctx, w, h, R) {
+      var g = ctx.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#0C1F33'); g.addColorStop(.55, '#284763'); g.addColorStop(1, '#C59B72'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(-.12); ctx.transform(1, 0, -.35, 1, 0, 0);
+      var cw = w / 7, ch = h / 9;
+      for (var x = -w; x < w; x += cw) for (var y = -h; y < h; y += ch) { ctx.fillStyle = 'rgba(255,255,255,' + (.03 + R() * .12) + ')'; ctx.fillRect(x + 3, y + 3, cw - 6, ch - 6); }
+      ctx.restore();
+    },
+    room: function (ctx, w, h, R) {
+      sky(ctx, w, h, .52); towers(ctx, w, h, h * .6, R, 22, '#1A2C3E', .5);
+      ctx.fillStyle = '#09131D'; ctx.fillRect(0, h * .6, w, h);
+      ctx.fillStyle = '#0A1622'; for (var i = 0; i <= 3; i++) ctx.fillRect(i * w / 3 - 6, 0, 12, h * .6);
+      ctx.fillStyle = '#0A1622'; ctx.fillRect(0, 0, w, h * .04);
+      ctx.fillStyle = '#1C2833'; ctx.beginPath(); ctx.moveTo(w * .1, h * .8); ctx.lineTo(w * .9, h * .8); ctx.lineTo(w * .78, h * .72); ctx.lineTo(w * .22, h * .72); ctx.fill();
+      ctx.fillStyle = 'rgba(236,174,112,.22)'; ctx.fillRect(w * .22, h * .72, w * .56, 2);
+      ctx.fillStyle = '#0D1823'; for (var c = 0; c < 5; c++) ctx.fillRect(w * (.2 + c * .13), h * .63, w * .06, h * .1);
+      var r = ctx.createLinearGradient(0, h * .6, 0, h); r.addColorStop(0, 'rgba(236,174,112,.12)'); r.addColorStop(1, 'rgba(236,174,112,0)'); ctx.fillStyle = r; ctx.fillRect(0, h * .8, w, h * .2);
+    },
+    desk: function (ctx, w, h, R) {
+      var g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#0C1C2D'); g.addColorStop(1, '#050E17'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      for (var i = 0; i < 6; i++) {
+        var x = w * (.04 + (i % 3) * .32), y = h * (.16 + Math.floor(i / 3) * .25), sw = w * .28, sh = h * .21;
+        ctx.fillStyle = '#0F2740'; ctx.fillRect(x, y, sw, sh);
+        glow(ctx, x + sw / 2, y + sh / 2, sw * .7, .06);
+        ctx.strokeStyle = 'rgba(236,174,112,.7)'; ctx.lineWidth = 1.5; ctx.beginPath(); var py = y + sh * .6; ctx.moveTo(x + 6, py);
+        for (var k = 1; k < 24; k++) { py += (R() - .52) * sh * .14; py = Math.max(y + 6, Math.min(y + sh - 6, py)); ctx.lineTo(x + 6 + k * ((sw - 12) / 23), py); } ctx.stroke();
+        ctx.fillStyle = 'rgba(160,190,220,.25)'; for (var b = 0; b < 4; b++) ctx.fillRect(x + 8, y + 8 + b * 6, sw * (.15 + R() * .2), 2);
+      }
+      ctx.fillStyle = '#03080E'; ctx.beginPath(); ctx.ellipse(w * .5, h * 1.05, w * .24, h * .34, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(w * .5, h * .67, w * .075, h * .085, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#141A21'; ctx.fillRect(0, h * .88, w, h);
+    },
+    portrait: function (ctx, w, h, R) {
+      var g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#2B3D4F'); g.addColorStop(1, '#0D1B29'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      var r = ctx.createRadialGradient(w * .75, h * .15, 0, w * .75, h * .15, w * .9); r.addColorStop(0, 'rgba(236,180,128,.38)'); r.addColorStop(1, 'rgba(236,180,128,0)'); ctx.fillStyle = r; ctx.fillRect(0, 0, w, h);
+    }
+  };
+  function grain(ctx, w, h, R) { for (var i = 0; i < w * h / 40; i++) { ctx.fillStyle = 'rgba(255,255,255,' + R() * .035 + ')'; ctx.fillRect(R() * w, R() * h, 1, 1); } }
+  function draw(el) {
+    var c = el.querySelector('canvas'); var rect = el.getBoundingClientRect(); if (!rect.width) return;
+    var d = Math.min(window.devicePixelRatio || 1, 2); c.width = Math.round(rect.width * d); c.height = Math.round(rect.height * d);
+    var ctx = c.getContext('2d'); ctx.setTransform(d, 0, 0, d, 0, 0);
+    var R = rng(+(el.getAttribute('data-seed') || 7)); var w = rect.width, h = rect.height;
+    scenes[el.getAttribute('data-scene')](ctx, w, h, R);
+    grain(ctx, w, h, R);
+    var v = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * .3, w / 2, h / 2, Math.max(w, h) * .75);
+    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.4)'); ctx.fillStyle = v; ctx.fillRect(0, 0, w, h);
+  }
+  var els = Array.prototype.slice.call(document.querySelectorAll('[data-scene]'));
+  function all() { els.forEach(draw); }
+  all();
+  var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(all, 150); });
 })();
 </script>
