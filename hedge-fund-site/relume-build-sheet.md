@@ -66,6 +66,30 @@ Navbar: About · Strategies · Approach · Clients · Insights · Careers · **I
 
 ---
 
+## 3b. Home page: exact Relume components
+
+These components are from the Relume component library. In Relume's wireframe view, use "Swap section" or "Add section" and search for each name below, then paste in the copy from section 4.
+
+| # | Section | Relume component | Why this one |
+|---|---|---|---|
+| 1 | Navbar | **Navbar 1** | Logo left, menu and buttons right. Set it transparent over the hero. |
+| 2 | Hero | **Header 111** | Full background image, left-aligned heading, two buttons |
+| 3 | Key figures | **Stats 4** | Figures over a background image. Add a fourth column, or use the stats row inside the hero. |
+| 4 | Who we are | **Layout 637** | Text left, image right, button |
+| 5 | Who we serve | **Layout 631** | Four columns with images, headings and text |
+| 6 | Our strategies | **Layout 627** | Four columns. Remove the images for a text-only strategy row, or keep them. |
+| 7 | How we invest | **Layout 669** | Image left, list right, for the three steps |
+| 8 | Independent oversight | **Layout 324** | Four columns on a background image |
+| 9 | CIO quote | **Testimonial 1** | One centred quote with avatar. Remove the logo. |
+| 10 | Leadership | **Team 7** | Three columns of portraits with name and role |
+| 11 | Insights | **Blog 38** | Three cards with image, category and title |
+| 12 | Closing call to action | **CTA 15** | Two columns on a background image, two buttons |
+| 13 | Footer | **Footer 1** | Four link columns. Replace the newsletter sign-up with the legal text. |
+
+Inner pages: use **Header 111** (or a shorter page header) at the top of each page so every page opens on a full-bleed photo, then pick from the Relume categories "Timeline Sections" (About), "Comparison Sections" or "Tables" (Strategies), "Team Sections" (Leadership), "Career Sections" (Careers), "Blog Sections" and "Blog Post Headers" (Insights), "FAQ Sections" (Investors) and "Contact Sections" (Contact).
+
+---
+
 ## 4. Pages and copy
 
 ### HOME
