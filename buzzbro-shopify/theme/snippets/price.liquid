@@ -5,7 +5,7 @@
 {%- liquid
   assign target = variant | default: product.selected_or_first_available_variant
   assign on_sale = false
-  if target.compare_at_price > target.price
+  if target.compare_at_price > target.price and hide_compare != true
     assign on_sale = true
     assign saving = target.compare_at_price | minus: target.price | times: 100.0 | divided_by: target.compare_at_price | round
   endif

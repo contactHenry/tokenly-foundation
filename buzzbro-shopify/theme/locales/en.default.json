@@ -57,6 +57,9 @@
     "name_placeholder": "Enter your Full Name (Public)",
     "email": "Email",
     "email_placeholder": "Enter your Email Address (Private)",
+    "media": "Picture/Video (optional)",
+    "attach": "Attach Files",
+    "media_subject": "Photos for my review of {{ product }}",
     "cancel": "Cancel Review",
     "submit": "Submit Review",
     "thanks": "Thanks! Your review was sent and will appear once it has been approved."

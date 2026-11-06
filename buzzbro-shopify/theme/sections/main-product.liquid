@@ -17,7 +17,6 @@
   if product.requires_selling_plan and has_plans
     assign default_plan = product.selling_plan_groups.first.selling_plans.first
   endif
-  assign collection_crumb = collection | default: product.collections.first
 -%}
 
 <section class="page-width pdp" data-product-section data-section-id="{{ section.id }}">
@@ -44,7 +43,7 @@
       </div>
       {%- if product.media.size > 1 -%}
         <ul class="gallery__thumbs" role="list">
-          {%- for media in product.media limit: 8 -%}
+          {%- for media in product.media limit: 4 -%}
             {%- assign img = media.preview_image | default: media -%}
             <li>
               <button class="gallery__thumb" type="button" data-thumb="{{ media.id }}" aria-label="{{ img.alt | default: product.title | escape }}"{% if forloop.first %} aria-current="true"{% endif %}>
@@ -58,7 +57,7 @@
 
     <div class="pdp__info">
       <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>/<a href="{% if collection_crumb %}{{ collection_crumb.url }}{% else %}{{ routes.all_products_collection_url }}{% endif %}">{% if collection_crumb %}{{ collection_crumb.title | escape }}{% else %}{{ 'general.shop_all' | t }}{% endif %}</a>/<span aria-current="page">{{ product.title | escape }}</span>
+        <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>/<a href="{{ routes.all_products_collection_url }}">{{ 'general.shop_all' | t }}</a>/<span aria-current="page">{{ product.title | escape }}</span>
       </nav>
 
       {%- for block in section.blocks -%}
@@ -72,13 +71,18 @@
             {%- endif -%}
 
           {%- when 'price' -%}
-            <div {{ block.shopify_attributes }} data-price-wrapper>{% render 'price', product: product, variant: current_variant %}</div>
+            <div class="pdp__price" {{ block.shopify_attributes }} data-price-wrapper{% unless block.settings.show_compare %} data-hide-compare{% endunless %}>{%- liquid
+              assign hide_cmp = true
+              if block.settings.show_compare
+                assign hide_cmp = false
+              endif
+            -%}{% render 'price', product: product, variant: current_variant, hide_compare: hide_cmp %}</div>
 
           {%- when 'rating' -%}
-            <div {{ block.shopify_attributes }}>{% render 'rating', product: product, class: 'pdp__rating' %}</div>
+            <div class="pdp__rating-slot" {{ block.shopify_attributes }}>{% render 'rating', product: product %}</div>
 
           {%- when 'perks' -%}
-            <div {{ block.shopify_attributes }}>
+            <div class="pdp__perks" {{ block.shopify_attributes }}>
               {%- if block.settings.heading != blank -%}<p class="pdp__perks-title">{{ block.settings.heading | escape }}</p>{%- endif -%}
               {%- assign perk_lines = block.settings.bullets | newline_to_br | split: '<br />' -%}
               <ul class="pdp__bullets">
@@ -222,7 +226,7 @@
     { "type": "@app" },
     { "type": "title", "name": "Title", "limit": 1 },
     { "type": "description", "name": "Description", "limit": 1 },
-    { "type": "price", "name": "Price", "limit": 1 },
+    { "type": "price", "name": "Price", "limit": 1, "settings": [{ "type": "checkbox", "id": "show_compare", "label": "Show compare-at price and Save badge", "default": false, "info": "Off matches the design: the product page shows the price alone." }] },
     { "type": "rating", "name": "Rating", "limit": 1 },
     {
       "type": "perks",

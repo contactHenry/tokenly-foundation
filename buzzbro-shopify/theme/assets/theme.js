@@ -156,6 +156,7 @@
         const panel = document.getElementById(t.getAttribute('aria-controls'));
         if (panel) panel.hidden = !on;
       });
+      root.classList.toggle('is-reviews', (tab.getAttribute('aria-controls') || '').startsWith('panel-reviews'));
     };
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => select(tab));
@@ -174,11 +175,12 @@
     const more = $('[data-review-load-more]', root);
     const toggleForm = (open) => {
       if (!fields) return;
+      root.classList.toggle('is-writing', open);
       fields.hidden = !open;
       if (list) list.hidden = open;
       if (more) more.parentElement.hidden = open || !$$('[data-review-more][hidden]', root).length;
       if (openBtn) openBtn.setAttribute('aria-expanded', String(open));
-      if (open) { const first = fields.querySelector('input:not([type="hidden"]), textarea'); first && first.focus(); }
+      if (open) { const first = fields.querySelector('input:not([type="hidden"]), textarea'); first && first.focus(); root.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
     };
     openBtn && openBtn.addEventListener('click', () => toggleForm(true));
     const cancel = $('[data-review-cancel]', root);
@@ -247,7 +249,7 @@
         if (p) p.textContent = variant.price;
         let compare = $('[data-compare-price]', row);
         let badge = $('[data-sale-badge]', row);
-        if (variant.compare_at_price) {
+        if (variant.compare_at_price && !row.closest('[data-hide-compare]')) {
           if (!compare) { compare = document.createElement('s'); compare.className = 'price__compare'; compare.dataset.comparePrice = ''; $('.price', row).appendChild(compare); }
           compare.textContent = variant.compare_at_price;
           if (data.showBadge) {

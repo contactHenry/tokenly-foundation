@@ -9,7 +9,7 @@
     "color_sky": "#D6E9FF",
     "color_ice": "#EBF4FF",
     "color_alert": "#F41E1E",
-    "color_star": "#FFC700",
+    "color_star": "#FFD100",
     "type_body_font": "inter_n4",
     "show_sale_badge": true,
     "sale_badge_text": "Save [percent] %",

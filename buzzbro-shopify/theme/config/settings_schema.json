@@ -27,7 +27,7 @@
       { "type": "color", "id": "color_sky", "label": "Sky (hero gradient)", "default": "#D6E9FF" },
       { "type": "color", "id": "color_ice", "label": "Ice blue (call-to-action band)", "default": "#EBF4FF" },
       { "type": "color", "id": "color_alert", "label": "Contact form button", "default": "#F41E1E" },
-      { "type": "color", "id": "color_star", "label": "Rating stars", "default": "#FFC700" }
+      { "type": "color", "id": "color_star", "label": "Rating stars", "default": "#FFD100" }
     ]
   },
   {
