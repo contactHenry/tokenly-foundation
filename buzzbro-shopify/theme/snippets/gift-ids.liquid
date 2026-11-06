@@ -1,0 +1,8 @@
+{%- comment -%}
+  Variant ids of the product's free gifts (custom.free_gifts), comma-separated, for data-gift-ids.
+  The automatic "Free gifts with the SmoothShave Kit 2.0" discount makes them free in the cart.
+{%- endcomment -%}
+{%- for g in gift_product.metafields.custom.free_gifts.value -%}
+  {%- assign gv = g.selected_or_first_available_variant -%}
+  {%- if gv.available -%}{{ gv.id }}{% unless forloop.last %},{% endunless %}{%- endif -%}
+{%- endfor -%}

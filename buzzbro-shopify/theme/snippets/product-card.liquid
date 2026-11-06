@@ -17,7 +17,7 @@
       {%- endif -%}
     </a>
     {%- if variant.available -%}
-      <form method="post" action="{{ routes.cart_add_url }}" class="card__quick-add" data-quick-add>
+      <form method="post" action="{{ routes.cart_add_url }}" class="card__quick-add" data-quick-add data-gift-ids="{% render 'gift-ids', gift_product: card_product %}">
         <input type="hidden" name="id" value="{{ variant.id }}">
         <input type="hidden" name="quantity" value="1">
         <button type="submit" class="icon-btn icon-btn--card" aria-label="{{ 'products.quick_add' | t: title: card_product.title | escape }}">

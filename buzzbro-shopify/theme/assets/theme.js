@@ -31,7 +31,7 @@
     $$('[data-cart-link]').forEach((el) => { el.hidden = count === 0; });
   }
 
-  async function addToCart(formData) {
+  async function addToCart(formData, form) {
     const res = await fetch(`${cfg.routes.cart_add_url}.js`, {
       method: 'POST',
       headers: { Accept: 'application/json' },
@@ -39,7 +39,20 @@
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.description || data.message || cfg.strings.error);
-    const cart = await fetch(cfg.routes.cart_js).then((r) => r.json());
+    let cart = await fetch(cfg.routes.cart_js).then((r) => r.json());
+
+    // Free gifts (custom.free_gifts): add any that aren't in the cart yet, one each.
+    const giftIds = ((form && form.dataset.giftIds) || '').split(',').map((s) => parseInt(s, 10)).filter(Boolean);
+    const inCart = new Set(cart.items.map((i) => i.variant_id));
+    const missing = giftIds.filter((id) => !inCart.has(id));
+    if (missing.length) {
+      await fetch(`${cfg.routes.cart_add_url}.js`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: missing.map((id) => ({ id, quantity: 1 })) }),
+      });
+      cart = await fetch(cfg.routes.cart_js).then((r) => r.json());
+    }
     setCartCount(cart.item_count);
     return data;
   }
@@ -50,7 +63,7 @@
       const button = form.querySelector('[type="submit"]');
       if (button) button.disabled = true;
       try {
-        await addToCart(new FormData(form));
+        await addToCart(new FormData(form), form);
         toast(cfg.strings.added);
       } catch (err) {
         toast(err.message || cfg.strings.error);
@@ -300,7 +313,7 @@
       try {
         const fd = new FormData(form);
         if (!fd.get('selling_plan')) fd.delete('selling_plan');
-        await addToCart(fd);
+        await addToCart(fd, form);
         toast(cfg.strings.added);
       } catch (err) {
         toast(err.message || cfg.strings.error);

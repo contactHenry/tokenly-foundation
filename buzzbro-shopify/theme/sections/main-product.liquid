@@ -95,7 +95,8 @@
 
           {%- when 'buy_buttons' -%}
             <div class="pdp__buy" {{ block.shopify_attributes }}>
-              {%- form 'product', product, id: 'ProductForm-main', data-product-form: '', novalidate: 'novalidate' -%}
+              {%- capture gift_ids -%}{% render 'gift-ids', gift_product: product %}{%- endcapture -%}
+              {%- form 'product', product, id: 'ProductForm-main', data-product-form: '', data-gift-ids: gift_ids, novalidate: 'novalidate' -%}
                 <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
 
                 {%- unless product.has_only_default_variant -%}

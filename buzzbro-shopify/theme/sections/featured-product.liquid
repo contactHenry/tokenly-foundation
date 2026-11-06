@@ -30,7 +30,7 @@
           <div class="actions-row">
             <a class="btn btn--primary btn--small" href="{{ fp.url }}">{{ 'products.buy_now' | t }}</a>
             {%- if v.available -%}
-              <form method="post" action="{{ routes.cart_add_url }}" data-quick-add>
+              <form method="post" action="{{ routes.cart_add_url }}" data-quick-add data-gift-ids="{% render 'gift-ids', gift_product: fp %}">
                 <input type="hidden" name="id" value="{{ v.id }}">
                 <input type="hidden" name="quantity" value="1">
                 <button class="icon-btn" type="submit" aria-label="{{ 'products.quick_add' | t: title: fp.title | escape }}">{% render 'icon', name: 'plus' %}</button>
