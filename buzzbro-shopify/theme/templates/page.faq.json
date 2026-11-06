@@ -180,7 +180,8 @@
       ],
       "settings": {
         "heading": "👋 Hi there! What do you need help with today?",
-        "subheading": "We’re here to assist you—ask us anything"
+        "subheading": "We’re here to assist you—ask us anything",
+        "padding_bottom": 119
       }
     }
   },

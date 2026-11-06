@@ -3,7 +3,8 @@
     "main": {
       "type": "contact-page",
       "settings": {
-        "heading": "Contact Us"
+        "heading": "Contact Us",
+        "padding_bottom": 116
       }
     }
   },

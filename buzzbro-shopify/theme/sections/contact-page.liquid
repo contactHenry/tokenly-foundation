@@ -1,31 +1,42 @@
-{%- comment -%} Contact Us page (Figma node 125:8282). {%- endcomment -%}
-<section class="page-width page-head contact">
-  <h1 class="page-title">{{ section.settings.heading | default: page.title | escape }}</h1>
-  {%- if section.settings.intro != blank -%}<div class="page-intro">{{ section.settings.intro }}</div>{%- endif -%}
+{%- comment -%} Contact Us page (Figma 125:8282). {%- endcomment -%}
+<section class="page-width cp contact" style="--cp-pb: {{ section.settings.padding_bottom }}px;">
+  <h1 class="cp__title cp__title--left">{{ section.settings.heading | default: page.title | escape }}</h1>
+  {%- if section.settings.intro != blank -%}
+    <div class="cp__item" style="margin-top: 24px; --item-pb: 0px; min-height: 122px;"><div class="cp__body">{{ section.settings.intro }}</div></div>
+  {%- endif -%}
 
   <div class="contact__grid">
     {%- form 'contact', class: 'contact__form', id: 'ContactForm' -%}
       {%- if form.posted_successfully? -%}
-        <p class="form-message" role="status">{{ 'contact.success' | t }}</p>
+        <p class="form-message" role="status" style="margin-bottom: 24px">{{ 'contact.success' | t }}</p>
       {%- elsif form.errors -%}
-        <p class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</p>
+        <p class="form-message form-message--error" role="alert" style="margin-bottom: 24px">{{ form.errors | default_errors }}</p>
       {%- endif -%}
-      <div class="field">
-        <label for="ContactName">{{ 'contact.name' | t }}</label>
-        <input id="ContactName" type="text" name="contact[name]" autocomplete="name" required placeholder="{{ 'contact.name_placeholder' | t }}" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+      <div class="contact__fields">
+        <div class="field">
+          <label for="ContactName">{{ 'contact.name' | t }}</label>
+          <input id="ContactName" type="text" name="contact[name]" autocomplete="name" required placeholder="{{ 'contact.name_placeholder' | t }}" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+        </div>
+        <div class="field">
+          <label for="ContactEmail">{{ 'contact.email' | t }}</label>
+          <input id="ContactEmail" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'contact.email_placeholder' | t }}" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+        </div>
+        <div class="field">
+          <label for="ContactBody">{{ 'contact.message' | t }}</label>
+          <textarea id="ContactBody" name="contact[body]" required placeholder="{{ 'contact.message_placeholder' | t }}">{{ form.body }}</textarea>
+        </div>
+        {%- if section.settings.show_attach -%}
+          {%- comment -%} Figma 125:8389. Shopify forms can't carry files, so this opens an email to the store instead. {%- endcomment -%}
+          <div class="contact__attach">
+            <a class="rf-attach" href="mailto:{{ shop.email }}?subject={{ 'contact.attach_subject' | t | url_encode }}">
+              {% render 'icon', name: 'attachment' %}<span>{{ 'reviews.attach' | t }}</span>
+            </a>
+            <p>{{ section.settings.attach_note | escape }}</p>
+          </div>
+        {%- endif -%}
       </div>
-      <div class="field">
-        <label for="ContactEmail">{{ 'contact.email' | t }}</label>
-        <input id="ContactEmail" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'contact.email_placeholder' | t }}" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
-      </div>
-      <div class="field">
-        <label for="ContactBody">{{ 'contact.message' | t }}</label>
-        <textarea id="ContactBody" name="contact[body]" required placeholder="{{ 'contact.message_placeholder' | t }}">{{ form.body }}</textarea>
-      </div>
-      <div>
-        <button class="btn btn--send" type="submit">{{ 'contact.send' | t }}</button>
-        {%- if section.settings.legal != blank -%}<div class="contact__legal">{{ section.settings.legal }}</div>{%- endif -%}
-      </div>
+      <button class="btn btn--send" type="submit">{{ 'contact.send' | t }}</button>
+      {%- if section.settings.legal != blank -%}<div class="contact__legal">{{ section.settings.legal }}</div>{%- endif -%}
     {%- endform -%}
 
     <div class="contact__image">
@@ -45,7 +56,10 @@
     { "type": "text", "id": "heading", "label": "Heading", "default": "Contact Us" },
     { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>Shop stress-free this holiday season! Enjoy our 30-day money-back guarantee on all holiday purchases. Buy now, gift later, and if it’s not the perfect fit, returns are easy and hassle-free.</p>" },
     { "type": "image_picker", "id": "image", "label": "Image" },
-    { "type": "richtext", "id": "legal", "label": "Small print", "default": "<p>This site is protected by reCAPTCHA Enterprise and the Google Privacy Policy and Terms of Service apply.</p>" }
+    { "type": "checkbox", "id": "show_attach", "label": "Show “Attach Files”", "default": true, "info": "Opens the shopper's email app addressed to your store email, so they can send files." },
+    { "type": "text", "id": "attach_note", "label": "Attach note", "default": "Send photos or documents to us by email." },
+    { "type": "richtext", "id": "legal", "label": "Small print", "default": "<p>This site is protected by reCAPTCHA Enterprise and the Google Privacy Policy and Terms of Service apply.</p>" },
+    { "type": "range", "id": "padding_bottom", "label": "Space below", "min": 40, "max": 400, "step": 1, "unit": "px", "default": 118 }
   ],
   "presets": [{ "name": "Contact page" }]
 }

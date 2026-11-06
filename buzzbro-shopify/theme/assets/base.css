@@ -747,24 +747,61 @@ ul[role="list"] { list-style: none; }
 .rte ul, .rte ol { padding-left: 24px; }
 .rte a { text-decoration: underline; }
 
-.contact { padding-bottom: 96px; }
-.contact__grid { display: grid; grid-template-columns: 587fr 638fr; justify-content: space-between; gap: clamp(32px, 6vw, 87px); margin-top: 16px; }
-.contact__form { display: flex; flex-direction: column; gap: 43px; }
-.contact__image img { width: 100%; height: auto; }
-.btn--send { width: 100%; height: 80px; background: var(--color-alert); color: #fff; font-weight: 700; font-size: 24px; letter-spacing: 0; filter: drop-shadow(var(--shadow-cta)); }
-.contact__legal { font-size: clamp(14px, 1.39vw, 20px); line-height: 2; margin-top: 8px; }
-@media (max-width: 900px) { .contact__grid { grid-template-columns: 1fr; } .contact__image { order: -1; } }
+/* ---------- Content pages: FAQ, Shipping & Returns, Warranty, Contact (Figma 125:7832, 125:8042, 125:8191, 125:8282) ---------- */
+/* 1312px column starting 87px under the header */
+.cp { padding-top: clamp(40px, 6.04vw, 87px); padding-bottom: var(--cp-pb, 141px); }
+.cp__title { font-weight: 700; font-size: clamp(30px, 3.33vw, 48px); line-height: 1.46; text-align: center; color: var(--color-ink); }
+.cp__title--left { text-align: left; }
+.cp__sub { margin-top: 8px; font-size: clamp(17px, 1.67vw, 24px); line-height: 2.08; text-align: center; color: var(--color-ink); }
+/* 125:7866: group heading, 48 bold on a 70px line, 3px rule */
+.cp__group { margin-top: 40px; }
+.cp__group-title { padding: 10px 0; border-bottom: 3px solid var(--color-ink); font-weight: 700; font-size: clamp(28px, 3.33vw, 48px); line-height: 1.46; color: var(--color-ink); }
+/* 125:7869: item, 1px #cacaca rule, 32 bold title on a 70px line, 24/50 body */
+.cp__item { padding: 10px 0 var(--item-pb, 3px); border-bottom: 1px solid #cacaca; }
+.cp__item-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 0; font-weight: 700; font-size: clamp(20px, 2.22vw, 32px); line-height: 2.19; color: var(--color-ink); }
+.cp__item-title svg { width: 24px; height: 24px; flex: none; }
+.cp__body { font-size: clamp(16px, 1.67vw, 24px); line-height: 2.08; color: var(--color-ink); }
+.cp__body p { margin: 0; }
+.cp__body ul, .cp__body ol { margin: 0; padding-left: 1.5em; list-style: disc; }
+.cp__body a { text-decoration: underline; }
+.cp__body strong { font-weight: 700; }
+/* FAQ questions sit in a 10px padded row with an up chevron (open) */
+.cp--faq .cp__item { --item-pb: 0px; }
+.cp--faq details > summary { list-style: none; cursor: pointer; padding: 10px; }
+.cp--faq details > summary::-webkit-details-marker { display: none; }
+.cp--faq details > summary svg { transform: rotate(180deg); transition: transform .2s; }
+.cp--faq details[open] > summary svg { transform: rotate(0deg); }
+/* Warranty: running text with 32px bold heads on 50px lines and blank-line gaps */
+.cp__item--flow { padding: 0; border-bottom: 0; margin-top: 50px; }
+.cp__item--flow.is-first { margin-top: 38px; }
+.cp__item--flow.is-tight { margin-top: 0; }
+.cp__item--flow .cp__item-title { padding: 0; line-height: 50px; }
+.cp__inline-title { font-weight: 700; font-size: clamp(20px, 2.22vw, 32px); line-height: 50px; }
+.has-inline-title > p:first-of-type { display: inline; }
 
-.faq-page { padding-top: clamp(40px, 4.6vw, 66px); padding-bottom: 96px; }
-.faq-page__hero { text-align: center; margin-bottom: clamp(32px, 4vw, 56px); }
-.faq-page__title { font-weight: 600; font-size: clamp(28px, 3.33vw, 48px); letter-spacing: -0.04em; }
-.faq-page__sub { margin-top: 12px; font-size: clamp(16px, 1.39vw, 20px); }
-.faq-group + .faq-group { margin-top: clamp(40px, 4.4vw, 64px); }
-.faq-group__title { font-weight: 600; font-size: clamp(28px, 3.33vw, 48px); letter-spacing: -0.04em; padding-bottom: 12px; border-bottom: 2px solid var(--color-ink); }
-
-.policy { padding-bottom: 96px; }
-.policy__block + .policy__block { margin-top: clamp(32px, 3.3vw, 48px); }
-.policy__block h2 { font-weight: 600; font-size: clamp(24px, 2.22vw, 32px); letter-spacing: -0.04em; margin-bottom: 12px; }
+/* 125:8370 contact form: fields 587 · image 638 */
+.contact__grid { display: grid; grid-template-columns: minmax(0, 587px) minmax(0, 638px); justify-content: space-between; align-items: start; column-gap: 32px; margin-top: 24px; }
+.contact__form { display: flex; flex-direction: column; }
+.contact__fields { display: flex; flex-direction: column; gap: 43px; }
+.contact .field { gap: 8px; }
+.contact .field label { font-weight: 500; font-size: clamp(20px, 2.08vw, 30px); line-height: 50px; }
+.contact .field input, .contact .field textarea { min-height: 0; height: 60px; padding: 10px; border: 1px solid rgba(51, 51, 51, 0.6); border-radius: 8px; font-size: clamp(16px, 1.67vw, 24px); line-height: 40px; }
+.contact .field textarea { height: 332px; resize: none; }
+.contact__attach { display: flex; flex-direction: column; gap: 8px; }
+.contact__attach .rf-attach { height: 70px; }
+.contact__attach p { font-size: clamp(15px, 1.39vw, 20px); line-height: 50px; color: var(--color-ink); }
+/* 125:8371: red 80px pill, 91px under the fields, small print 8px below */
+.btn--send { width: 100%; height: 80px; margin-top: 91px; background: var(--color-alert); color: #fff; font-weight: 700; font-size: 24px; letter-spacing: 0; filter: drop-shadow(var(--shadow-cta)); }
+.contact__legal { margin-top: 8px; font-size: clamp(14px, 1.39vw, 20px); line-height: 40px; color: var(--color-ink); }
+.contact__legal p { margin: 0; }
+.contact__image { aspect-ratio: 638 / 584; overflow: hidden; }
+.contact__image img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 900px) {
+  .contact__grid { grid-template-columns: minmax(0, 1fr); row-gap: 32px; }
+  .contact__image { order: -1; }
+  .btn--send { margin-top: 40px; }
+  .cp { --cp-pb: 72px; }
+}
 
 /* ---------- Collection / search / cart ---------- */
 .collection { padding-top: 40px; padding-bottom: 96px; }

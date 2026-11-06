@@ -85,7 +85,8 @@
     "message": "Message",
     "message_placeholder": "Write your Message",
     "send": "Send",
-    "success": "Thanks for reaching out! We'll get back to you as soon as possible."
+    "success": "Thanks for reaching out! We'll get back to you as soon as possible.",
+    "attach_subject": "Files for my message"
   },
   "collections": {
     "empty": "No products found",

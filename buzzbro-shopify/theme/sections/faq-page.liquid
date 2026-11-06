@@ -1,28 +1,27 @@
-{%- comment -%} FAQ page (Figma node 125:7832). Add a "Category" block, then "Question" blocks under it. {%- endcomment -%}
-<section class="page-width faq-page">
-  <div class="faq-page__hero">
-    <h1 class="faq-page__title">{{ section.settings.heading | escape }}</h1>
-    {%- if section.settings.subheading != blank -%}<p class="faq-page__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
-  </div>
+{%- comment -%}
+  FAQ page (Figma 125:7832). A "Category" block starts a group (48px heading with a 3px rule);
+  "Question" blocks after it are its questions, shown open with an up chevron.
+{%- endcomment -%}
+<section class="page-width cp cp--faq" style="--cp-pb: {{ section.settings.padding_bottom }}px;">
+  <h1 class="cp__title">{{ section.settings.heading | escape }}</h1>
+  {%- if section.settings.subheading != blank -%}<p class="cp__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
 
   {%- for block in section.blocks -%}
     {%- if block.type == 'category' or forloop.first -%}
       {%- assign start = forloop.index0 -%}
-      <div class="faq-group"{% if block.type == 'category' %} {{ block.shopify_attributes }}{% endif %}>
+      <div class="cp__group"{% if block.type == 'category' %} {{ block.shopify_attributes }}{% endif %}>
         {%- if block.type == 'category' -%}
-          <h2 class="faq-group__title">{{ block.settings.title | escape }}</h2>
+          <h2 class="cp__group-title">{{ block.settings.title | escape }}</h2>
         {%- endif -%}
-        <div class="accordion">
-          {%- for q in section.blocks offset: start -%}
-            {%- if q.type == 'category' and forloop.index0 > 0 -%}{%- break -%}{%- endif -%}
-            {%- if q.type == 'question' -%}
-              <details {{ q.shopify_attributes }} open>
-                <summary>{{ q.settings.question | escape }}{% render 'icon', name: 'chevron-down' %}</summary>
-                <div class="accordion__body rte">{{ q.settings.answer }}</div>
-              </details>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
+        {%- for q in section.blocks offset: start -%}
+          {%- if q.type == 'category' and forloop.index0 > 0 -%}{%- break -%}{%- endif -%}
+          {%- if q.type == 'question' -%}
+            <details class="cp__item" {{ q.shopify_attributes }} open>
+              <summary class="cp__item-title">{{ q.settings.question | escape }}{% render 'icon', name: 'chevron-up' %}</summary>
+              <div class="cp__body">{{ q.settings.answer }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
       </div>
     {%- endif -%}
   {%- endfor -%}
@@ -33,7 +32,8 @@
   "name": "FAQ page",
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "👋 Hi there! What do you need help with today?" },
-    { "type": "text", "id": "subheading", "label": "Subheading", "default": "We’re here to assist you—ask us anything" }
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "We’re here to assist you—ask us anything" },
+    { "type": "range", "id": "padding_bottom", "label": "Space below", "min": 40, "max": 400, "step": 1, "unit": "px", "default": 141 }
   ],
   "blocks": [
     { "type": "category", "name": "Category", "settings": [{ "type": "text", "id": "title", "label": "Title", "default": "General" }] },

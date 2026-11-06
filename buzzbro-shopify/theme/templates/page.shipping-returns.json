@@ -3,68 +3,199 @@
     "main": {
       "type": "policy-page",
       "blocks": {
-        "b0": {
-          "type": "text",
+        "g0": {
+          "type": "group",
           "settings": {
-            "title": "30-Day Money-Back Guarantee",
+            "title": "30-Day Money-Back Guarantee"
+          }
+        },
+        "i1": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
             "text": "<p>Shop stress-free this holiday season! Enjoy our 30-day money-back guarantee on all holiday purchases. Buy now, gift later, and if it’s not the perfect fit, returns are easy and hassle-free.</p>"
           }
         },
-        "b1": {
-          "type": "text",
+        "i2": {
+          "type": "item",
           "settings": {
+            "style": "boxed",
             "title": "Estimated Shipping Times:",
-            "text": "<ul><li><strong>Standard Shipping:</strong> 3-7 business days (free, but not guaranteed)</li><li><strong>Expedited Shipping:</strong> 2-5 business days</li><li><strong>Priority Shipping:</strong> 2 business days</li></ul><p><em>Note: Free shipping may not be available for Alaska, Puerto Rico, Hawaii, or PO Boxes. Orders may take up to 10 business days to arrive.</em></p>"
+            "text": "<ul><li>Standard Shipping: 3-7 business days (free, but not guaranteed)</li><li>Expedited Shipping: 2-5 business days</li><li>Priority Shipping: 2 business days</li></ul>"
           }
         },
-        "b2": {
-          "type": "text",
+        "i3": {
+          "type": "item",
           "settings": {
-            "title": "International Shipping & Tracking",
-            "text": "<p><strong>Shipping Information</strong></p><p>We offer international shipping to most countries.</p><ul><li><strong>Estimated Delivery Time:</strong> 5-10 business days</li><li><strong>Processing Time:</strong> 1-2 business days</li></ul><p><strong>Duties &amp; Taxes</strong></p><p>Once your order ships, you’ll receive an email with your tracking details. You can track your order anytime on your tracking page.</p><p><strong>Delivery Timeframe</strong></p><p>International orders typically arrive within 5-10 business days after fulfillment. Your estimated delivery date will be visible on your tracking page.</p><p><strong>Tracking Delays?</strong></p><p>If your package stops moving, don’t worry! It’s likely clearing customs. Delays can occur due to customs or weather conditions, but your tracking page will be updated with the latest status.</p>"
+            "style": "boxed",
+            "title": "",
+            "text": "<p>Note: Free shipping may not be available for Alaska, Puerto Rico, Hawaii, or PO Boxes. Orders may take up to 10 business days to arrive.</p>"
           }
         },
-        "b3": {
-          "type": "text",
+        "g4": {
+          "type": "group",
           "settings": {
-            "title": "Returns & Refunds",
-            "text": "<p>We stand by our products and want you to love your Buzzbro experience! If you're not satisfied, you can return your purchase within 30 days of receiving it.</p><ul><li><strong>Return Shipping:</strong> Buzzbro does not provide return labels or cover return shipping costs.</li><li><strong>Authorized Retailers:</strong> If you purchased from an authorized dealer (e.g., Amazon), their return policy applies—please contact them directly.</li><li><strong>Unauthorized Retailers:</strong> Items bought from unauthorized sellers are not covered by our return policy.</li><li><strong>Partial Returns:</strong> You can return part of your order, and we’ll refund the purchase price of each returned item.</li></ul>"
+            "title": "International Shipping & Tracking"
           }
         },
-        "b4": {
-          "type": "text",
+        "i5": {
+          "type": "item",
           "settings": {
-            "title": "Returns Eligibility",
-            "text": "<p>If you're not 100% satisfied with your purchase within 30 days, you can return it for a refund—no questions asked. Simply contact us, and our team will assist you with the process.</p><p><strong>Return Conditions:</strong></p><ul><li><strong>SmoothShave 2.0, Bundles &amp; Accessories:</strong> Must be returned in like-new condition with original packaging.</li><li><strong>Blade Refills:</strong> Must be unopened and in new condition.</li></ul><p>Return shipping labels are not provided, and shipping costs are not covered by Buzzbro. Our return policy applies only to orders placed on our official website.</p>"
+            "style": "boxed",
+            "title": "Shipping Information",
+            "text": "<p>We offer international shipping to most countries.</p><ul><li>Estimated Delivery Time: 5-10 business days</li><li>Processing Time: 1-2 business days</li></ul>"
           }
         },
-        "b5": {
-          "type": "text",
+        "i6": {
+          "type": "item",
           "settings": {
-            "title": "Exchanges",
-            "text": "<ul><li><strong>30-Day Exchange Policy</strong> – Exchanges can only be made within 30 days of purchase. If you’d like to swap your item(s), email our help team, and we’ll assist with your exchange request.</li><li><strong>Return Condition</strong> – Products must be in like-new condition with the original packaging to qualify for an exchange.</li><li><strong>Consumable Products</strong> – Must be at least three-quarters full to be eligible for an exchange.</li></ul>"
+            "style": "boxed",
+            "title": "Duties & Taxes",
+            "text": "<p>Once your order ships, you’ll receive an email with your tracking details. You can track your order anytime on your tracking page.</p>"
           }
         },
-        "b6": {
-          "type": "text",
+        "i7": {
+          "type": "item",
           "settings": {
-            "title": "Shipping Outside of the USA",
-            "text": "<p><strong>Do you ship to the UK &amp; EU?</strong></p><p>Yes! We ship to the UK &amp; EU. To ensure smooth delivery, we’ve partnered with Passport Shipping, which will handle all orders:</p><ul><li><strong>UK:</strong> Orders under £135</li><li><strong>EU:</strong> Orders under €150</li></ul>"
+            "style": "boxed",
+            "title": "Delivery Timeframe",
+            "text": "<p>International orders typically arrive within 5-10 business days after fulfillment. Your estimated delivery date will be visible on your tracking page.</p>"
+          }
+        },
+        "i8": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "Tracking Delays?",
+            "text": "<p>If your package stops moving, don’t worry! It’s likely clearing customs. Delays can occur due to customs or weather conditions, but your tracking page will be updated with the latest status.</p>"
+          }
+        },
+        "g9": {
+          "type": "group",
+          "settings": {
+            "title": "Returns & Refunds"
+          }
+        },
+        "i10": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<p>We stand by our products and want you to love your Buzzbro experience! If you’re not satisfied, you can return your purchase within 30 days of receiving it.</p>"
+          }
+        },
+        "i11": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<ul><li><strong>Return Shipping:</strong> Buzzbro does not provide return labels or cover return shipping costs.</li><li><strong>Authorized Retailers:</strong> If you purchased from an authorized dealer (e.g., Amazon), their return policy applies—please contact them directly.</li><li><strong>Unauthorized Retailers</strong>: Items bought from unauthorized sellers are not covered by our return policy.</li><li><strong>Partial Returns:</strong> You can return part of your order, and we’ll refund the purchase price of each returned item.</li></ul>"
+          }
+        },
+        "g12": {
+          "type": "group",
+          "settings": {
+            "title": "Returns Eligibility"
+          }
+        },
+        "i13": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<p>If you’re not 100% satisfied with your purchase within 30 days, you can return it for a refund—no questions asked. Simply contact us, and our team will assist you with the process.</p>"
+          }
+        },
+        "i14": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "Return Conditions:",
+            "text": "<ul><li><strong>SmoothShave 2.0, Bundles &amp; Accessories:</strong> Must be returned in like-new condition with original packaging.</li><li><strong>Blade Refills:</strong> Must be unopened and in new condition.</li></ul>"
+          }
+        },
+        "i15": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<p>Return shipping labels are not provided, and shipping costs are not covered by Buzzbro. Our return policy applies only to orders placed on our official website.</p>"
+          }
+        },
+        "g16": {
+          "type": "group",
+          "settings": {
+            "title": "Exchanges"
+          }
+        },
+        "i17": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<ul><li><strong>30-Day Exchange Policy –</strong> Exchanges can only be made within 30 days of purchase. If you’d like to swap your item(s), email our help team, and we’ll assist with your exchange request.</li></ul>"
+          }
+        },
+        "i18": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<ul><li><strong>Return Condition</strong> – Products must be in like-new condition with the original packaging to qualify for an exchange.</li><li><strong>Consumable Products</strong> – Must be at least three-quarters full to be eligible for an exchange</li></ul>"
+          }
+        },
+        "g19": {
+          "type": "group",
+          "settings": {
+            "title": "Shipping Outside of the USA"
+          }
+        },
+        "i20": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<p>Do you ship to the UK &amp; EU?</p>"
+          }
+        },
+        "i21": {
+          "type": "item",
+          "settings": {
+            "style": "boxed",
+            "title": "",
+            "text": "<p>Yes! We ship to the UK &amp; EU. To ensure smooth delivery, we’ve partnered with Passport Shipping, which will handle all orders:</p><ul><li>UK: Orders under £135</li><li>EU: Orders under €150</li></ul>"
           }
         }
       },
       "block_order": [
-        "b0",
-        "b1",
-        "b2",
-        "b3",
-        "b4",
-        "b5",
-        "b6"
+        "g0",
+        "i1",
+        "i2",
+        "i3",
+        "g4",
+        "i5",
+        "i6",
+        "i7",
+        "i8",
+        "g9",
+        "i10",
+        "i11",
+        "g12",
+        "i13",
+        "i14",
+        "i15",
+        "g16",
+        "i17",
+        "i18",
+        "g19",
+        "i20",
+        "i21"
       ],
       "settings": {
         "heading": "Shipping & Returns",
-        "show_page_content": false
+        "show_page_content": false,
+        "padding_bottom": 197
       }
     }
   },
