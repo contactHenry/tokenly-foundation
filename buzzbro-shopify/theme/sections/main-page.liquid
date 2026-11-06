@@ -1,7 +1,8 @@
-<section class="page-width page-head policy">
-  <h1 class="page-title">{{ page.title | escape }}</h1>
+{%- comment -%} Generic page (Our Story, Careers…): content-page title, lead paragraph, then the page text. {%- endcomment -%}
+<section class="page-width cp cp--story" style="--cp-pb: 120px;">
+  <h1 class="cp__title">{{ page.title | escape }}</h1>
   {%- if page.content != blank -%}
-    <div class="rte" style="margin-top: 32px">{{ page.content }}</div>
+    <div class="cp__group"><div class="cp__body">{{ page.content }}</div></div>
   {%- endif -%}
 </section>
 

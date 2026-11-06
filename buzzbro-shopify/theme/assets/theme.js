@@ -120,6 +120,91 @@
     });
   });
 
+  /* ---------- Shave companion: drag the shaver to rotate it, callouts follow ---------- */
+  $$('[data-companion]').forEach((root) => {
+    const stage = $('[data-companion-stage]', root);
+    const rotor = $('[data-companion-rotor]', root);
+    const svg = $('[data-companion-links]', root);
+    if (!stage || !rotor || !svg) return;
+    const SW = 1440, SH = 1032, PX = 670, PY = 374.5; // stage size and pivot, Figma coordinates
+    const NS = 'http://www.w3.org/2000/svg';
+    const callouts = $$('[data-callout]', root).map((el) => {
+      const [ax, ay] = el.dataset.anchor.split(',').map(Number);
+      const [sx, sy] = el.dataset.start.split(',').map(Number);
+      const elbowX = sx < ax ? sx + 255 : sx - 200; // where the label's own rule ends
+      const line = document.createElementNS(NS, 'polyline');
+      const dot = document.createElementNS(NS, 'circle');
+      dot.setAttribute('r', '3');
+      svg.append(line, dot);
+      return { el, ax, ay, sx, sy, elbowX, line, dot };
+    });
+    let angle = 0;
+    const desktop = () => window.matchMedia('(min-width: 901px)').matches;
+
+    const render = () => {
+      rotor.style.setProperty('--rot', `${angle}deg`);
+      rotor.setAttribute('aria-valuenow', String(Math.round(angle)));
+      if (!desktop()) return;
+      const r = (angle * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+      const sx = stage.clientWidth / SW, sy = stage.clientHeight / SH; // stage keeps its aspect, but be exact
+      callouts.forEach((k) => {
+        // anchor rotated about the pivot (in screen-scaled space so non-uniform scale can't skew it)
+        const dx = (k.ax - PX) * sx, dy = (k.ay - PY) * sy;
+        const nx = PX + (dx * c - dy * s) / sx, ny = PY + (dx * s + dy * c) / sy;
+        const shift = (ny - k.ay) * 0.35; // labels drift a little toward the point they mark
+        k.el.style.transform = `translateY(${(shift * sy).toFixed(1)}px)`;
+        const ly = k.sy + shift;
+        k.line.setAttribute('points', `${k.sx},${ly} ${k.elbowX},${ly} ${nx.toFixed(1)},${ny.toFixed(1)}`);
+        k.dot.setAttribute('cx', nx.toFixed(1));
+        k.dot.setAttribute('cy', ny.toFixed(1));
+      });
+    };
+
+    const pivotOnScreen = () => {
+      const b = rotor.getBoundingClientRect(); // rotation keeps the pivot fixed, so use the stage box
+      const st = stage.getBoundingClientRect();
+      if (!desktop()) return { x: b.left + b.width / 2, y: b.top + b.height / 2 };
+      return { x: st.left + (PX / SW) * st.width, y: st.top + (PY / SH) * st.height };
+    };
+    let drag = null;
+    rotor.addEventListener('pointerdown', (e) => {
+      const p = pivotOnScreen();
+      drag = { id: e.pointerId, start: Math.atan2(e.clientY - p.y, e.clientX - p.x), from: angle, p };
+      rotor.classList.remove('is-settling');
+      rotor.classList.add('is-dragging');
+      rotor.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    rotor.addEventListener('pointermove', (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const a = Math.atan2(e.clientY - drag.p.y, e.clientX - drag.p.x);
+      let next = drag.from + ((a - drag.start) * 180) / Math.PI;
+      next = ((next + 540) % 360) - 180; // keep within -180..180
+      angle = next;
+      requestAnimationFrame(render);
+    });
+    const end = (e) => {
+      if (!drag || (e && e.pointerId !== drag.id)) return;
+      drag = null;
+      rotor.classList.remove('is-dragging');
+    };
+    rotor.addEventListener('pointerup', end);
+    rotor.addEventListener('pointercancel', end);
+    rotor.addEventListener('dblclick', () => {
+      const from = angle, t0 = performance.now();
+      const step = (t) => { const k = Math.min(1, (t - t0) / 600); angle = from * (1 - (1 - Math.pow(1 - k, 3))); render(); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+    rotor.addEventListener('keydown', (e) => {
+      const d = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 }[e.key];
+      if (d) { angle = Math.max(-180, Math.min(180, angle + d)); render(); e.preventDefault(); }
+      if (e.key === 'Home') { angle = 0; render(); e.preventDefault(); }
+    });
+    window.addEventListener('resize', render);
+    root.classList.add('is-live');
+    render();
+  });
+
   /* ---------- Carousel ---------- */
   $$('[data-carousel]').forEach((root) => {
     const track = $('[data-carousel-track]', root);

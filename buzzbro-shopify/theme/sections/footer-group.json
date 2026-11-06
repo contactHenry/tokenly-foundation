@@ -5,16 +5,42 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "shop": { "type": "menu", "settings": { "heading": "SHOP", "menu": "footer-shop" } },
-        "help": { "type": "menu", "settings": { "heading": "HELP", "menu": "footer-help" } },
-        "company": { "type": "menu", "settings": { "heading": "COMPANY", "menu": "footer-company" } }
+        "shop": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer-shop"
+          }
+        },
+        "help": {
+          "type": "menu",
+          "settings": {
+            "heading": "Help",
+            "menu": "footer-help"
+          }
+        },
+        "company": {
+          "type": "menu",
+          "settings": {
+            "heading": "Company",
+            "menu": "footer-company"
+          }
+        }
       },
-      "block_order": ["shop", "help", "company"],
+      "block_order": [
+        "shop",
+        "help",
+        "company"
+      ],
       "settings": {
-        "newsletter_heading": "News Letter Sign Up",
-        "legal_menu": "footer-legal"
+        "newsletter_heading": "Newsletter Sign Up",
+        "legal_menu": "footer-legal",
+        "newsletter_text": "Shaving tips, blade-refill reminders and first access to new drops.",
+        "tagline": "The closest shave, the softest touch. Head shavers and blades made for a smooth, effortless shave."
       }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }

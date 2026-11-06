@@ -1,39 +1,60 @@
-{%- comment -%} "The Ultimate Shave Companion" feature callouts (Figma node 145:1952). {%- endcomment -%}
-<section class="companion">
-  <div class="companion__stage">
+{%- comment -%}
+  "The Ultimate Shave Companion" feature callouts (Figma node 145:1952).
+  Drag the shaver to rotate it; each callout's line follows the point it labels
+  (anchors measured from the Figma frame, in 1440 x 1032 stage coordinates).
+  Optional: a Spline scene URL replaces the image with a 3D model (callouts then stay fixed).
+{%- endcomment -%}
+{%- assign spline_url = section.settings.spline_url | strip -%}
+<section class="companion" data-companion{% if spline_url != blank %} data-spline-url="{{ spline_url | escape }}"{% endif %}>
+  <div class="companion__stage" data-companion-stage>
     {%- if section.settings.eyebrow != blank -%}
       <p class="companion__eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {%- endif -%}
 
-    <div class="companion__visual" aria-hidden="true">
-      {%- if section.settings.image_back != blank -%}
-        {{ section.settings.image_back | image_url: width: 1300 | image_tag: class: 'companion__img companion__img--ghost', loading: 'lazy', alt: '' }}
+    <div class="companion__visual">
+      <span class="companion__shadow" aria-hidden="true"></span>
+      {%- if spline_url != blank -%}
+        <div class="companion__spline" data-companion-spline></div>
       {%- else -%}
-        <img class="companion__img companion__img--ghost" src="{{ 'companion-ghost.png' | asset_url }}" alt="" width="645" height="667" loading="lazy">
+        <div class="companion__rotor" data-companion-rotor tabindex="0" role="slider" aria-label="{{ 'accessibility.rotate_product' | t }}" aria-valuemin="-180" aria-valuemax="180" aria-valuenow="0">
+          {%- if section.settings.image_back != blank -%}
+            {{ section.settings.image_back | image_url: width: 1300 | image_tag: class: 'companion__img companion__img--ghost', loading: 'lazy', alt: '', draggable: 'false' }}
+          {%- else -%}
+            <img class="companion__img companion__img--ghost" src="{{ 'companion-ghost.png' | asset_url }}" alt="" width="645" height="667" loading="lazy" draggable="false">
+          {%- endif -%}
+          {%- if section.settings.image_front != blank -%}
+            {{ section.settings.image_front | image_url: width: 1300 | image_tag: class: 'companion__img companion__img--main', loading: 'lazy', alt: '', draggable: 'false' }}
+          {%- else -%}
+            <img class="companion__img companion__img--main" src="{{ 'companion-main.png' | asset_url }}" alt="" width="645" height="667" loading="lazy" draggable="false">
+          {%- endif -%}
+          <svg class="companion__ring" viewBox="0 0 568 539" fill="none" aria-hidden="true">
+            <ellipse cx="284" cy="269.5" rx="138.5" ry="254.5" transform="rotate(50.1 284 269.5)" stroke="currentColor" stroke-width="3"/>
+          </svg>
+        </div>
       {%- endif -%}
-      {%- if section.settings.image_front != blank -%}
-        {{ section.settings.image_front | image_url: width: 1300 | image_tag: class: 'companion__img companion__img--main', loading: 'lazy', alt: '' }}
-      {%- else -%}
-        <img class="companion__img companion__img--main" src="{{ 'companion-main.png' | asset_url }}" alt="" width="645" height="667" loading="lazy">
-      {%- endif -%}
-      <svg class="companion__ring" viewBox="0 0 568 539" fill="none" aria-hidden="true">
-        <ellipse cx="284" cy="269.5" rx="138.5" ry="254.5" transform="rotate(50.1 284 269.5)" stroke="currentColor" stroke-width="3"/>
-      </svg>
-      <span class="companion__shadow"></span>
     </div>
+
+    {%- comment -%} Connector lines, drawn on top in stage coordinates once the script runs. {%- endcomment -%}
+    <svg class="companion__links" viewBox="0 0 1440 1032" preserveAspectRatio="none" aria-hidden="true" data-companion-links></svg>
 
     {%- for block in section.blocks -%}
       {%- liquid
         case forloop.index
           when 1
             assign pos = 'callout--left'
+            assign anchor = '560.2,373.5'
+            assign start = '105,373.5'
           when 2
             assign pos = 'callout--right callout--r1'
+            assign anchor = '744.5,198.6'
+            assign start = '1201,198.6'
           else
             assign pos = 'callout--right callout--r2'
+            assign anchor = '765.4,468.5'
+            assign start = '1223,468.5'
         endcase
       -%}
-      <div class="callout {{ pos }}" {{ block.shopify_attributes }}>
+      <div class="callout {{ pos }}" data-callout data-anchor="{{ anchor }}" data-start="{{ start }}" {{ block.shopify_attributes }}>
         <h3 class="callout__title">{{ block.settings.title | escape }}</h3>
         <span class="callout__line" aria-hidden="true"></span>
         <p class="callout__text">{{ block.settings.text | escape }}</p>
@@ -45,6 +66,22 @@
   </div>
 </section>
 
+{%- if spline_url != blank -%}
+  <script type="module">
+    (() => {
+      const root = document.querySelector('[data-companion][data-spline-url]');
+      if (!root) return;
+      const mount = root.querySelector('[data-companion-spline]');
+      import('https://unpkg.com/@splinetool/viewer@2.0.82/build/spline-viewer.js').then(() => {
+        const viewer = document.createElement('spline-viewer');
+        viewer.setAttribute('url', root.dataset.splineUrl);
+        viewer.setAttribute('loading', 'lazy');
+        mount.appendChild(viewer);
+      }).catch(() => {});
+    })();
+  </script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Shave companion",
@@ -52,8 +89,9 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The SmoothShave" },
     { "type": "textarea", "id": "title", "label": "Heading", "default": "The Ultimate\nShave Companion" },
-    { "type": "image_picker", "id": "image_front", "label": "Product image (front)", "info": "Rotated cut-out. Rendered with an exclusion blend like the design." },
-    { "type": "image_picker", "id": "image_back", "label": "Product image (ghost)" }
+    { "type": "image_picker", "id": "image_front", "label": "Product image (front)", "info": "Rotated cut-out. Rendered with an exclusion blend like the design. Shoppers can drag it to rotate." },
+    { "type": "image_picker", "id": "image_back", "label": "Product image (ghost)" },
+    { "type": "text", "id": "spline_url", "label": "Spline scene URL (optional)", "placeholder": "https://prod.spline.design/XXXX/scene.splinecode", "info": "Replaces the image with a 3D Spline model. The callout lines then stay fixed." }
   ],
   "blocks": [
     {
