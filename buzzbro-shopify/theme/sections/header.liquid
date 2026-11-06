@@ -55,10 +55,11 @@
       {%- elsif section.settings.show_country_selector -%}
         <span class="country-selector__toggle" aria-hidden="true">
           <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="50" height="50">
+          {% render 'icon', name: 'chevron-down' %}
         </span>
       {%- endif -%}
 
-      <a class="cart-link" href="{{ routes.cart_url }}">
+      <a class="cart-link" href="{{ routes.cart_url }}" data-cart-link{% if cart.item_count == 0 %} hidden{% endif %}>
         <span class="visually-hidden">{{ 'accessibility.cart_count' | t: count: cart.item_count }}</span>
         {% render 'icon', name: 'bag' %}
         <span class="cart-link__count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %} aria-hidden="true">{{ cart.item_count }}</span>

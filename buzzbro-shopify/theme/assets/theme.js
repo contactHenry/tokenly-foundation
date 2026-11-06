@@ -27,6 +27,8 @@
       el.textContent = count;
       el.hidden = count === 0;
     });
+    // The Figma header has no cart icon; it appears once the cart has something in it.
+    $$('[data-cart-link]').forEach((el) => { el.hidden = count === 0; });
   }
 
   async function addToCart(formData) {

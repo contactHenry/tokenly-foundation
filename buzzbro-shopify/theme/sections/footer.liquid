@@ -24,13 +24,15 @@
             {%- assign labels = 'Facebook,Instagram,X,YouTube' | split: ',' -%}
             {%- for network in networks -%}
               {%- assign href = links[forloop.index0] -%}
-              {%- if href != blank or request.design_mode -%}
-                <li>
-                  <a href="{% if href != blank %}{{ href }}{% else %}#{% endif %}"{% if href != blank %} target="_blank" rel="noopener"{% endif %} aria-label="{{ 'accessibility.social' | t: network: labels[forloop.index0] }}">
+              <li>
+                {%- if href != blank -%}
+                  <a href="{{ href }}" target="_blank" rel="noopener" aria-label="{{ 'accessibility.social' | t: network: labels[forloop.index0] }}">
                     {% render 'icon', name: network %}
                   </a>
-                </li>
-              {%- endif -%}
+                {%- else -%}
+                  <span aria-hidden="true">{% render 'icon', name: network %}</span>
+                {%- endif -%}
+              </li>
             {%- endfor -%}
           </ul>
         </div>
