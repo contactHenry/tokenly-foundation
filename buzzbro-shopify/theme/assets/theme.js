@@ -306,9 +306,11 @@
     // Gallery thumbnails
     const showMedia = (id) => {
       if (!gallery || !id) return;
-      const target = $(`.gallery__main [data-media-id="${id}"]`, gallery);
+      const target = $(`.gallery__slide[data-media-id="${id}"]`, gallery);
       if (!target) return;
-      $$('.gallery__main img', gallery).forEach((img) => img.classList.toggle('is-active', img === target));
+      $$('.gallery__slide', gallery).forEach((slide) => slide.classList.toggle('is-active', slide === target));
+      const img = $('img', target);
+      if (img) img.loading = 'eager';
       $$('[data-thumb]', gallery).forEach((t) => t.setAttribute('aria-current', String(t.dataset.thumb === String(id))));
     };
     if (gallery) {

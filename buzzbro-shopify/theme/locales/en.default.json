@@ -128,5 +128,10 @@
     "title": "Your gift card",
     "code": "Gift card code",
     "balance": "Balance"
+  },
+  "blogs": {
+    "read_more": "Read more",
+    "back": "Back to {{ blog }}",
+    "empty": "New posts are on the way."
   }
 }

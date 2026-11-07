@@ -1,23 +1,53 @@
+{%- comment -%} Blog index: content-page title, then a grid of post cards (cover, date, title, excerpt). {%- endcomment -%}
 {%- paginate blog.articles by 9 -%}
-<section class="page-width collection">
-  <h1 class="page-title" style="margin-bottom: 40px">{{ blog.title | escape }}</h1>
-  <ul class="grid" role="list">
-    {%- for article in blog.articles -%}
-      <li>
-        <a class="card" href="{{ article.url }}">
-          <span class="card__media">
-            {%- if article.image -%}{{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', alt: article.title }}{%- else -%}{{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}{%- endif -%}
-          </span>
-          <span class="product-title-lg">{{ article.title | escape }}</span>
-          <span class="card__subtitle">{{ article.published_at | date: format: 'date' }}</span>
-        </a>
-      </li>
-    {%- endfor -%}
-  </ul>
+<section class="page-width cp blog" style="--cp-pb: 120px;">
+  <h1 class="cp__title">{{ blog.title | escape }}</h1>
+  {%- if section.settings.intro != blank -%}
+    <p class="cp__sub blog__intro">{{ section.settings.intro | escape }}</p>
+  {%- endif -%}
+
+  {%- if blog.articles.size > 0 -%}
+    <ul class="post-grid" role="list">
+      {%- for article in blog.articles -%}
+        <li>
+          <article class="post-card">
+            <a class="post-card__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+              {%- if article.image -%}
+                {{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900', sizes: '(max-width: 560px) 92vw, (max-width: 1024px) 46vw, 410px', alt: article.image.alt | default: article.title }}
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+            <div class="post-card__body">
+              <p class="post-card__meta">
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'date' }}</time>
+                {%- if article.tags.size > 0 %} · {{ article.tags.first | escape }}{% endif -%}
+              </p>
+              <h2 class="post-card__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+              {%- if article.excerpt != blank -%}
+                <p class="post-card__excerpt">{{ article.excerpt | strip_html | truncatewords: 26 }}</p>
+              {%- else -%}
+                <p class="post-card__excerpt">{{ article.content | strip_html | truncatewords: 26 }}</p>
+              {%- endif -%}
+              <a class="post-card__more" href="{{ article.url }}">{{ 'blogs.read_more' | t }}<span class="visually-hidden">: {{ article.title | escape }}</span></a>
+            </div>
+          </article>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    <p class="cp__sub">{{ 'blogs.empty' | t }}</p>
+  {%- endif -%}
+
   {% render 'pagination', paginate: paginate %}
 </section>
 {%- endpaginate -%}
 
 {% schema %}
-{ "name": "Blog posts" }
+{
+  "name": "Blog posts",
+  "settings": [
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Shaving guides, care tips and news from the BuzzBro team." }
+  ]
+}
 {% endschema %}

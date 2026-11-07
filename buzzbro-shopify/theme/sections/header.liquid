@@ -12,7 +12,7 @@
       {% render 'icon', name: 'menu' %}
     </button>
 
-    <a class="site-header__logo" href="{{ routes.root_url }}">
+    <a class="site-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
       {% render 'logo', loading: 'eager' %}
     </a>
 
@@ -36,7 +36,7 @@
           <button class="country-selector__toggle" type="button" aria-expanded="false" aria-controls="CountryList" data-country-toggle>
             <span class="visually-hidden">{{ 'accessibility.country_selector' | t }}: {{ localization.country.name }}</span>
             {%- if localization.country.iso_code == 'US' -%}
-              <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="50" height="50">
+              <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="26" height="26">
             {%- else -%}
               <span class="country-selector__code" aria-hidden="true">{{ localization.country.iso_code }}</span>
             {%- endif -%}
@@ -54,7 +54,7 @@
         {%- endform -%}
       {%- elsif section.settings.show_country_selector -%}
         <span class="country-selector__toggle" aria-hidden="true">
-          <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="50" height="50">
+          <img class="country-selector__flag" src="{{ 'flag-us.png' | asset_url }}" alt="" width="26" height="26">
           {% render 'icon', name: 'chevron-down' %}
         </span>
       {%- endif -%}

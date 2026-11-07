@@ -1,10 +1,19 @@
-<article class="page-width page-head policy" style="max-width: 900px">
-  <p class="card__subtitle">{{ article.published_at | date: format: 'date' }}</p>
-  <h1 class="page-title" style="margin-top: 8px">{{ article.title | escape }}</h1>
-  {%- if article.image -%}
-    <div style="margin-top: 32px">{{ article.image | image_url: width: 1800 | image_tag: loading: 'eager', widths: '800, 1200, 1800', sizes: '(max-width: 900px) 100vw, 900px', alt: article.title }}</div>
-  {%- endif -%}
-  <div class="rte" style="margin-top: 32px">{{ article.content }}</div>
+{%- comment -%} Blog post: back link, meta, title, cover, then the post text in the content-page style. {%- endcomment -%}
+<article class="page-width cp article" style="--cp-pb: 120px;">
+  <div class="article__inner">
+    <a class="article__back" href="{{ blog.url }}">{% render 'icon', name: 'chevron-down' %}{{ 'blogs.back' | t: blog: blog.title }}</a>
+    <p class="post-card__meta">
+      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'date' }}</time>
+      {%- if article.author != blank %} · {{ article.author | escape }}{% endif -%}
+    </p>
+    <h1 class="cp__title article__title">{{ article.title | escape }}</h1>
+    {%- if article.image -%}
+      <div class="article__cover">
+        {{ article.image | image_url: width: 1800 | image_tag: loading: 'eager', widths: '800, 1200, 1800', sizes: '(max-width: 900px) 100vw, 880px', alt: article.image.alt | default: article.title }}
+      </div>
+    {%- endif -%}
+    <div class="cp__body article__body">{{ article.content }}</div>
+  </div>
 </article>
 
 {% schema %}

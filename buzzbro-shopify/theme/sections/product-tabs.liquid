@@ -176,7 +176,20 @@
                   <span class="review__date">{{ block.settings.date | escape }}</span>
                 </div>
                 <div class="review__body">{{ block.settings.body }}</div>
-                <p class="review__author"><span class="review__avatar" aria-hidden="true">{% render 'icon', name: 'avatar' %}</span>{{ block.settings.author | escape }}</p>
+                {%- liquid
+                  assign avatar_index = forloop.index0 | modulo: 2 | plus: 1
+                  assign avatar_fallback = 'review-avatar-' | append: avatar_index | append: '.jpg'
+                -%}
+                <p class="review__author">
+                  <span class="review__avatar">
+                    {%- if block.settings.photo != blank -%}
+                      {{ block.settings.photo | image_url: width: 160, height: 160, crop: 'center' | image_tag: loading: 'lazy', alt: block.settings.author, width: 80, height: 80 }}
+                    {%- else -%}
+                      <img src="{{ avatar_fallback | asset_url }}" alt="{{ block.settings.author | escape }}" width="80" height="80" loading="lazy">
+                    {%- endif -%}
+                  </span>
+                  {{ block.settings.author | escape }}
+                </p>
               </article>
             {%- endfor -%}
           </div>
@@ -218,7 +231,8 @@
         { "type": "text", "id": "title", "label": "Title", "default": "Best Head Shave Ever!" },
         { "type": "text", "id": "date", "label": "Date", "default": "07/07/2024" },
         { "type": "richtext", "id": "body", "label": "Review", "default": "<p>I’ve tried countless razors, but SmoothShave 2.0 is a game-changer.</p>" },
-        { "type": "text", "id": "author", "label": "Name", "default": "James D." }
+        { "type": "text", "id": "author", "label": "Name", "default": "James D." },
+        { "type": "image_picker", "id": "photo", "label": "Customer photo", "info": "Square photo, at least 160 × 160 px. Sample photos are shown until you add the customer's own." }
       ]
     }
   ],

@@ -35,7 +35,9 @@
             endif
           -%}
           {%- if img != blank -%}
-            {{ img | image_url: width: 1400 | image_tag: class: img_class, loading: img_loading, widths: '600, 900, 1200, 1400', sizes: '(max-width: 900px) 100vw, 633px', alt: img.alt | default: product.title, data-media-id: media.id }}
+            <div class="gallery__slide {{ img_class }}" data-media-id="{{ media.id }}">
+              {{ img | image_url: width: 1400 | image_tag: loading: img_loading, widths: '600, 900, 1200, 1400', sizes: '(max-width: 900px) 100vw, 633px', alt: img.alt | default: product.title }}
+            </div>
           {%- endif -%}
         {%- else -%}
           {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
