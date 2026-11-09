@@ -57,8 +57,8 @@ and its footer link are all generated.
 
 ## Before going live
 
-- **Sign-in link:** `LOGIN_URL` points at the Lovable preview of the CarePlus app. Publish the Lovable project (or give it a
-  domain such as `app.careplus.co.uk`) and update `LOGIN_URL`.
+- **Sign-in link:** `LOGIN_URL` points at the published app, https://carepulses.lovable.app/login. Update it if you add a
+  custom domain.
 - **Contact email:** replace the placeholder `CONTACT_EMAIL`. The request form has no backend. It prepares an email for the
   visitor to send. Connect it to a form service or CRM if you want submissions stored.
 - **Photos:** the photos are exported from the client's Figma file. Confirm their licences, or replace them with CarePlus's
