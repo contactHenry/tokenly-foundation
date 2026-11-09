@@ -27,7 +27,9 @@ Shared pages: Home, Platform, Compliance, Pricing (real home care plans) and Get
 
 Hospitals, clinics and laboratories lead with what CarePlus does for them today, through care providers, agencies and the marketplace. Anything not built yet is listed under a clearly labelled **Early access** section.
 
-The same site also runs inside the CarePlus app on Lovable as React pages (`src/site/` in that project): `/` shows the website and Sign in opens `/login`. This folder is the standalone static version.
+The live site runs inside the CarePlus app on Lovable as React pages (`src/site/` in that project): `/` shows the website and Sign in opens `/login`. **That is the master version.** This folder is a standalone static copy of it, with the same copy, photos, page structure and calls to action.
+
+Every call to action follows the client's brief: **register, onboard or explore services**, with Book a demo as a secondary option. Buttons link to `get-started.html?for=<market>&goal=<goal>#request`, so the form opens with the right market and goal already chosen. The live app saves requests to its `website_enquiries` table. This standalone copy has no server, so it prepares an email to `CONTACT_EMAIL` instead.
 
 ## Build
 
@@ -46,8 +48,7 @@ or open `site/index.html` directly.
 |---|---|
 | Sign-in link (every "Sign in" button) | `src/config.mjs` → `LOGIN_URL` |
 | Demo and partner request email | `src/config.mjs` → `CONTACT_EMAIL` (currently a placeholder) |
-| All page copy, markets, plans | `src/content.mjs` |
-| Illustrative product screens | `src/mockups.mjs` |
+| All page copy, markets, plans | `src/content.mjs`, generated from the app's `src/site/content.ts`. Edit it in the app first so the two copies stay the same |
 | Look and feel | `src/styles.css` |
 | Logo and icons | `src/icons.mjs` |
 | Photos | `src/img/` |
@@ -61,6 +62,6 @@ and its footer link are all generated.
   custom domain.
 - **Contact email:** replace the placeholder `CONTACT_EMAIL`. The request form has no backend. It prepares an email for the
   visitor to send. Connect it to a form service or CRM if you want submissions stored.
-- **Photos:** the photos are exported from the client's Figma file. Confirm their licences, or replace them with CarePlus's
-  own photography. The residential photo is a small crop from the app's login screen, so a full-size original would look sharper.
+- **Photos:** the 19 photos in `src/img/` are AI-generated, realistic scenes with no text, labels or logos (kept in the Figma file
+  "CarePlus website photography"). Replace them with real photos of CarePlus services whenever you have them, using the same file names.
 - **Logo:** the logo is a vector redraw of the CarePlus mark from the app's login page. Swap in the official file if there is one.

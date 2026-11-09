@@ -1,7 +1,19 @@
-// All website copy lives here. Each market page follows the same six-part story:
-// who it is for → problems we solve → features built for them → benefits →
-// how they use CarePlus → what to do next.
-// Every feature named below exists in the CarePlus app today.
+// GENERATED from the CarePlus app (src/site/content.ts on Lovable). Edit there, then regenerate.
+// CarePlus public website content. Every market page follows the same six parts:
+// who it is for → problems we solve → features → benefits → how they use CarePlus → next step.
+// Features named here exist in the CarePlus app today; planned work only appears under `roadmap`.
+
+
+/** What a visitor can ask for on the Get started form. */
+export const GOALS = [
+  { key: "register", label: "Register my organisation" },
+  { key: "onboard", label: "Start onboarding" },
+  { key: "demo", label: "Book a demo" },
+  { key: "early-access", label: "Register for early access" },
+  { key: "partner", label: "Become a partner" },
+  { key: "quote", label: "Get a quote" },
+  { key: "question", label: "Ask a question" },
+];
 
 export const GROUPS = [
   { id: "providers", label: "Care providers", blurb: "Services that deliver care and support every day." },
@@ -17,8 +29,7 @@ export const MARKETS = [
     name: "Nursing homes",
     group: "providers",
     icon: "building",
-    img: "nursing",
-    mock: "mar",
+    img: "nursing-homes",
     card: {
       summary: "Run safe medication rounds, control drugs properly and stay inspection-ready across every unit.",
       bullets: ["eMAR and medication rounds", "Controlled drugs register", "Inspection pack"],
@@ -26,10 +37,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For nursing homes",
       title: "Every dose recorded. <em>Every round accounted for.</em>",
-      lede: "CarePlus gives nursing homes one place for residents, medication, staffing and compliance, so nurses spend less time on paperwork and managers always know what happened on every unit.",
+      lede: "Your nurses should be with residents, not chasing signatures on paper MAR charts. CarePlus puts medication rounds, controlled drugs, staffing and inspection evidence in one place, so you always know what happened on every unit, day and night.",
     },
     audience: {
-      intro: "Built for registered nursing homes and the people who run them day and night.",
+      intro: "If you run a registered nursing home, or work in one, this is for you.",
       roles: ["Registered managers", "Clinical leads and nurses", "Senior carers and care staff", "Quality and compliance leads", "Owners and finance teams"],
     },
     problems: [
@@ -67,15 +78,14 @@ export const MARKETS = [
         { icon: "users", t: "Team & access", d: "Owners manage members, roles and permissions in one place." },
       ],
     },
-    cta: { title: "See CarePlus in your nursing home", text: "Book a walkthrough built around your units, rounds and inspection plans.", label: "Book a nursing home demo" },
+    cta: { title: "Bring calm to your medication rounds", text: "Register your home and we'll set CarePlus up around your units, residents and rounds. Want to see it first? Book a demo.", label: "Register your nursing home", goal: "register" },
   },
   {
     slug: "residential-care",
     name: "Residential care homes",
     group: "providers",
     icon: "home",
-    img: "residential",
-    mock: "admissions",
+    img: "residential-care",
     card: {
       summary: "From the first enquiry to daily care, family updates and billing, for 24-hour non-nursing homes.",
       bullets: ["Enquiry to admission", "Person-centred care plans", "Family portal"],
@@ -83,10 +93,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For residential care homes",
       title: "Care that follows the person, <em>from enquiry to every day after.</em>",
-      lede: "CarePlus connects admissions, care planning, daily records, medication, staffing and finance for residential and dementia care homes, so your team spends its time with residents.",
+      lede: "Families trust you with the people they love. CarePlus helps you fill rooms faster, keep care plans current and show families how their relative is doing, without your team drowning in paperwork.",
     },
     audience: {
-      intro: "Built for 24-hour residential and dementia care homes without nursing.",
+      intro: "If you run a 24-hour residential or dementia care home, this is for you.",
       roles: ["Home managers and deputies", "Senior carers and carers", "Admissions and admin teams", "Activities and wellbeing staff", "Owners and finance teams"],
     },
     problems: [
@@ -124,15 +134,14 @@ export const MARKETS = [
         { icon: "message", t: "Family portal", d: "Approved updates and messages for relatives." },
       ],
     },
-    cta: { title: "See CarePlus in your care home", text: "We'll show you admissions, daily care and family updates using a home like yours.", label: "Book a care home demo" },
+    cta: { title: "Give your team more time with residents", text: "Register your care home and we'll set CarePlus up around your floors, rooms and residents.", label: "Register your care home", goal: "register" },
   },
   {
     slug: "home-care",
     name: "Home care",
     group: "providers",
     icon: "pin",
-    img: "homecare",
-    mock: "visits",
+    img: "home-care",
     card: {
       summary: "Plan rounds, verify visits, manage medicines in clients' homes and run payroll for your carers.",
       bullets: ["Rota and route planning", "Live visit monitoring", "Carer app that works offline"],
@@ -140,10 +149,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For home care (domiciliary) providers",
       title: "Every visit on time. <em>Every carer supported.</em>",
-      lede: "CarePlus plans your rota and routes, verifies every visit, flags late calls the moment they happen and keeps medicines stocked in clients' homes. Your carers get an app that works without signal.",
+      lede: "You can't see inside every client's home, but you're responsible for what happens there. CarePlus shows you every visit as it happens, flags late calls straight away, keeps medicines stocked and gives your carers an app that works without signal.",
     },
     audience: {
-      intro: "Built for domiciliary care agencies with one branch or many.",
+      intro: "If you run a home care agency, with one branch or many, this is for you.",
       roles: ["Registered managers", "Care coordinators and schedulers", "Field carers", "Finance and payroll teams", "Families and advocates"],
     },
     problems: [
@@ -181,15 +190,14 @@ export const MARKETS = [
         { icon: "users", t: "Family and proxy access", d: "Consent-controlled updates for relatives and advocates." },
       ],
     },
-    cta: { title: "Start with the plan that fits your branch", text: "Home care plans start at £149 per branch per month. Book a demo or compare plans.", label: "Book a home care demo", secondary: { label: "See plans and pricing", href: "pricing.html" } },
+    cta: { title: "See every visit, from anywhere", text: "Plans start at £149 per branch per month. Register your agency to get started, or compare plans first.", label: "Register your agency", goal: "register", secondary: { label: "Compare plans", href: "/pricing" } },
   },
   {
     slug: "supported-living",
     name: "Supported living",
     group: "providers",
     icon: "users",
-    img: null,
-    mock: "hours",
+    img: "supported-living",
     card: {
       summary: "Support plans, keyworker sessions, commissioned hours and property upkeep across every address.",
       bullets: ["Commissioned hours", "Support plans and keyworkers", "Equipment passports with QR"],
@@ -197,10 +205,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For supported living services",
       title: "Every property, every person, <em>every commissioned hour.</em>",
-      lede: "CarePlus brings support plans, keyworker sessions, commissioned hours, properties, equipment and agency staff together, so you can show commissioners the support you deliver at every address.",
+      lede: "Supporting people across many addresses means a lot to keep track of. CarePlus brings support plans, keyworker sessions, hours, properties and agency staff together, so you can show commissioners exactly what support you deliver, and where.",
     },
     audience: {
-      intro: "Built for providers supporting people in their own tenancies and shared houses.",
+      intro: "If you support people in their own tenancies or shared houses, this is for you.",
       roles: ["Service and locality managers", "Support workers and keyworkers", "Property and facilities leads", "Commissioning and finance teams"],
     },
     problems: [
@@ -238,15 +246,14 @@ export const MARKETS = [
         { icon: "qr", t: "QR equipment passports", d: "Scan equipment on site to see its history and checks." },
       ],
     },
-    cta: { title: "See CarePlus for supported living", text: "We'll walk you through hours, properties and support plans using services like yours.", label: "Book a supported living demo" },
+    cta: { title: "Show the support you deliver", text: "Register your service and we'll set up your properties, people and commissioned packages with you.", label: "Register your service", goal: "register" },
   },
   {
     slug: "mental-health",
     name: "Mental health services",
     group: "providers",
     icon: "brain",
-    img: null,
-    mock: "stock",
+    img: "mental-health",
     card: {
       summary: "Keep equipment safe, stock in date and agency staffing under control in calm, clear workspaces.",
       bullets: ["Equipment workspace", "Stock and suppliers", "Healthcare agency"],
@@ -254,10 +261,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For mental health services",
       title: "Calm, clear operations <em>behind every service.</em>",
-      lede: "CarePlus gives mental health services one calm place to run equipment, stock, suppliers and healthcare agency staffing, with a manager copilot that pulls the evidence together and leaves every decision with you.",
+      lede: "Mental health services need calm, safe surroundings. CarePlus keeps your equipment checked, stock in date and agency staffing under control, while a manager copilot pulls the evidence together. Every decision stays with you.",
     },
     audience: {
-      intro: "Built for mental health care and support providers and the teams behind their wards and services.",
+      intro: "If you run a mental health care or support service, this is for you.",
       roles: ["Service managers", "Ward and service teams", "Facilities and stock leads", "Agency and staffing coordinators"],
     },
     problems: [
@@ -295,15 +302,14 @@ export const MARKETS = [
         { icon: "sparkle", t: "Manager copilot", d: "Ask for a summary. You make the decision." },
       ],
     },
-    cta: { title: "See CarePlus for mental health services", text: "We'll show you equipment, stock and agency workspaces with examples from a service like yours.", label: "Book a mental health demo" },
+    cta: { title: "Spend less time chasing, more time caring", text: "Register your service and we'll set up your equipment, stock and agency workspaces with you.", label: "Register your service", goal: "register" },
   },
   {
     slug: "learning-disability",
     name: "Learning disability services",
     group: "providers",
     icon: "hand",
-    img: null,
-    mock: "sharing",
+    img: "learning-disability",
     card: {
       summary: "Specialist equipment, consent-led family sharing and partner access for contractors and suppliers.",
       bullets: ["Specialist equipment upkeep", "Consent-led family portal", "Partner portal"],
@@ -311,10 +317,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For learning disability services",
       title: "Support built around each person's <em>own wishes.</em>",
-      lede: "CarePlus helps learning disability services look after specialist equipment, manage stock and agency staffing, and share information with families only in the way each person has chosen.",
+      lede: "The people you support deserve a say in who knows what about them. CarePlus helps you look after specialist equipment, manage stock and agency staff, and share updates with families only in the way each person has chosen.",
     },
     audience: {
-      intro: "Built for providers supporting people with learning disabilities and autistic people.",
+      intro: "If you support people with learning disabilities or autistic people, this is for you.",
       roles: ["Service managers", "Support workers", "Families and advocates", "Contractors and suppliers"],
     },
     problems: [
@@ -352,7 +358,7 @@ export const MARKETS = [
         { icon: "building", t: "Partner portal", d: "Open jobs and orders for contractors and suppliers." },
       ],
     },
-    cta: { title: "See CarePlus for learning disability services", text: "We'll show you equipment, family sharing and the partner portal in action.", label: "Book a learning disability demo" },
+    cta: { title: "Put each person's wishes first", text: "Register your service and we'll set up your people, equipment and family sharing with you.", label: "Register your service", goal: "register" },
   },
   {
     slug: "childcare",
@@ -360,7 +366,6 @@ export const MARKETS = [
     group: "providers",
     icon: "baby",
     img: "childcare",
-    mock: "ratios",
     card: {
       summary: "Live ratios, EYFS learning journeys, funding claims and a parent portal for early years settings.",
       bullets: ["Live room ratios", "EYFS learning journeys", "Funding and billing"],
@@ -368,10 +373,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For nurseries and childcare providers",
       title: "Safe ratios, happy parents, <em>funding claimed on time.</em>",
-      lede: "CarePlus brings children's records, EYFS learning journeys, live ratios, funding claims, billing and parent communication together for nurseries and early years settings.",
+      lede: "Your practitioners are there to help children learn and grow, not to wrestle with spreadsheets. CarePlus keeps ratios safe in every room, records learning journeys as they happen, handles funding claims and keeps parents in the loop.",
     },
     audience: {
-      intro: "Built for day nurseries, pre-schools and early years settings.",
+      intro: "If you run a day nursery, pre-school or early years setting, this is for you.",
       roles: ["Nursery owners and managers", "Room leaders and practitioners", "Admin and finance teams", "Parents and carers"],
     },
     problems: [
@@ -409,7 +414,7 @@ export const MARKETS = [
         { icon: "message", t: "Parent portal", d: "Updates and messages for families." },
       ],
     },
-    cta: { title: "See CarePlus in your nursery", text: "We'll show you ratios, learning journeys and funding using a setting like yours.", label: "Book a nursery demo" },
+    cta: { title: "Give your practitioners their time back", text: "Register your nursery and we'll set up your rooms, sessions and fees with you.", label: "Register your nursery", goal: "register" },
   },
 
   // ───────────────────────────── Workforce ─────────────────────────────
@@ -418,8 +423,7 @@ export const MARKETS = [
     name: "Staffing and recruitment agencies",
     group: "workforce",
     icon: "briefcase",
-    img: "agency",
-    mock: "shifts",
+    img: "recruitment-agencies",
     card: {
       summary: "Onboard candidates, keep them compliant, fill shifts fast and invoice from approved timesheets.",
       bullets: ["Candidate compliance", "Shift matching", "Timesheets and invoicing"],
@@ -427,10 +431,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For care staffing and recruitment agencies",
       title: "Fill more shifts <em>with fully compliant staff.</em>",
-      lede: "CarePlus runs your whole agency, from candidate onboarding and compliance to shift matching, sign-ins, timesheets and invoicing, and connects you to care providers looking for staff.",
+      lede: "When a care home needs a nurse tonight, every minute counts. CarePlus helps you onboard candidates, keep their checks in date, match them to shifts and invoice from approved timesheets, all in one place.",
     },
     audience: {
-      intro: "Built for agencies that supply nurses, carers and support workers to care providers.",
+      intro: "If your agency supplies nurses, carers or support workers to care providers, this is for you.",
       roles: ["Agency owners and directors", "Recruiters and consultants", "Compliance officers", "Finance and payroll teams"],
     },
     problems: [
@@ -468,15 +472,14 @@ export const MARKETS = [
         { icon: "cart", t: "Marketplace", d: "Where providers find agencies and workers." },
       ],
     },
-    cta: { title: "Run your agency on CarePlus", text: "See onboarding, compliance and shift matching working together.", label: "Book an agency demo" },
+    cta: { title: "Fill shifts faster, get paid sooner", text: "Register your agency and we'll help you bring your candidates and clients across.", label: "Register your agency", goal: "register" },
   },
   {
     slug: "care-professionals",
     name: "Carers, nurses and support workers",
     group: "workforce",
     icon: "heart",
-    img: "professional",
-    mock: "app",
+    img: "care-professionals",
     card: {
       summary: "Your shifts, timesheets, training and pay in one app, with extra shifts when you want them.",
       bullets: ["Shifts and visits", "Timesheets and payslips", "Training and certificates"],
@@ -484,10 +487,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For carers, nurses and support workers",
       title: "Your shifts, your training, <em>your pay. In your pocket.</em>",
-      lede: "If your employer or agency uses CarePlus, you get one app for your rota, visits, timesheets, training and leave. It works without signal, and you can pick up extra shifts if you want them.",
+      lede: "You give everything on every shift. CarePlus makes the rest easier: your rota, visits, timesheets, training and leave in one app that works without signal, with extra shifts when you want them.",
     },
     audience: {
-      intro: "For the people who deliver care, whether you're employed, on the bank or with an agency.",
+      intro: "If you're a carer, nurse or support worker, whether you're employed, on the bank or with an agency, this is for you.",
       roles: ["Carers and care assistants", "Nurses", "Senior carers", "Support workers", "Bank and agency staff"],
     },
     problems: [
@@ -525,7 +528,7 @@ export const MARKETS = [
         { icon: "lock", t: "Your data, your view", d: "You always keep access to your own shifts, timesheets and leave." },
       ],
     },
-    cta: { title: "Already invited? Sign in.", text: "If you haven't received an invitation, ask your manager or agency to add you to CarePlus.", label: "Sign in to CarePlus", href: "LOGIN", secondary: { label: "My employer isn't on CarePlus", href: "get-started.html#care-professionals" } },
+    cta: { title: "Already invited? Sign in.", text: "No invitation yet? Ask your manager or agency to add you, or tell us where you work and we'll get in touch with them.", label: "Sign in to CarePlus", goal: "onboard", href: "LOGIN", secondary: { label: "My employer isn't on CarePlus yet", href: "/get-started?for=care-professionals&goal=question#request" } },
   },
 
   // ─────────────────────── Partners & commissioners ───────────────────────
@@ -537,8 +540,7 @@ export const MARKETS = [
     name: "Hospitals",
     group: "healthcare",
     icon: "building",
-    img: null,
-    mock: "discharge",
+    img: "hospitals",
     card: {
       summary: "Discharge patients to care providers who reconcile every medicine and admit them through a clear, tracked process.",
       bullets: ["Safer discharge to care", "Medication reconciled line by line", "Compliant agency staff"],
@@ -546,10 +548,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For hospitals and NHS trusts",
       title: "Discharge to care, <em>without the loose ends.</em>",
-      lede: "When patients leave hospital for a care home or home care, providers on CarePlus take them through a tracked admission and reconcile every medicine against your discharge letter. Agencies on CarePlus can also send you compliant nurses and carers.",
+      lede: "A safe discharge depends on what happens after the patient leaves. Care homes and home care providers on CarePlus admit patients through a tracked process and check every medicine against your discharge letter. Agencies on CarePlus can also send you compliant nurses and carers.",
     },
     audience: {
-      intro: "For the hospital teams who move patients into social care, and the wards that need extra staff.",
+      intro: "If you work in discharge, patient flow, on a ward or in hospital pharmacy, this is for you.",
       roles: ["Discharge and patient flow teams", "Ward managers and matrons", "Hospital pharmacists", "Integrated care and NHS trust leads", "Staffing and bank offices"],
     },
     problems: [
@@ -593,15 +595,14 @@ export const MARKETS = [
         { icon: "sparkle", t: "Early access programme", d: "Pilot the hospital tools as we build them." },
       ],
     },
-    cta: { title: "Help shape CarePlus for hospitals", text: "Register for early access, or talk to us about the providers you discharge to.", label: "Register for early access" },
+    cta: { title: "Help shape CarePlus for hospitals", text: "Register for early access and help us build direct referrals and discharge tracking with you.", label: "Register for early access", goal: "early-access" },
   },
   {
     slug: "clinics",
     name: "Clinics and GP practices",
     group: "healthcare",
     icon: "heart",
-    img: null,
-    mock: "review",
+    img: "clinics",
     card: {
       summary: "Your medication changes and reviews reach the care teams who give the medicines, recorded and signed off.",
       bullets: ["Medication changes followed through", "Audited eMAR records", "Pharmacy change notices"],
@@ -609,10 +610,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For clinics, GP practices and community teams",
       title: "Your review, <em>carried out exactly.</em>",
-      lede: "When you change a patient's medicines, care providers on CarePlus record the change in their eMAR with a reason and a named person, pass it to the pharmacy and keep stock in step. You get fewer follow-up calls and safer care.",
+      lede: "When you change someone's medicines, you need to know the change actually happens. Care providers on CarePlus record your changes with a reason and a named person, pass them to the pharmacy and keep stock in step.",
     },
     audience: {
-      intro: "For the primary and community care teams who look after people living in care homes or receiving home care.",
+      intro: "If you're a GP, practice pharmacist or community clinician supporting people in care, this is for you.",
       roles: ["GPs and practice teams", "Practice and clinical pharmacists", "Community nurses", "Outpatient and specialist clinics", "Care home support teams"],
     },
     problems: [
@@ -656,15 +657,14 @@ export const MARKETS = [
         { icon: "sparkle", t: "Early access programme", d: "Pilot the clinician view as we build it." },
       ],
     },
-    cta: { title: "Help shape CarePlus for clinics", text: "Register for early access, or tell us about the care providers you support.", label: "Register for early access" },
+    cta: { title: "Help shape CarePlus for clinics", text: "Register for early access and help us build a clinician view with you.", label: "Register for early access", goal: "early-access" },
   },
   {
     slug: "laboratories",
     name: "Laboratories",
     group: "healthcare",
     icon: "search",
-    img: null,
-    mock: "samples",
+    img: "laboratories",
     card: {
       summary: "Reach care providers through the supplier marketplace today, and pilot sample and results tools in early access.",
       bullets: ["Supplier marketplace", "Outbreak and infection records", "Early access: results"],
@@ -672,10 +672,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For pathology and testing laboratories",
       title: "Closer to the care teams <em>who send you samples.</em>",
-      lede: "Care providers on CarePlus already manage infection control, outbreaks and their supplies in one place. Laboratories can reach them through the supplier marketplace today and join early access for sample and results tools.",
+      lede: "When an outbreak hits a care home, speed matters. Care providers on CarePlus already record infection control and order supplies in one place. Reach them through the supplier marketplace today, and help us build sample and results tools.",
     },
     audience: {
-      intro: "For laboratories that test samples from care homes, home care and supported living services.",
+      intro: "If your laboratory tests samples from care settings, this is for you.",
       roles: ["Pathology laboratories", "Private testing laboratories", "Infection prevention teams", "Test kit and consumables suppliers"],
     },
     problems: [
@@ -718,15 +718,14 @@ export const MARKETS = [
         { icon: "sparkle", t: "Early access programme", d: "Sample and results tools, in development." },
       ],
     },
-    cta: { title: "Help shape CarePlus for laboratories", text: "Register for early access, or list your supplies on the marketplace.", label: "Register for early access" },
+    cta: { title: "Help shape CarePlus for laboratories", text: "Register for early access, or list your supplies on the marketplace.", label: "Register for early access", goal: "early-access" },
   },
   {
     slug: "pharmacies",
     name: "Pharmacies",
     group: "healthcare",
     icon: "pill",
-    img: null,
-    mock: "reorders",
+    img: "pharmacies",
     card: {
       summary: "Receive reorders, change notices and delivery requests from the care providers you supply.",
       bullets: ["Electronic reorders", "Change notices", "Delivery tracking"],
@@ -734,10 +733,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For community pharmacies",
       title: "Fewer phone calls. <em>Clearer orders.</em> Safer supply.",
-      lede: "Care providers on CarePlus can connect to their nominated pharmacy. Reorders, medication changes and delivery requests come to you in a clear, consistent format, so medicines reach people before they run out.",
+      lede: "Unclear orders and last-minute calls cost your team hours. Care providers on CarePlus can connect to their nominated pharmacy, so reorders, medicine changes and delivery requests reach you clearly and in one consistent format.",
     },
     audience: {
-      intro: "For community pharmacies supplying home care clients and care homes.",
+      intro: "If your pharmacy supplies care homes or home care clients, this is for you.",
       roles: ["Pharmacists", "Dispensary teams", "Care home and domiciliary account leads"],
     },
     problems: [
@@ -772,7 +771,7 @@ export const MARKETS = [
         { icon: "mail", t: "Partner onboarding", d: "Register your interest and we'll set up your connection." },
       ],
     },
-    cta: { title: "Become a CarePlus partner pharmacy", text: "Tell us about your pharmacy and the providers you supply.", label: "Register as a partner pharmacy" },
+    cta: { title: "Become a CarePlus partner pharmacy", text: "Register your pharmacy and we'll connect you with the providers you supply.", label: "Register your pharmacy", goal: "partner" },
   },
   {
     slug: "suppliers",
@@ -780,7 +779,6 @@ export const MARKETS = [
     group: "partners",
     icon: "truck",
     img: "suppliers",
-    mock: "orders",
     card: {
       summary: "Reach care providers through the supplier marketplace, win group orders and track them to delivery.",
       bullets: ["Supplier marketplace", "Group buying", "Order tracking"],
@@ -788,10 +786,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For suppliers and vendors",
       title: "Supply the care sector <em>through one marketplace.</em>",
-      lede: "Care providers use CarePlus to buy consumables, equipment and supplies. List with us to be found, receive approved purchase orders and combined group orders, and see every order through to delivery.",
+      lede: "Care providers need supplies they can rely on, and you want to reach more of them. CarePlus puts your catalogue where care teams already buy, sends you orders that are already approved and combines demand across homes.",
     },
     audience: {
-      intro: "For businesses that supply care homes, home care and supported living services.",
+      intro: "If you supply care homes, home care or supported living services, this is for you.",
       roles: ["Consumables and PPE suppliers", "Equipment and mobility suppliers", "Facilities and catering suppliers", "Account and sales teams"],
     },
     problems: [
@@ -826,15 +824,14 @@ export const MARKETS = [
         { icon: "building", t: "Partner portal", d: "Your open orders, under your company name." },
       ],
     },
-    cta: { title: "Become a CarePlus supplier", text: "Tell us about your products and we'll get you listed.", label: "Register as a supplier" },
+    cta: { title: "Reach more care providers", text: "Register as a supplier and we'll help you list your products.", label: "Register as a supplier", goal: "partner" },
   },
   {
     slug: "technicians",
     name: "Technicians and contractors",
     group: "partners",
     icon: "wrench",
-    img: null,
-    mock: "jobs",
+    img: "technicians",
     card: {
       summary: "Receive maintenance requests, send quotes and keep care settings safe and running.",
       bullets: ["Maintenance requests", "Quotes and scheduling", "Permits and inspections"],
@@ -842,10 +839,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For technicians and contractors",
       title: "Clear jobs, quick quotes, <em>safe sites.</em>",
-      lede: "Care settings use CarePlus to log faults, schedule inspections and manage contractors. Receive clear requests, send quotes, agree visits and see the permits you need, all in one place.",
+      lede: "A faulty hoist or nurse call system can't wait. Care settings on CarePlus send you clear requests with the location and equipment history, take your quotes and agree visit times, so you arrive knowing what to fix.",
     },
     audience: {
-      intro: "For trades and service engineers who keep care buildings and equipment safe.",
+      intro: "If you service or maintain care buildings and equipment, this is for you.",
       roles: ["Field service technicians", "Maintenance contractors", "Equipment engineers (hoists, beds, nurse call)", "Building and fire safety trades"],
     },
     problems: [
@@ -880,15 +877,14 @@ export const MARKETS = [
         { icon: "message", t: "Job messages", d: "Updates on each request." },
       ],
     },
-    cta: { title: "Work with care providers on CarePlus", text: "Register your trade and the areas you cover.", label: "Register as a contractor" },
+    cta: { title: "Work with care providers on CarePlus", text: "Register your trade and the areas you cover.", label: "Register as a contractor", goal: "partner" },
   },
   {
     slug: "commissioners",
     name: "Commissioners and local authorities",
     group: "partners",
     icon: "scale",
-    img: null,
-    mock: "commissioner",
+    img: "commissioners",
     card: {
       summary: "See commissioned hours, quality evidence and notifications from the providers you fund.",
       bullets: ["Commissioner portal", "Commissioned hours", "Evidence packs"],
@@ -896,10 +892,10 @@ export const MARKETS = [
     hero: {
       eyebrow: "For commissioners and local authorities",
       title: "See the care you commission, <em>as it's delivered.</em>",
-      lede: "When providers you fund use CarePlus, you can follow delivered hours, quality evidence and statutory notifications through a read-only commissioner portal, without waiting for quarterly returns.",
+      lede: "You fund care, so you need to know it's being delivered. When providers you work with use CarePlus, you can follow delivered hours, quality evidence and statutory notifications in a read-only commissioner portal, without waiting for quarterly returns.",
     },
     audience: {
-      intro: "For the teams that buy and monitor adult social care.",
+      intro: "If you commission adult social care for a council, the NHS or an integrated care board, this is for you.",
       roles: ["Local authority commissioners", "NHS and ICB commissioning teams", "Quality and contract monitoring officers"],
     },
     problems: [
@@ -934,7 +930,7 @@ export const MARKETS = [
         { icon: "login", t: "Secure sign-in", d: "Your own account on CarePlus." },
       ],
     },
-    cta: { title: "Bring your providers onto CarePlus", text: "Talk to us about commissioner access and data feeds.", label: "Talk to our team" },
+    cta: { title: "See the care you commission", text: "Register for commissioner access and we'll connect you with the providers you fund.", label: "Register for commissioner access", goal: "register" },
   },
 ];
 

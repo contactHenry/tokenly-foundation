@@ -21,8 +21,8 @@
       setMega(megaBtn.getAttribute("aria-expanded") !== "true");
     });
     document.addEventListener("click", function (e) { if (!mega.contains(e.target)) setMega(false); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") { setMega(false); setDrawer(false); } });
   }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { setMega(false); setDrawer(false); } });
 
   // Mobile drawer.
   var toggle = document.getElementById("nav-toggle");
@@ -38,27 +38,32 @@
   }
   if (toggle) toggle.addEventListener("click", function () { setDrawer(toggle.getAttribute("aria-expanded") !== "true"); });
 
-  // Keep the last row of market cards full: the "find your fit" card takes the spare columns.
-  function fitCard() {
-    var card = document.getElementById("fit-card");
-    if (!card) return;
-    var n = document.querySelectorAll("[data-group]:not([hidden])").length % 3;
-    card.className = "m-cta " + (n === 1 ? "span-2" : n === 2 ? "" : "span-3");
-  }
-  fitCard();
-
-  // Market tabs on the home page.
+  // Home: one category at a time, at most six cards, with "See all" for the rest.
   var tabs = document.querySelectorAll("[data-tab]");
-  tabs.forEach(function (t) {
-    t.addEventListener("click", function () {
-      var g = t.getAttribute("data-tab");
-      tabs.forEach(function (o) { o.setAttribute("aria-selected", String(o === t)); });
-      document.querySelectorAll("[data-group]").forEach(function (c) {
-        c.hidden = g !== "all" && c.getAttribute("data-group") !== g;
-      });
-      fitCard();
+  var seeAll = document.getElementById("see-all");
+  var blurb = document.getElementById("tab-blurb");
+  var current = tabs.length ? tabs[0] : null;
+  function showGroup(tab, all) {
+    current = tab;
+    var g = tab.getAttribute("data-tab");
+    var limit = seeAll ? Number(seeAll.getAttribute("data-limit")) : 6;
+    tabs.forEach(function (o) { o.setAttribute("aria-selected", String(o === tab)); });
+    var cards = Array.prototype.filter.call(document.querySelectorAll("#market-cards [data-group]"), function (c) {
+      var mine = c.getAttribute("data-group") === g;
+      if (!mine) c.hidden = true;
+      return mine;
     });
-  });
+    cards.forEach(function (c, i) { c.hidden = !all && i >= limit; });
+    if (blurb) blurb.textContent = tab.getAttribute("data-blurb");
+    if (seeAll) {
+      var extra = cards.length > limit && !all;
+      seeAll.hidden = !extra;
+      seeAll.textContent = "See all " + cards.length + " " + tab.getAttribute("data-label").toLowerCase();
+    }
+  }
+  tabs.forEach(function (t) { t.addEventListener("click", function () { showGroup(t, false); }); });
+  if (seeAll) seeAll.addEventListener("click", function () { if (current) showGroup(current, true); });
+  if (current) showGroup(current, false);
 
   // Pricing: monthly / annual.
   var cycleBtns = document.querySelectorAll("[data-cycle]");
@@ -75,21 +80,22 @@
     });
   });
 
-  // Get started: preselect the segment from the link (#segment) and handle the request form.
+  // Get started: buttons elsewhere link here as ?for=<market>&goal=<goal>#request.
   var form = document.getElementById("request-form");
   var seg = document.getElementById("f-segment");
-  function preselect() {
-    var h = (location.hash || "").replace("#", "");
-    if (seg && h && seg.querySelector('option[value="' + h + '"]')) {
-      seg.value = h;
+  var goal = document.getElementById("f-goal");
+  if (form && seg && goal) {
+    var params = new URLSearchParams(location.search);
+    var forSlug = params.get("for") || (location.hash || "").replace("#", "");
+    var segOpt = forSlug && seg.querySelector('option[value="' + forSlug + '"]');
+    if (segOpt) seg.value = forSlug;
+    var g = params.get("goal") || (segOpt && segOpt.getAttribute("data-goal"));
+    if (g && goal.querySelector('option[value="' + g + '"]')) goal.value = g;
+    if (segOpt || params.get("goal")) {
       var target = document.getElementById("request");
       if (target) target.scrollIntoView({ block: "start" });
     }
-  }
-  preselect();
-  window.addEventListener("hashchange", preselect);
 
-  if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var ok = true;
@@ -102,9 +108,10 @@
       });
       if (!ok) return;
       var v = function (id) { return (document.getElementById(id) || {}).value || ""; };
+      var goalText = goal.options[goal.selectedIndex].text;
       var segText = seg.options[seg.selectedIndex].text;
       var body = [
-        "Request: " + v("f-goal"),
+        "Request: " + goalText,
         "Name: " + v("f-name"),
         "Email: " + v("f-email"),
         "Organisation: " + v("f-org"),
@@ -112,12 +119,12 @@
         v("f-size") ? "Size: " + v("f-size") : "",
         v("f-msg") ? "\n" + v("f-msg") : "",
       ].filter(Boolean).join("\n");
-      var subject = "CarePlus " + v("f-goal").toLowerCase() + " · " + segText;
+      var subject = "CarePlus: " + goalText + " · " + segText;
       var done = document.getElementById("request-done");
       done.querySelector("pre").textContent = body;
       done.querySelector(".email").textContent = CONTACT_EMAIL;
-      var mail = done.querySelector("[data-mailto]");
-      mail.href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      done.querySelector("[data-mailto]").href =
+        "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
       form.hidden = true;
       done.hidden = false;
       done.focus();
@@ -125,11 +132,10 @@
     var copyBtn = document.querySelector("[data-copy]");
     if (copyBtn) copyBtn.addEventListener("click", function () {
       var pre = document.querySelector("#request-done pre");
-      var text = pre.textContent;
       var label = copyBtn.querySelector("span");
       function selectIt() { var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); label.textContent = "Selected. Press Ctrl+C to copy"; }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () { label.textContent = "Copied"; }, selectIt);
+        navigator.clipboard.writeText(pre.textContent).then(function () { label.textContent = "Copied"; }, selectIt);
       } else selectIt();
     });
     var again = document.querySelector("[data-again]");
