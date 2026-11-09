@@ -20,9 +20,14 @@ Each target market has its own page, and every market page follows the same six 
 |---|---|
 | Care providers | Nursing homes, Residential care homes, Home care, Supported living, Mental health services, Learning disability services, Nurseries and childcare |
 | Workforce | Staffing and recruitment agencies; Carers, nurses and support workers |
-| Partners & commissioners | Pharmacies, Suppliers and vendors, Technicians and contractors, Commissioners and local authorities |
+| Healthcare | Hospitals, Clinics and GP practices, Laboratories, Pharmacies |
+| Partners & commissioners | Suppliers and vendors, Technicians and contractors, Commissioners and local authorities |
 
 Shared pages: Home, Platform, Compliance, Pricing (real home care plans) and Get started (a segment chooser plus a request form).
+
+Hospitals, clinics and laboratories lead with what CarePlus does for them today, through care providers, agencies and the marketplace. Anything not built yet is listed under a clearly labelled **Early access** section.
+
+The same site also runs inside the CarePlus app on Lovable as React pages (`src/site/` in that project): `/` shows the website and Sign in opens `/login`. This folder is the standalone static version.
 
 ## Build
 

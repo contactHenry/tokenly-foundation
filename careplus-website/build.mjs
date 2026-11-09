@@ -96,6 +96,7 @@ function footer() {
     <div class="f-top">
       <div><a href="index.html" aria-label="CarePlus home">${logo("on-dark")}</a><p>${TAGLINE} Built in the UK for regulated care, with UK data residency and a full audit trail.</p></div>
       ${col("Care providers", byGroup("providers").map((m) => [m.name, page(m)]))}
+      ${col("Healthcare", byGroup("healthcare").map((m) => [m.name, page(m)]))}
       ${col("Workforce and partners", [...byGroup("workforce"), ...byGroup("partners")].map((m) => [m.name, page(m)]))}
       ${col("CarePlus", [["Platform", "platform.html"], ["Compliance and security", "compliance.html"], ["Pricing", "pricing.html"], ["Get started", "get-started.html"], ["Sign in", LOGIN_URL]])}
     </div>
@@ -178,7 +179,7 @@ function home() {
       <div class="hero-copy">
         <h2 class="display h-xl">Run your whole care service <em>from one place.</em></h2>
         <div style="display:grid;gap:28px">
-          <p>CarePlus brings residents, medication, rotas, compliance, stock and finance together for nursing homes, home care, supported living, childcare, agencies and the partners who supply them.</p>
+          <p>CarePlus brings residents, medication, rotas, compliance, stock and finance together for care homes, home care, supported living, childcare and agencies, and connects them with the hospitals, clinics, pharmacies and partners they work with.</p>
           <div class="btn-row">
             <a class="btn btn-primary" href="get-started.html">Get started ${icon("arrow")}</a>
             <a class="btn btn-ghost-light" href="get-started.html#request">Book a demo</a>
@@ -215,7 +216,7 @@ function home() {
         ${GROUPS.map((g) => `<button class="tab" role="tab" aria-selected="false" data-tab="${g.id}">${g.label}</button>`).join("")}
       </div>
     </div>
-    <div class="cards">${MARKETS.map(marketCard).join("")}<div class="m-cta span-2" id="fit-card"><div><h3>Not sure which fits you?</h3><p>Tell us what your organisation does and we'll show you the parts of CarePlus built for you.</p></div><div class="btn-row"><a class="btn btn-light" href="get-started.html">Find your fit ${icon("arrow")}</a>${signIn("btn btn-ghost-light")}</div></div></div>
+    <div class="cards">${GROUPS.flatMap((g) => byGroup(g.id)).map(marketCard).join("")}<div class="m-cta span-2" id="fit-card"><div><h3>Not sure which fits you?</h3><p>Tell us what your organisation does and we'll show you the parts of CarePlus built for you.</p></div><div class="btn-row"><a class="btn btn-light" href="get-started.html">Find your fit ${icon("arrow")}</a>${signIn("btn btn-ghost-light")}</div></div></div>
   </div>
 </section>
 
@@ -337,6 +338,15 @@ function marketPage(m) {
     </div>
   </div>
 </section>
+
+${m.roadmap ? `<section class="section" style="padding-top:0" aria-labelledby="rm-title">
+  <div class="wrap">
+    <div class="roadmap">
+      <div><span class="soon">${icon("sparkle")}Early access</span><h2 class="display h-lg" id="rm-title" style="margin-top:16px">Coming next for ${m.name.toLowerCase()}</h2><p class="lede" style="margin-top:16px">${m.roadmap.intro}</p></div>
+      <ul class="rm-list">${m.roadmap.items.map((r) => `<li><b>${r.t}</b><span>${r.d}</span><small>In development</small></li>`).join("")}</ul>
+    </div>
+  </div>
+</section>` : ""}
 
 ${ctaBand({ title: m.cta.title, text: m.cta.text, primary, secondary })}
 

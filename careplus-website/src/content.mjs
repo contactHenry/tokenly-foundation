@@ -5,6 +5,7 @@
 
 export const GROUPS = [
   { id: "providers", label: "Care providers", blurb: "Services that deliver care and support every day." },
+  { id: "healthcare", label: "Healthcare", blurb: "Hospitals, clinics, pharmacies and laboratories that work alongside care." },
   { id: "workforce", label: "Workforce", blurb: "The agencies and people who staff care." },
   { id: "partners", label: "Partners & commissioners", blurb: "Organisations that supply, maintain and fund care." },
 ];
@@ -528,10 +529,201 @@ export const MARKETS = [
   },
 
   // ─────────────────────── Partners & commissioners ───────────────────────
+  // ─────────────────────────────── Healthcare ───────────────────────────────
+  // Hospitals, clinics and laboratories: these pages lead with what works today through
+  // care providers on CarePlus, and list planned capabilities under "early access".
+  {
+    slug: "hospitals",
+    name: "Hospitals",
+    group: "healthcare",
+    icon: "building",
+    img: null,
+    mock: "discharge",
+    card: {
+      summary: "Discharge patients to care providers who reconcile every medicine and admit them through a clear, tracked process.",
+      bullets: ["Safer discharge to care", "Medication reconciled line by line", "Compliant agency staff"],
+    },
+    hero: {
+      eyebrow: "For hospitals and NHS trusts",
+      title: "Discharge to care, <em>without the loose ends.</em>",
+      lede: "When patients leave hospital for a care home or home care, providers on CarePlus take them through a tracked admission and reconcile every medicine against your discharge letter. Agencies on CarePlus can also send you compliant nurses and carers.",
+    },
+    audience: {
+      intro: "For the hospital teams who move patients into social care, and the wards that need extra staff.",
+      roles: ["Discharge and patient flow teams", "Ward managers and matrons", "Hospital pharmacists", "Integrated care and NHS trust leads", "Staffing and bank offices"],
+    },
+    problems: [
+      { p: "Medication changes made in hospital are missed when the patient arrives at their care home.", s: "Care providers on CarePlus reconcile each discharge line by line: kept, changed, started or stopped, with a named person signing it off." },
+      { p: "Discharges stall while a care home works through its admission paperwork.", s: "Care homes manage referrals, pre-admission assessments, rooms and admission checklists in one tracked workflow." },
+      { p: "Home care packages start late after discharge.", s: "Home care providers schedule the first visits, set up medication records and get carers there with the app." },
+      { p: "Wards are short of nurses and carers.", s: "Agencies on CarePlus supply staff whose DBS checks and training are tracked, and blocked when they lapse." },
+    ],
+    features: [
+      { icon: "route", t: "Transitions of care", d: "Admissions, hospital transfers and discharges reconciled against the source documents." },
+      { icon: "pill", t: "Medication reconciliation", d: "Each line is marked as kept, changed, started or stopped, and signed off by a named person." },
+      { icon: "home", t: "Referrals into care homes", d: "Enquiry, pre-admission assessment, room allocation and admission checklist." },
+      { icon: "pin", t: "Home care starts", d: "First visits scheduled, medication records set up and carers on their way." },
+      { icon: "briefcase", t: "Compliant agency staff", d: "Nurses and carers with tracked DBS checks, training and competencies." },
+      { icon: "plug", t: "NHS data feeds", d: "Local authority and NHS data feeds are available to providers on Enterprise plans." },
+    ],
+    benefits: [
+      { t: "Safer discharges", d: "Medication changes are checked and signed off when the patient arrives." },
+      { t: "Faster flow", d: "Care providers work through admissions in one tracked process." },
+      { t: "Fewer readmissions from medication errors", d: "What you prescribed is what gets given." },
+      { t: "Staff you can trust", d: "Agency workers arrive cleared and trained." },
+    ],
+    roadmap: {
+      intro: "We're building tools for hospital teams to work with care providers directly. Register for early access to help shape them.",
+      items: [
+        { t: "Discharge referrals", d: "Send a referral and discharge summary straight to a care provider on CarePlus." },
+        { t: "Care vacancy search", d: "See which providers have capacity for a patient's needs." },
+        { t: "Discharge status", d: "Follow each patient's admission or first visit until it's complete." },
+      ],
+    },
+    access: {
+      steps: [
+        { t: "Work with providers on CarePlus", d: "Care homes and home care agencies in your area may already use CarePlus." },
+        { t: "Share discharge information", d: "Providers reconcile your discharge letters against their records." },
+        { t: "Book compliant staff", d: "Use agencies on CarePlus to cover ward shifts." },
+        { t: "Join early access", d: "Register to pilot direct referrals and discharge tracking." },
+      ],
+      channels: [
+        { icon: "users", t: "Through care providers", d: "Available today wherever your local providers use CarePlus." },
+        { icon: "briefcase", t: "Through agencies", d: "Book staff from agencies that run on CarePlus." },
+        { icon: "sparkle", t: "Early access programme", d: "Pilot the hospital tools as we build them." },
+      ],
+    },
+    cta: { title: "Help shape CarePlus for hospitals", text: "Register for early access, or talk to us about the providers you discharge to.", label: "Register for early access" },
+  },
+  {
+    slug: "clinics",
+    name: "Clinics and GP practices",
+    group: "healthcare",
+    icon: "heart",
+    img: null,
+    mock: "review",
+    card: {
+      summary: "Your medication changes and reviews reach the care teams who give the medicines, recorded and signed off.",
+      bullets: ["Medication changes followed through", "Audited eMAR records", "Pharmacy change notices"],
+    },
+    hero: {
+      eyebrow: "For clinics, GP practices and community teams",
+      title: "Your review, <em>carried out exactly.</em>",
+      lede: "When you change a patient's medicines, care providers on CarePlus record the change in their eMAR with a reason and a named person, pass it to the pharmacy and keep stock in step. You get fewer follow-up calls and safer care.",
+    },
+    audience: {
+      intro: "For the primary and community care teams who look after people living in care homes or receiving home care.",
+      roles: ["GPs and practice teams", "Practice and clinical pharmacists", "Community nurses", "Outpatient and specialist clinics", "Care home support teams"],
+    },
+    problems: [
+      { p: "Medication changes from a review don't always reach the people giving the medicines.", s: "Care providers record every change in their eMAR, with a reason and a named person. Records can't be overwritten." },
+      { p: "Pharmacies dispense the old dose after a change.", s: "Providers send change notices to their nominated pharmacy, which acknowledges them." },
+      { p: "Missed or refused doses only come up at the next appointment.", s: "Providers see missed, refused and PRN doses during the round, and trends over time." },
+      { p: "Controlled drugs prescribed for end-of-life care need careful oversight.", s: "Providers keep a two-witness controlled drugs register and an append-only stock ledger." },
+    ],
+    features: [
+      { icon: "pill", t: "eMAR with audited changes", d: "Medication changes recorded with a reason and a named person." },
+      { icon: "bell", t: "Pharmacy change notices", d: "Changes passed to the nominated pharmacy and acknowledged." },
+      { icon: "chart", t: "Medication trends", d: "Missed, refused and PRN doses over time, by resident." },
+      { icon: "lock", t: "Controlled drugs", d: "A two-witness register with balances from the same ledger." },
+      { icon: "route", t: "Transitions of care", d: "Changes after hospital stays reconciled line by line." },
+      { icon: "file", t: "Printable MAR", d: "A current MAR chart whenever you need one." },
+    ],
+    benefits: [
+      { t: "Changes that stick", d: "Your decisions are recorded and carried out." },
+      { t: "Fewer follow-up calls", d: "Care teams and pharmacies get the same information." },
+      { t: "Better reviews", d: "Missed and refused doses are visible before you review." },
+      { t: "Clinical decisions stay yours", d: "CarePlus records care. It never prescribes or sets doses." },
+    ],
+    roadmap: {
+      intro: "We're building ways for clinicians to work with care teams directly. Register for early access to help shape them.",
+      items: [
+        { t: "Clinician view", d: "Read-only access to a patient's medication record and recent observations." },
+        { t: "Change requests", d: "Send a medication change straight to the care team for sign-off." },
+        { t: "Review preparation", d: "A pre-review summary of missed doses, PRN use and observations." },
+      ],
+    },
+    access: {
+      steps: [
+        { t: "Work with providers on CarePlus", d: "Care homes and home care agencies you support may already use it." },
+        { t: "Send changes as you do today", d: "Providers record your changes and pass them to the pharmacy." },
+        { t: "Ask for a printed MAR", d: "Providers can print a current MAR for reviews." },
+        { t: "Join early access", d: "Register to pilot the clinician tools." },
+      ],
+      channels: [
+        { icon: "users", t: "Through care providers", d: "Available today wherever your patients' providers use CarePlus." },
+        { icon: "plug", t: "Through pharmacies", d: "Change notices reach nominated pharmacies." },
+        { icon: "sparkle", t: "Early access programme", d: "Pilot the clinician view as we build it." },
+      ],
+    },
+    cta: { title: "Help shape CarePlus for clinics", text: "Register for early access, or tell us about the care providers you support.", label: "Register for early access" },
+  },
+  {
+    slug: "laboratories",
+    name: "Laboratories",
+    group: "healthcare",
+    icon: "search",
+    img: null,
+    mock: "samples",
+    card: {
+      summary: "Reach care providers through the supplier marketplace today, and pilot sample and results tools in early access.",
+      bullets: ["Supplier marketplace", "Outbreak and infection records", "Early access: results"],
+    },
+    hero: {
+      eyebrow: "For pathology and testing laboratories",
+      title: "Closer to the care teams <em>who send you samples.</em>",
+      lede: "Care providers on CarePlus already manage infection control, outbreaks and their supplies in one place. Laboratories can reach them through the supplier marketplace today and join early access for sample and results tools.",
+    },
+    audience: {
+      intro: "For laboratories that test samples from care homes, home care and supported living services.",
+      roles: ["Pathology laboratories", "Private testing laboratories", "Infection prevention teams", "Test kit and consumables suppliers"],
+    },
+    problems: [
+      { p: "Care homes don't always have test kits and sample supplies when an outbreak starts.", s: "Providers order supplies through the supplier marketplace, with approval and stock warnings." },
+      { p: "Outbreak information is scattered across calls and emails.", s: "Care homes record infection control and outbreaks in CarePlus, alongside each resident's care." },
+      { p: "Results take a while to reach the care team who needs them.", s: "In early access: sending results straight to the provider's record." },
+      { p: "It's hard to see which samples are still outstanding.", s: "In early access: sample tracking that both sides can see." },
+    ],
+    features: [
+      { icon: "cart", t: "Supplier marketplace", d: "List test kits and sample supplies where care providers buy." },
+      { icon: "clipboard", t: "Approved orders", d: "Orders reach you after the provider has signed them off." },
+      { icon: "truck", t: "Delivery tracking", d: "Order status from approval to delivery." },
+      { icon: "shield", t: "Infection control records", d: "Care homes record outbreaks and infection control in CarePlus." },
+      { icon: "building", t: "Partner portal", d: "See your company's open orders only." },
+    ],
+    benefits: [
+      { t: "Supplies in place", d: "Care teams can order what they need before an outbreak spreads." },
+      { t: "Clearer context", d: "Providers record outbreaks alongside care." },
+      { t: "New customers", d: "Reach providers across care settings." },
+      { t: "A say in what's built", d: "Early access partners shape the results tools." },
+    ],
+    roadmap: {
+      intro: "Laboratory tools are in development. Register for early access to pilot them with care providers.",
+      items: [
+        { t: "Sample tracking", d: "Follow samples from collection to result, visible to the care provider." },
+        { t: "Results to the record", d: "Send results to the right person's record, for a named clinician or manager to review." },
+        { t: "Outbreak dashboards", d: "Results across a home during an outbreak, alongside infection control records." },
+      ],
+    },
+    access: {
+      steps: [
+        { t: "Register your laboratory", d: "Tell us about your tests and the areas you serve." },
+        { t: "List your supplies", d: "Put test kits and sample supplies on the marketplace." },
+        { t: "Receive approved orders", d: "Providers' signed-off orders reach you." },
+        { t: "Pilot the results tools", d: "Early access partners test sample tracking with care providers." },
+      ],
+      channels: [
+        { icon: "cart", t: "Supplier marketplace", d: "Available today." },
+        { icon: "building", t: "Partner portal", d: "Your open orders, under your company name." },
+        { icon: "sparkle", t: "Early access programme", d: "Sample and results tools, in development." },
+      ],
+    },
+    cta: { title: "Help shape CarePlus for laboratories", text: "Register for early access, or list your supplies on the marketplace.", label: "Register for early access" },
+  },
   {
     slug: "pharmacies",
     name: "Pharmacies",
-    group: "partners",
+    group: "healthcare",
     icon: "pill",
     img: null,
     mock: "reorders",

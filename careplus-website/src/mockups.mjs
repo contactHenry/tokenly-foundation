@@ -186,6 +186,38 @@ const M = {
          `<span class="c-${i % 11 === 3 ? "dark" : i % 13 === 5 ? "warn" : i % 7 === 2 ? "info" : "ok"}"></span>`
        ).join("")}</div>`
     ),
+  discharge: () =>
+    frame(
+      "Discharge reconciliation",
+      "Room 12 · from St Helier",
+      rows([
+        `<span>Apixaban 5mg twice daily</span>${pill("ok", "Kept")}`,
+        `<span>Furosemide 40mg → 20mg</span>${pill("warn", "Changed")}`,
+        `<span>Amoxicillin 500mg · 5 days</span>${pill("info", "Started")}`,
+        `<span>Ibuprofen 400mg</span>${pill("bad", "Stopped")}`,
+      ]) + `<div class="mk-foot">${dot("ok")}Signed off by nurse in charge · 14:20</div>`
+    ),
+  review: () =>
+    frame(
+      "Medication changes",
+      "After GP review",
+      rows([
+        `<span>Mr K. Adams · Amlodipine</span><span class="mk-mono">5mg → 10mg</span>${pill("ok", "Recorded")}`,
+        `<span>Ms L. Byrne · Sertraline</span><span class="mk-mono">Stop</span>${pill("ok", "Recorded")}`,
+        `<span>Pharmacy change notice</span><span class="mk-mono">2 lines</span>${pill("info", "Acknowledged")}`,
+        `<span>Refused doses · last 7 days</span><span class="mk-mono">3</span>${pill("warn", "Review")}`,
+      ])
+    ),
+  samples: () =>
+    frame(
+      "Sample tracking",
+      "Concept · early access",
+      rows([
+        `<span>Unit B · 6 swabs</span><span class="mk-mono">Collected 09:10</span>${pill("info", "In transit")}`,
+        `<span>Room 4 · urine sample</span><span class="mk-mono">Received</span>${pill("neutral", "Testing")}`,
+        `<span>Room 9 · swab</span><span class="mk-mono">Result ready</span>${pill("warn", "To review")}`,
+      ]) + `<div class="mk-foot">In development: shown for illustration only</div>`
+    ),
   payroll: () =>
     frame(
       "Pay run",
