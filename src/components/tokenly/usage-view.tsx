@@ -74,7 +74,9 @@ const names = {
   token: "Token type",
 };
 const seriesColor = (group: Dimension, id: string, index: number) =>
-  group === "model" ? (MODEL_COLORS[id] ?? `var(--chart-${(index % 5) + 1})`) : `var(--chart-${(index % 5) + 1})`;
+  group === "model"
+    ? (MODEL_COLORS[id] ?? `var(--chart-${(index % 5) + 1})`)
+    : `var(--chart-${(index % 5) + 1})`;
 const metrics = ["Cost", "Tokens", "Requests"] as const;
 // The "Last 7d" column holds a sparkline array; sort it by its total.
 const sortNumber = (value: unknown) =>
@@ -152,7 +154,17 @@ export function UsageView() {
     to = search.to ?? range.to;
   const filters: Search = search;
   const update = (patch: Partial<Search>) =>
-    navigate({ to: "/usage", search: (prev) => ({ ...prev, ...patch }), replace: true });
+    navigate({
+      to: "/usage",
+      search: (prev) => {
+        const next = { ...prev, ...patch };
+        return {
+          ...next,
+          token: next.token === "input" || next.token === "output" ? next.token : undefined,
+        };
+      },
+      replace: true,
+    });
   const events = useMemo(
     () => filteredEvents(filters, range.from, range.to),
     [search, range.from, range.to],
@@ -176,8 +188,7 @@ export function UsageView() {
     from?: string | undefined;
     to?: string | undefined;
   }>({});
-  const activeCount =
-    FILTERS.filter((k) => search[k]).length + (search.from || search.to ? 1 : 0);
+  const activeCount = FILTERS.filter((k) => search[k]).length + (search.from || search.to ? 1 : 0);
   const [saved, setSaved] = useState<SavedView[]>([]);
   useEffect(() => {
     setSaved(getStored());
@@ -405,7 +416,13 @@ export function UsageView() {
             <div className="grid gap-2">
               <label className="text-xs font-medium text-muted-foreground">Token type</label>
               <div className="flex gap-1 rounded-md bg-muted p-1">
-                {([["all", "All"], ["input", "Input"], ["output", "Output"]] as const).map(([value, label]) => (
+                {(
+                  [
+                    ["all", "All"],
+                    ["input", "Input"],
+                    ["output", "Output"],
+                  ] as const
+                ).map(([value, label]) => (
                   <button
                     key={value}
                     type="button"
@@ -439,7 +456,10 @@ export function UsageView() {
                     active={draft.model === entity.id}
                     dot={MODEL_COLORS[entity.id]}
                     onClick={() =>
-                      setDraft((d) => ({ ...d, model: d.model === entity.id ? undefined : entity.id }))
+                      setDraft((d) => ({
+                        ...d,
+                        model: d.model === entity.id ? undefined : entity.id,
+                      }))
                     }
                   />
                 ))}
@@ -459,7 +479,10 @@ export function UsageView() {
                     label={entity.name}
                     active={draft.project === entity.id}
                     onClick={() =>
-                      setDraft((d) => ({ ...d, project: d.project === entity.id ? undefined : entity.id }))
+                      setDraft((d) => ({
+                        ...d,
+                        project: d.project === entity.id ? undefined : entity.id,
+                      }))
                     }
                   />
                 ))}
@@ -475,7 +498,10 @@ export function UsageView() {
                       setDraft((d) => ({ ...d, [kind]: value === "all" ? undefined : value }))
                     }
                   >
-                    <SelectTrigger className="h-9 w-full text-sm" aria-label={`Filter by ${names[kind]}`}>
+                    <SelectTrigger
+                      className="h-9 w-full text-sm"
+                      aria-label={`Filter by ${names[kind]}`}
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -501,9 +527,7 @@ export function UsageView() {
                       key={days}
                       label={`Last ${days} days`}
                       active={active}
-                      onClick={() =>
-                        setDraft((d) => ({ ...d, from, to: "2026-09-26" }))
-                      }
+                      onClick={() => setDraft((d) => ({ ...d, from, to: "2026-09-26" }))}
                     />
                   );
                 })}
@@ -512,39 +536,47 @@ export function UsageView() {
                   active={
                     !!draft.from &&
                     ![7, 30, 90].some(
-                      (days) => draft.from === shiftDate("2026-09-26", -(days - 1)) && draft.to === "2026-09-26",
+                      (days) =>
+                        draft.from === shiftDate("2026-09-26", -(days - 1)) &&
+                        draft.to === "2026-09-26",
                     )
                   }
                   onClick={() =>
-                    setDraft((d) => ({ ...d, from: d.from ?? "2026-09-01", to: d.to ?? "2026-09-26" }))
+                    setDraft((d) => ({
+                      ...d,
+                      from: d.from ?? "2026-09-01",
+                      to: d.to ?? "2026-09-26",
+                    }))
                   }
                 />
               </div>
               {draft.from &&
                 ![7, 30, 90].some(
-                  (days) => draft.from === shiftDate("2026-09-26", -(days - 1)) && draft.to === "2026-09-26",
+                  (days) =>
+                    draft.from === shiftDate("2026-09-26", -(days - 1)) &&
+                    draft.to === "2026-09-26",
                 ) && (
-                <div className="flex items-center gap-2">
-                  <Input
-                    aria-label="From date"
-                    type="date"
-                    value={draft.from}
-                    max={draft.to}
-                    onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
-                    className="h-9 text-sm"
-                  />
-                  <span className="text-xs text-muted-foreground">–</span>
-                  <Input
-                    aria-label="To date"
-                    type="date"
-                    value={draft.to ?? ""}
-                    min={draft.from}
-                    max="2026-09-26"
-                    onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
-                    className="h-9 text-sm"
-                  />
-                </div>
-              )}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      aria-label="From date"
+                      type="date"
+                      value={draft.from}
+                      max={draft.to}
+                      onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))}
+                      className="h-9 text-sm"
+                    />
+                    <span className="text-xs text-muted-foreground">–</span>
+                    <Input
+                      aria-label="To date"
+                      type="date"
+                      value={draft.to ?? ""}
+                      min={draft.from}
+                      max="2026-09-26"
+                      onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))}
+                      className="h-9 text-sm"
+                    />
+                  </div>
+                )}
             </div>
           </div>
           <div className="flex items-center justify-between gap-2 pt-2">
@@ -552,7 +584,15 @@ export function UsageView() {
               variant="ghost"
               size="sm"
               onClick={() =>
-                setDraft({ model: undefined, project: undefined, key: undefined, user: undefined, token: undefined, from: undefined, to: undefined })
+                setDraft({
+                  model: undefined,
+                  project: undefined,
+                  key: undefined,
+                  user: undefined,
+                  token: undefined,
+                  from: undefined,
+                  to: undefined,
+                })
               }
             >
               Reset

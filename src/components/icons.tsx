@@ -9,6 +9,7 @@
 import { forwardRef, type ComponentProps } from "react";
 import {
   ArrowCounterClockwise,
+  ArrowElbowDownLeft,
   ArrowDown as PhArrowDown,
   ArrowDownLeft as PhArrowDownLeft,
   ArrowDownRight as PhArrowDownRight,
@@ -27,6 +28,7 @@ import {
   CaretRight,
   CaretUp,
   ChartLineUp,
+  ChatCircle,
   Check as PhCheck,
   CheckCircle,
   Checks,
@@ -45,11 +47,13 @@ import {
   Gift as PhGift,
   Hash as PhHash,
   Info as PhInfo,
+  Image as PhImage,
   Key,
   Lightning,
   MagnifyingGlass,
   Minus as PhMinus,
   Moon as PhMoon,
+  Monitor as PhMonitor,
   PencilSimple,
   Plus as PhPlus,
   Pulse,
@@ -57,6 +61,8 @@ import {
   ShieldWarning,
   SidebarSimple,
   SlidersHorizontal as PhSlidersHorizontal,
+  SpinnerGap,
+  Square as PhSquare,
   SquaresFour,
   Sun as PhSun,
   Trash,
@@ -127,6 +133,10 @@ export const PanelLeft = duo(SidebarSimple);
 export const Circle = duo(PhCircle);
 export const Command = duo(PhCommand);
 export const Speedometer = duo(PhGauge);
+export const MessageCircle = duo(ChatCircle);
+export const ImageIcon = duo(PhImage);
+export const Monitor = duo(PhMonitor);
+export const Loader2Icon = duo(SpinnerGap);
 
 /* Small UI glyphs: bold so they read clearly at 12–16px */
 export const Check = bold(PhCheck);
@@ -152,3 +162,9 @@ export const MoreHorizontal = bold(DotsThree);
 export const GripVertical = bold(DotsSixVertical);
 export const RefreshCw = bold(ArrowsClockwise);
 export const RotateCcw = bold(ArrowCounterClockwise);
+export const CornerDownLeftIcon = bold(ArrowElbowDownLeft);
+export const SquareIcon = bold(PhSquare);
+export const ArrowDownIcon = ArrowDown;
+export const DownloadIcon = Download;
+export const PlusIcon = Plus;
+export const XIcon = X;
