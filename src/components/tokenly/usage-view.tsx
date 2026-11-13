@@ -152,7 +152,17 @@ export function UsageView() {
     to = search.to ?? range.to;
   const filters: Search = search;
   const update = (patch: Partial<Search>) =>
-    navigate({ to: "/usage", search: (prev) => ({ ...prev, ...patch }), replace: true });
+    navigate({
+      to: "/usage",
+      search: (prev) => {
+        const next = { ...prev, ...patch };
+        return {
+          ...next,
+          token: next.token === "input" || next.token === "output" ? next.token : undefined,
+        };
+      },
+      replace: true,
+    });
   const events = useMemo(
     () => filteredEvents(filters, range.from, range.to),
     [search, range.from, range.to],

@@ -15,14 +15,14 @@ function errorRecord(error: unknown): ErrorRecord {
 }
 
 function gatewayMessage(record: ErrorRecord) {
-  const body = record.responseBody;
+  const body = record["responseBody"];
   if (typeof body === "string") {
     try {
       const parsed = JSON.parse(body) as ErrorRecord;
-      const nested = typeof parsed.error === "object" && parsed.error !== null
-        ? (parsed.error as ErrorRecord)
+      const nested = typeof parsed["error"] === "object" && parsed["error"] !== null
+        ? (parsed["error"] as ErrorRecord)
         : {};
-      const message = nested.message ?? parsed.message;
+      const message = nested["message"] ?? parsed["message"];
       if (typeof message === "string" && message.trim()) return message.trim().slice(0, 600);
     } catch {
       // Use the status-specific safe message below.
@@ -33,7 +33,7 @@ function gatewayMessage(record: ErrorRecord) {
 
 export function assistantErrorDetails(error: unknown) {
   const record = errorRecord(error);
-  const rawStatus = record.statusCode ?? record.status;
+  const rawStatus = record["statusCode"] ?? record["status"];
   const status = typeof rawStatus === "number" && rawStatus >= 400 && rawStatus <= 599
     ? rawStatus
     : 500;

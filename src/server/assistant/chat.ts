@@ -18,7 +18,7 @@ ${JSON.stringify(snapshot)}`;
 }
 
 export async function handleAssistantChat(request: Request): Promise<Response> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) {
     return Response.json(
       { error: "The AI assistant is not configured yet. Please contact the workspace owner." },
