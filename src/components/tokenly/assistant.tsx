@@ -84,7 +84,10 @@ export function TokenlyAssistant({ range }: { range: DateSelection }) {
         <MessageCircle />
         <span>Ask Tokenly</span>
       </Button>
-      <SheetContent className="flex w-full flex-col gap-0 p-0 sm:max-w-md" side="right">
+      <SheetContent
+        className="flex w-[calc(100vw-0.75rem)] max-w-[calc(100vw-0.75rem)] flex-col gap-0 p-0 sm:w-full sm:max-w-md"
+        side="right"
+      >
         <SheetHeader className="shrink-0 border-b px-5 py-4 pr-14">
           <div className="flex items-center gap-3">
             <LogoMark className="size-8 rounded-md" />
