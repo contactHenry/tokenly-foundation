@@ -35,7 +35,10 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
   const parsed = assistantRequestSchema.safeParse(body);
   if (!parsed.success) {
     return Response.json(
-      { error: "The chat request is incomplete or too large. Start a new conversation and try again." },
+      {
+        error:
+          "The chat request is incomplete or too large. Start a new conversation and try again.",
+      },
       { status: 400 },
     );
   }
@@ -58,7 +61,10 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
     if (request.signal.aborted || (error instanceof Error && error.name === "AbortError")) {
       return new Response(null, { status: 499 });
     }
-    console.error("Tokenly Assistant request failed", error instanceof Error ? error.message : error);
+    console.error(
+      "Tokenly Assistant request failed",
+      error instanceof Error ? error.message : error,
+    );
     const details = assistantErrorDetails(error);
     return Response.json({ error: details.message }, { status: details.status });
   }

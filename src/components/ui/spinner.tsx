@@ -1,6 +1,6 @@
-import { Loader2Icon } from "@/components/icons"
+import { Loader2Icon } from "@/components/icons";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Spinner({ className, ...props }: React.ComponentProps<typeof Loader2Icon>) {
   return (
@@ -10,7 +10,7 @@ function Spinner({ className, ...props }: React.ComponentProps<typeof Loader2Ico
       className={cn("size-4 animate-spin", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Spinner }
+export { Spinner };

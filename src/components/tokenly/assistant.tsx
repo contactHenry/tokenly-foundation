@@ -110,7 +110,8 @@ export function TokenlyAssistant({ range }: { range: DateSelection }) {
                     <div className="space-y-1.5">
                       <h2 className="text-lg font-semibold">Understand your AI spend</h2>
                       <p className="text-sm leading-6 text-muted-foreground">
-                        Get clear answers from the dashboard’s sample data. No chat history is saved.
+                        Get clear answers from the dashboard’s sample data. No chat history is
+                        saved.
                       </p>
                     </div>
                     <div className="flex w-full flex-col gap-2">
