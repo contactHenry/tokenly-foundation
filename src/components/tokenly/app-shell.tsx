@@ -45,6 +45,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { CommandMenu } from "@/components/tokenly/command-menu";
+import { TokenlyAssistant } from "@/components/tokenly/assistant";
 import { navGroups } from "@/components/tokenly/nav";
 import { setDarkMode, useIsDark } from "@/components/tokenly/theme";
 import { Logo } from "@/components/tokenly/logo";
