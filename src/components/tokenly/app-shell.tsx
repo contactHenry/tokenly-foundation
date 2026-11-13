@@ -402,6 +402,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </main>
         </SidebarInset>
         <TopUpDialog open={topUpOpen} onOpenChange={setTopUpOpen} />
+        <TokenlyAssistant range={range} />
       </SidebarProvider>
     </RangeContext.Provider>
   );

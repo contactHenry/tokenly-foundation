@@ -16,7 +16,7 @@ import {
   PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
 import { Shimmer } from "@/components/ai-elements/shimmer";
-import { MessageCircle, Plus, RotateCcw } from "@/components/icons";
+import { Info, MessageCircle, RotateCcw } from "@/components/icons";
 import { buildAssistantSnapshot } from "@/components/tokenly/assistant-snapshot";
 import type { DateSelection } from "@/components/tokenly/app-shell";
 import { useBillingStore } from "@/components/tokenly/billing-store";
@@ -196,7 +196,6 @@ export function TokenlyAssistant({ range }: { range: DateSelection }) {
               aria-label="Message Tokenly Assistant"
               placeholder="Ask about your dashboard…"
               maxLength={2000}
-              disabled={busy}
             />
             <PromptInputFooter className="justify-end">
               <PromptInputSubmit
@@ -207,7 +206,7 @@ export function TokenlyAssistant({ range }: { range: DateSelection }) {
             </PromptInputFooter>
           </PromptInput>
           <p className="mt-2 flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
-            <Plus className="size-3" aria-hidden />
+            <Info className="size-3" aria-hidden />
             Answers can be wrong. Check important figures on the page.
           </p>
         </div>
