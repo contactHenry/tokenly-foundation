@@ -1,7 +1,7 @@
 # Tokenly Overview and Usage
-- [ ] Build one session-only Tokenly Assistant conversation with no persisted history.
-- [ ] Stream dashboard-aware AI answers through a validated server route.
-- [ ] Verify assistant UI, follow-up context, errors, stop, and mobile layout.
+- [x] Build one session-only Tokenly Assistant conversation with no persisted history.
+- [x] Stream dashboard-aware AI answers through a validated server route.
+- [x] Verify assistant UI, follow-up context, errors, stop, and mobile layout.
 - [x] Replace Overview with status → cause → action hierarchy and responsive 12-column layout.
 - [x] Add range-aware spending, runway, forecast, consumers, attention, and activity from mock data.
 - [x] Make attention actions and consumer filters carry context to relevant pages.
